@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>會員註冊</title>
+</head>
+<body>
+<h2>會員註冊表單</h2>
+<form id="registerForm">
+    <label>Email: <input type="email" name="email" required></label><br><br>
+    <label>密碼: <input type="password" name="password" required></label><br><br>
+    <label>姓名: <input type="text" name="name" required></label><br><br>
+    <label>手機: <input type="text" name="phone"></label><br><br>
+    <button type="submit">送出註冊</button>
+</form>
+
+<p id="result"></p>
+
+<h3>重寄驗證信</h3>
+<input type="email" id="resendEmail" placeholder="請輸入 email">
+<button onclick="resendVerification()">重寄驗證信</button>
+<p id="resendResult"></p>
+
+<script>
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const data = {
+            email: form.email.value,
+            password: form.password.value,
+            name: form.name.value,
+            phone: form.phone.value
+        };
+
+        fetch("http://localhost:8080/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.text())
+            .then(response => {
+                document.getElementById("result").innerText = response;
+                form.reset();
+            })
+            .catch(error => {
+                document.getElementById("result").innerText = "註冊失敗：" + error;
+            });
+    });
+
+    function resendVerification() {
+        const email = document.getElementById("resendEmail").value;
+        fetch("http://localhost:8080/resend-verification", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email })
+        })
+            .then(res => res.text())
+            .then(msg => document.getElementById("resendResult").innerText = msg)
+            .catch(err => document.getElementById("resendResult").innerText = "錯誤：" + err);
+    }
+</script>
+</body>
+</html>
