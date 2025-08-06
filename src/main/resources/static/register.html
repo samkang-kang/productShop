@@ -33,7 +33,7 @@
             phone: form.phone.value
         };
 
-        fetch("http://localhost:8080/register", {
+        fetch("http://localhost:8080/users/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -52,7 +52,7 @@
 
     function resendVerification() {
         const email = document.getElementById("resendEmail").value;
-        fetch("http://localhost:8080/resend-verification", {
+        fetch("http://localhost:8080/users/resend-verification", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email })
