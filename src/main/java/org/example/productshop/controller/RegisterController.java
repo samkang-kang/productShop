@@ -31,19 +31,19 @@ public class RegisterController {
     private VerifyEmailDao verifyEmailDao;
 
 
-    @PostMapping("/register") //
+    @PostMapping("/users/register") //
     public String test(@RequestBody Member member) {
 
         return registerService.register(member);
     }
 
-    @GetMapping("/verify")
+    @GetMapping("/users/verify")
     public String verifyEmail(@RequestParam("token") String token) {
 
         return verifyEmailDao.verifyEmail(token);
     }
 
-    @PostMapping("/resend-verification")
+    @PostMapping("/users/resend-verification")
     public String resendVerification(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         return verifyEmailDao.resendVerification(email);
