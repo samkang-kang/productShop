@@ -49,6 +49,7 @@ public class JwtFilter implements Filter {
 
         // 白名單 API 直接放行
         if (WHITELIST.stream().anyMatch(path::startsWith)) {
+            //FilterChain chain 呼叫下一個實作
             chain.doFilter(request, response);
             return;
         }
