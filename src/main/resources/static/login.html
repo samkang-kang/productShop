@@ -75,9 +75,10 @@
             .then(data => {
                 if (data.status === "success") {
                     localStorage.setItem("token", data.token);
+                    // Token 已保存的字串  不用顯示在前端
                     document.getElementById("loginResult").innerText = "登入成功，Token 已保存";
                 } else {
-                    document.getElementById("loginResult").innerText = data.message || "帳密錯誤或者帳號未開通";
+                    document.getElementById("loginResult").innerText = data.message || "帳號未開通，請至信箱查看驗證信";
                 }
             })
             .catch(err => {
