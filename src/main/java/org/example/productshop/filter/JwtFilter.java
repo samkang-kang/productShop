@@ -23,6 +23,8 @@ public class JwtFilter implements Filter {
             "/users/login",
             "/users/verify",
             "/users/resend-verification",
+            "/users/password/reset/request",
+            "/users/password/reset/confirm",
             "/error"
     );
 
