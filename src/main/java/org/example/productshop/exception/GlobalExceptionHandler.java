@@ -12,6 +12,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity<String> handleDuplicateKey(DuplicateKeyException e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body("註冊失敗：email 已被註冊");
     }
@@ -23,11 +24,9 @@ public class GlobalExceptionHandler {
     }
 
 
-
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleOtherErrors(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("server error");
+                .body("server error"+e.getMessage());
     }
 }
