@@ -257,6 +257,161 @@ document.addEventListener("DOMContentLoaded", function () {
   window.resendVerification = resendVerification;
 
   // ========================================
+  // 登入表單驗證功能
+  // ========================================
+  const loginForm = document.querySelector("#login");
+  if (loginForm) {
+    const loginSubmitBtn = document.getElementById("login-submit");
+
+    // 定義登入需要驗證的欄位
+    const loginFields = [
+      { id: "login-email", placeholder: "Username or Email" },
+      { id: "login-password", placeholder: "Password" },
+    ];
+
+    // 為登入欄位設置事件監聽器
+    loginFields.forEach(function (f) {
+      const input = document.getElementById(f.id);
+      if (input) {
+        // 保存原始提示文字
+        input.dataset.placeholder = f.placeholder;
+
+        // 輸入時恢復原始提示文字
+        input.addEventListener("input", function () {
+          input.placeholder = input.dataset.placeholder;
+          input.style.border = "";
+        });
+      }
+    });
+
+    // 登入按鈕點擊事件
+    loginSubmitBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      // 防止重複提交 - 檢查按鈕是否已被禁用
+      if (loginSubmitBtn.disabled) {
+        return;
+      }
+
+      let valid = true;
+
+      // 驗證 Email
+      const email = document.getElementById("login-email");
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email.value.trim()) {
+        email.value = "";
+        email.placeholder = "Email is required";
+        valid = false;
+      } else if (!emailPattern.test(email.value.trim())) {
+        email.value = "";
+        email.placeholder = "Invalid email";
+        valid = false;
+      }
+
+      // 驗證密碼
+      const password = document.getElementById("login-password");
+      if (!password.value.trim()) {
+        password.value = "";
+        password.placeholder = "Password is required";
+        valid = false;
+      }
+
+      // 如果驗證通過，發送登入請求
+      if (valid) {
+        // 禁用送出按鈕，防止重複提交
+        const originalValue = loginSubmitBtn.value;
+        loginSubmitBtn.disabled = true;
+        loginSubmitBtn.value = "登入中...";
+        loginSubmitBtn.style.opacity = "0.6";
+        loginSubmitBtn.style.cursor = "not-allowed";
+
+        // 準備登入數據
+        const loginData = {
+          email: email.value.trim(),
+          password: password.value,
+        };
+
+        // 發送登入請求到 LoginController
+        fetch(`${API_BASE}/users/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
+        })
+          .then((response) => {
+            console.debug(`登入 API 回應狀態: ${response.status}`);
+
+            // 檢查是否為使用者不存在（404 狀態碼）
+            if (response.status === 404) {
+              alert("尚未註冊的帳號");
+              throw new Error("User not found");
+            }
+
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error("系統繁忙，請稍後再試");
+            }
+          })
+          .then((data) => {
+            console.log("登入回應:", data);
+
+            // 檢查回應內容是否包含「使用者不存在」相關訊息
+            if (
+              data.message &&
+              (data.message.includes("User not found") ||
+                data.message.includes("使用者不存在") ||
+                data.message.includes("帳號不存在"))
+            ) {
+              alert("尚未註冊的帳號");
+              return;
+            }
+
+            if (data.status === "success") {
+              // 登入成功 - 保存 Token
+              localStorage.setItem("token", data.token);
+
+              // 清空表單
+              email.value = "";
+              password.value = "";
+
+              // 顯示成功訊息
+              showSuccessMessage("登入成功！");
+
+              // 可以在這裡進行頁面跳轉或其他操作
+              console.log("Token 已保存:", data.token);
+            } else {
+              // 登入失敗 - 顯示錯誤訊息
+              const errorMessage =
+                data.message || "帳號未開通，請至信箱查看驗證信";
+              showErrorMessage(errorMessage);
+            }
+          })
+          .catch((error) => {
+            console.debug("登入錯誤:", error.message);
+
+            // 如果是使用者不存在的錯誤，不需要再顯示其他訊息
+            if (error.message === "User not found") {
+              // alert 已經在上面顯示了
+              return;
+            }
+
+            // 顯示用戶友善的錯誤訊息
+            showErrorMessage(error.message);
+          })
+          .finally(() => {
+            // 恢復送出按鈕狀態
+            loginSubmitBtn.disabled = false;
+            loginSubmitBtn.value = originalValue;
+            loginSubmitBtn.style.opacity = "1";
+            loginSubmitBtn.style.cursor = "pointer";
+          });
+      }
+    });
+  }
+
+  // ========================================
   // 訊息顯示功能
   // ========================================
   function showSuccessMessage(message) {
