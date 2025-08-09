@@ -25,7 +25,15 @@ public class JwtFilter implements Filter {
             "/users/resend-verification",
             "/users/password/reset/request",
             "/users/password/reset/confirm",
-            "/error"
+            "/error",
+            "/",
+            "/index.html",
+            "/login.html",
+            "/register.html",
+            "/favicon.ico",
+            "/CSS/",
+            "/JS/",
+            "/img/"
     );
 
     @Override
@@ -37,6 +45,7 @@ public class JwtFilter implements Filter {
 
         // 加上 CORS Header（不管成功或失敗都加）
         res.setHeader("Access-Control-Allow-Origin", "http://localhost:63342");
+//      res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
         res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -51,10 +60,16 @@ public class JwtFilter implements Filter {
 
         // 白名單 API 直接放行
         if (WHITELIST.stream().anyMatch(path::startsWith)) {
-            //FilterChain chain 呼叫下一個實作
-            chain.doFilter(request, response);
-            return;
-        }
+            if (WHITELIST.stream().anyMatch(whitelistPath -> {
+                if (whitelistPath.endsWith("/")) {
+                    return path.startsWith(whitelistPath);
+                } else {
+                    return path.equals(whitelistPath) || path.startsWith(whitelistPath);
+                }
+            })) {
+                chain.doFilter(request, response);
+                return;
+            }}
 
         // 驗證 Token
         String authHeader = req.getHeader("Authorization");
