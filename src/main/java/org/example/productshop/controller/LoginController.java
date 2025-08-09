@@ -25,11 +25,17 @@ public class LoginController {
         String email = request.get("email");
         String password = request.get("password");
         String token = loginService.login(email, password);
+        String isemail = loginService.checkEmail(email);
         HashMap<String, Object> response = new HashMap<>();
+        if(isemail == null) {
+            response.put("status", "failOfEmail");
+            response.put("message", "尚未註冊");
+            return response;
+        }
 
         if(!"active".equals(loginDao.checkStatus(email))){
-             response.put("status", "fail");
-             return response ;
+            response.put("status", "fail");
+            return response ;
         }
 
         if(token != null) {
@@ -44,6 +50,7 @@ public class LoginController {
         return response;
 
     }
+
 
     @GetMapping("/secure/test")
     public String testSecure(HttpServletRequest request) {
