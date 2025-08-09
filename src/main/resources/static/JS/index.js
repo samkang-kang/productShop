@@ -1,7 +1,7 @@
 const API_BASE =
-    window.location.hostname === "localhost"
-        ? "http://localhost:8080"
-        : window.location.origin;
+  window.location.hostname === "localhost"
+    ? "http://localhost:8080"
+    : window.location.origin;
 // ========================================
 // 導航欄響應式功能
 // ========================================
@@ -103,6 +103,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // 註冊按鈕點擊事件
   submitBtn.addEventListener("click", function (e) {
     e.preventDefault();
+
+    // 防止重複提交 - 檢查按鈕是否已被禁用
+    if (submitBtn.disabled) {
+      return;
+    }
+
     let valid = true;
 
     // 驗證姓名
@@ -148,6 +154,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 如果驗證通過，發送註冊請求
     if (valid) {
+      // 禁用送出按鈕，防止重複提交
+      const originalValue = submitBtn.value;
+      submitBtn.disabled = true;
+      submitBtn.value = "註冊中...";
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.cursor = "not-allowed";
+
       // 準備註冊數據 - 對應 Member 實體的欄位
       const memberData = {
         email: email.value.trim(),
@@ -165,10 +178,18 @@ document.addEventListener("DOMContentLoaded", function () {
         body: JSON.stringify(memberData),
       })
         .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+          console.debug(`註冊 API 回應狀態: ${response.status}`);
+
+          if (response.ok) {
+            return response.text();
+          } else {
+            // 根據 HTTP 狀態碼處理錯誤
+            if (response.status === 409) {
+              throw new Error("已使用的帳號");
+            } else {
+              throw new Error("系統繁忙，請稍後再試");
+            }
           }
-          return response.text();
         })
         .then((result) => {
           console.log("註冊成功:", result);
@@ -186,10 +207,17 @@ document.addEventListener("DOMContentLoaded", function () {
           showResendVerificationModal(result || "註冊成功！");
         })
         .catch((error) => {
-          console.error("註冊失敗:", error);
+          console.debug("註冊錯誤:", error.message);
 
-          // 顯示錯誤訊息
-          showErrorMessage("註冊失敗：" + error.message);
+          // 顯示用戶友善的錯誤訊息
+          showErrorMessage(error.message);
+        })
+        .finally(() => {
+          // 恢復送出按鈕狀態
+          submitBtn.disabled = false;
+          submitBtn.value = originalValue;
+          submitBtn.style.opacity = "1";
+          submitBtn.style.cursor = "pointer";
         });
     }
   });
