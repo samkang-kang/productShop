@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>交易結果</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <style>
+      .transaction-result {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 30px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+      }
+      .result-title {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+        font-size: 24px;
+      }
+      .info-item {
+        margin: 15px 0;
+        padding: 10px;
+        background-color: white;
+        border-radius: 5px;
+        border-left: 4px solid #00b7ff;
+      }
+      .info-label {
+        font-weight: bold;
+        color: #555;
+        margin-bottom: 5px;
+      }
+      .info-value {
+        color: #333;
+        font-size: 16px;
+      }
+      .back-button {
+        display: block;
+        width: 200px;
+        margin: 30px auto 0;
+        padding: 12px 24px;
+        background-color: #00b7ff;
+        color: white;
+        text-decoration: none;
+        text-align: center;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: background-color 0.3s;
+      }
+      .back-button:hover {
+        background-color: #0099cc;
+      }
+      .status-success {
+        color: #28a745;
+        font-weight: bold;
+      }
+      .status-failed {
+        color: #dc3545;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="transaction-result">
+      <h1 class="result-title">交易結果</h1>
+
+      <div class="info-item">
+        <div class="info-label">交易狀態</div>
+        <div
+          class="info-value <%= query.RtnCode === '1' ? 'status-success' : 'status-failed' %>"
+        >
+          <%= query.RtnMsg || '無資料' %>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-label">交易金額</div>
+        <div class="info-value">NT$ <%= query.TradeAmt || '無資料' %></div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-label">付款方式</div>
+        <div class="info-value"><%= query.PaymentType || '無資料' %></div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-label">訂單編號</div>
+        <div class="info-value"><%= query.MerchantTradeNo || '無資料' %></div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-label">交易時間</div>
+        <div class="info-value"><%= query.PaymentDate || '無資料' %></div>
+      </div>
+
+      <a href="/" class="back-button">返回首頁</a>
+    </div>
+  </body>
+</html>
