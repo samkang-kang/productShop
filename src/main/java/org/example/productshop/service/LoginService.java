@@ -17,6 +17,15 @@ public class LoginService {
     @Autowired
     private BCrypt bcrypt ;
 
+    public String checkEmail(String email) {
+        String isemail = loginDao.checkEmail(email);
+        if(isemail!=null ) {
+            return isemail ;}
+        else return null ;
+    }
+
+
+
     public String  login(String email, String password){
         String dbHash = loginDao.getHashpassword(email);
         if(dbHash!=null && BCrypt.checkpw(password, dbHash)){

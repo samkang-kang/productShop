@@ -759,6 +759,385 @@ document.addEventListener("DOMContentLoaded", function () {
   document.head.appendChild(additionalStyle);
 
   // ========================================
+  // 忘記密碼功能
+  // ========================================
+  function setupForgotPasswordModal() {
+    const forgotPasswordLink = document.getElementById("forgot-password-link");
+    if (forgotPasswordLink) {
+      forgotPasswordLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        showForgotPasswordModal();
+      });
+    }
+  }
+
+  function showForgotPasswordModal() {
+    // 創建模態視窗背景
+    const modalOverlay = document.createElement("div");
+    modalOverlay.id = "forgotPasswordModalOverlay";
+    modalOverlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      animation: fadeIn 0.3s ease;
+    `;
+
+    // 創建模態視窗內容
+    const modalContent = document.createElement("div");
+    modalContent.id = "forgotPasswordModalContent";
+    modalContent.style.cssText = `
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.3s ease;
+      position: relative;
+    `;
+
+    // 添加關閉按鈕
+    const closeBtn = document.createElement("button");
+    closeBtn.innerHTML = "&times;";
+    closeBtn.style.cssText = `
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background-color 0.2s;
+    `;
+    closeBtn.onmouseover = () => (closeBtn.style.backgroundColor = "#f0f0f0");
+    closeBtn.onmouseout = () =>
+      (closeBtn.style.backgroundColor = "transparent");
+    closeBtn.onclick = () => closeForgotPasswordModal();
+
+    // 創建標題
+    const title = document.createElement("h2");
+    title.textContent = "重設密碼";
+    title.style.cssText = `
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: 600;
+    `;
+
+    // 創建說明文字
+    const description = document.createElement("div");
+    description.textContent = "請輸入您的 Email 地址和新密碼";
+    description.style.cssText = `
+      color: #666;
+      margin-bottom: 25px;
+      font-size: 16px;
+      line-height: 1.5;
+    `;
+
+    // 創建表單區塊
+    const formSection = document.createElement("div");
+    formSection.style.cssText = `
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      border-radius: 15px;
+      padding: 25px;
+      margin: 20px 0;
+      border: 2px solid #dee2e6;
+    `;
+
+    // 創建 Email 輸入框
+    const emailInput = document.createElement("input");
+    emailInput.type = "email";
+    emailInput.id = "forgot-email";
+    emailInput.placeholder = "請輸入您的 Email 地址";
+    emailInput.style.cssText = `
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    `;
+    emailInput.onfocus = () => (emailInput.style.borderColor = "#007bff");
+    emailInput.onblur = () => (emailInput.style.borderColor = "#dee2e6");
+
+    // 創建密碼輸入區塊
+    const passwordWrapper = document.createElement("div");
+    passwordWrapper.style.cssText = `
+      position: relative;
+      margin-bottom: 20px;
+    `;
+
+    // 創建密碼輸入框
+    const passwordInput = document.createElement("input");
+    passwordInput.type = "password";
+    passwordInput.id = "forgot-password";
+    passwordInput.placeholder = "請輸入新密碼（至少8碼含英數字）";
+    passwordInput.style.cssText = `
+      width: 100%;
+      padding: 12px 45px 12px 15px;
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    `;
+    passwordInput.onfocus = () => (passwordInput.style.borderColor = "#007bff");
+    passwordInput.onblur = () => (passwordInput.style.borderColor = "#dee2e6");
+
+    // 創建顯示/隱藏密碼按鈕
+    const togglePasswordBtn = document.createElement("button");
+    togglePasswordBtn.type = "button";
+    togglePasswordBtn.innerHTML = "👁️";
+    togglePasswordBtn.style.cssText = `
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 5px;
+      border-radius: 3px;
+      transition: background-color 0.2s;
+    `;
+    togglePasswordBtn.onmouseover = () =>
+      (togglePasswordBtn.style.backgroundColor = "#f0f0f0");
+    togglePasswordBtn.onmouseout = () =>
+      (togglePasswordBtn.style.backgroundColor = "transparent");
+    togglePasswordBtn.onclick = () => {
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        togglePasswordBtn.innerHTML = "🙈";
+      } else {
+        passwordInput.type = "password";
+        togglePasswordBtn.innerHTML = "👁️";
+      }
+    };
+
+    passwordWrapper.appendChild(passwordInput);
+    passwordWrapper.appendChild(togglePasswordBtn);
+
+    // 創建送出按鈕
+    const submitButton = document.createElement("button");
+    submitButton.textContent = "送出重設申請";
+    submitButton.style.cssText = `
+      background: linear-gradient(80deg, #886153d8, #fd1d1dca, #436727d0);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-right: 10px;
+    `;
+    submitButton.onmouseover = () => {
+      submitButton.style.transform = "translateY(-2px)";
+      submitButton.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+    };
+    submitButton.onmouseout = () => {
+      submitButton.style.transform = "translateY(0)";
+      submitButton.style.boxShadow = "none";
+    };
+    submitButton.onclick = () => handleForgotPasswordSubmit();
+
+    // 創建取消按鈕
+    const cancelButton = document.createElement("button");
+    cancelButton.textContent = "取消";
+    cancelButton.style.cssText = `
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    `;
+    cancelButton.onmouseover = () =>
+      (cancelButton.style.backgroundColor = "#5a6268");
+    cancelButton.onmouseout = () =>
+      (cancelButton.style.backgroundColor = "#6c757d");
+    cancelButton.onclick = () => closeForgotPasswordModal();
+
+    // 組裝表單
+    formSection.appendChild(emailInput);
+    formSection.appendChild(passwordWrapper);
+    formSection.appendChild(submitButton);
+    formSection.appendChild(cancelButton);
+
+    // 組裝模態視窗
+    modalContent.appendChild(closeBtn);
+    modalContent.appendChild(title);
+    modalContent.appendChild(description);
+    modalContent.appendChild(formSection);
+
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+
+    // 點擊背景關閉模態視窗
+    modalOverlay.onclick = (e) => {
+      if (e.target === modalOverlay) {
+        closeForgotPasswordModal();
+      }
+    };
+
+    // 聚焦到 Email 輸入框
+    setTimeout(() => emailInput.focus(), 100);
+  }
+
+  // 關閉忘記密碼模態視窗
+  function closeForgotPasswordModal() {
+    const modal = document.getElementById("forgotPasswordModalOverlay");
+    if (modal) {
+      modal.style.animation = "fadeOut 0.3s ease";
+      modal.querySelector("#forgotPasswordModalContent").style.animation =
+        "slideOut 0.3s ease";
+
+      setTimeout(() => {
+        if (modal.parentNode) {
+          modal.parentNode.removeChild(modal);
+        }
+      }, 300);
+    }
+  }
+
+  // 處理忘記密碼表單提交
+  function handleForgotPasswordSubmit() {
+    const email = document.getElementById("forgot-email").value.trim();
+    const newPassword = document.getElementById("forgot-password").value;
+
+    // 驗證 Email 格式
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      showErrorMessage("請輸入 Email 地址");
+      return;
+    }
+    if (!emailPattern.test(email)) {
+      showErrorMessage("請輸入有效的 Email 格式");
+      return;
+    }
+
+    // 驗證密碼（至少8碼且含英數字）
+    if (!newPassword) {
+      showErrorMessage("請輸入新密碼");
+      return;
+    }
+    if (newPassword.length < 8) {
+      showErrorMessage("密碼至少需要 8 個字元");
+      return;
+    }
+
+    // 檢查是否包含英文字母和數字
+    const hasLetter = /[a-zA-Z]/.test(newPassword);
+    const hasNumber = /[0-9]/.test(newPassword);
+    if (!hasLetter || !hasNumber) {
+      showErrorMessage("密碼必須包含英文字母和數字");
+      return;
+    }
+
+    // 正確選取提交按鈕（使用內容文字而不是 onclick 屬性）
+    const submitButton = Array.from(
+      document.querySelectorAll("#forgotPasswordModalContent button")
+    ).find(
+      (btn) =>
+        btn.textContent.includes("送出重設申請") ||
+        btn.textContent.includes("處理中")
+    );
+
+    if (submitButton) {
+      const originalText = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = "處理中...";
+      submitButton.style.opacity = "0.6";
+      submitButton.style.cursor = "not-allowed";
+
+      // 完全使用 forget-password-test.html 的邏輯，但增強錯誤處理
+      fetch("http://localhost:8080/users/password/reset/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, newPassword }),
+      })
+        .then((res) => {
+          console.log("API 回應狀態:", res.status);
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          console.log("API 回應數據:", data);
+          showSuccessMessage(data.message || "請求已送出");
+          // 清空表單內容（模擬 form.reset()）
+          document.getElementById("forgot-email").value = "";
+          document.getElementById("forgot-password").value = "";
+          closeForgotPasswordModal();
+        })
+        .catch((err) => {
+          console.error("忘記密碼請求失敗:", err);
+          showErrorMessage("錯誤：" + err);
+        })
+        .finally(() => {
+          // 恢復按鈕狀態
+          if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+            submitButton.style.opacity = "1";
+            submitButton.style.cursor = "pointer";
+          }
+        });
+    } else {
+      // 如果找不到按鈕，直接執行 API 請求（防錯機制）
+      fetch("http://localhost:8080/users/password/reset/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, newPassword }),
+      })
+        .then((res) => {
+          console.log("API 回應狀態 (fallback):", res.status);
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          console.log("API 回應數據 (fallback):", data);
+          showSuccessMessage(data.message || "請求已送出");
+          document.getElementById("forgot-email").value = "";
+          document.getElementById("forgot-password").value = "";
+          closeForgotPasswordModal();
+        })
+        .catch((err) => {
+          console.error("忘記密碼請求失敗 (fallback):", err);
+          showErrorMessage("錯誤：" + err);
+        });
+    }
+  }
+
+  // 初始化忘記密碼功能
+  setupForgotPasswordModal();
+
+  // ========================================
   // Google OAuth2 功能
   // ========================================
   // 等待 DOM 完全載入後再綁定事件
