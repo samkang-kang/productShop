@@ -33,7 +33,9 @@ public class JwtFilter implements Filter {
             "/favicon.ico",
             "/CSS/",
             "/JS/",
-            "/img/"
+            "/img/",
+            "/api/cart/add",  // ← 測試用放行購物車新增
+            "/api/products/search"  // ← 測試用搜尋商品
     );
 
     @Override
