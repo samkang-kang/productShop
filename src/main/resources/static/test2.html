@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8" />
+    <title>n8n OAuth Popup Demo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+        body { font-family: ui-sans-serif, system-ui, -apple-system; padding: 24px; }
+        button { padding: 10px 16px; font-size: 16px; }
+        pre { background:#111; color:#0f0; padding:12px; overflow:auto; }
+    </style>
+</head>
+<body>
+<h1>Sign in with Google（n8n + popup）</h1>
+<p>按鈕會開一個小視窗執行 OAuth，成功後 n8n 會把 token 用 <code>postMessage</code> 丟回來。</p>
+
+<button id="login">Sign in with Google</button>
+<h3>回傳結果：</h3>
+<pre id="out">尚未登入</pre>
+
+<script>
+    // 你的 start Production URL + 帶上 redirect_origin（給 n8n 回傳時用）
+    const BASE_START = 'https://molly-premium-frankly.ngrok-free.app/webhook/oauth/google/start';
+    const N8N_START_URL = BASE_START + '?redirect_origin=' + encodeURIComponent(location.origin);
+
+    let popup = null;
+
+    document.getElementById('login').addEventListener('click', () => {
+        // 開 popup（避免被瀏覽器擋，請確保是使用者點擊觸發）
+        popup = window.open(
+            N8N_START_URL,
+            'n8n_oauth_popup',
+            'width=520,height=650,noopener'
+        );
+        if (!popup) alert('請允許彈出視窗（popup）');
+    });
+
+    // 等 n8n 回傳 token
+    window.addEventListener('message', (evt) => {
+        // 安全起見可以檢查來源：
+        // if (evt.origin !== 'https://molly-premium-frankly.ngrok-free.app') return;
+
+        const out = document.getElementById('out');
+        try {
+            const data = typeof evt.data === 'string' ? JSON.parse(evt.data) : evt.data;
+            out.textContent = JSON.stringify(data, null, 2);
+        } catch (e) {
+            out.textContent = '收到非 JSON：\n' + evt.data;
+        }
+        if (popup && !popup.closed) popup.close();
+    });
+</script>
+<script>
+    const N8N_ORIGIN = "https://molly-premium-frankly.ngrok-free.app"; // 例如 "https://molly-premium-frankly.ngrok-free.app"
+
+    window.addEventListener("message", (ev) => {
+        console.log("message from:", ev.origin, ev.data);
+        if (ev.origin !== N8N_ORIGIN) return;                 // 安全檢查：只接受來自 n8n
+        if (!ev.data || ev.data.type !== "n8n-google-auth") return;
+
+        const { ok, payload } = ev.data;
+        if (!ok) return;
+
+        // 在頁面上顯示登入結果
+        document.getElementById("result").textContent = "已登入：" + payload.user.email;
+
+        // 接下來送 payload 去你的後端 /auth/sso/finalize 交換站內 session
+        // fetch('/auth/sso/finalize', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
+    }, false);
+
+    // 點擊按鈕：開啟 n8n OAuth 起始 URL（Production URL）
+    function openPopup() {
+        // 例： https://your-n8n/webhook/oauth/google/start
+        window.open("https://你的-n8n-網域/webhook/oauth/google/start",
+            "n8nLogin",
+            "width=520,height=640");
+    }
+</script>
+
+
+</body>
+</html>

@@ -140,16 +140,25 @@ document.addEventListener("DOMContentLoaded", function () {
       valid = false;
     }
 
-    // 驗證密碼
+    // 驗證密碼（至少8碼且含英數字）
     const password = document.getElementById("register-password");
     if (!password.value.trim()) {
       password.value = "";
       password.placeholder = "Password is required";
       valid = false;
-    } else if (password.value.length < 6) {
+    } else if (password.value.length < 8) {
       password.value = "";
-      password.placeholder = "At least 6 characters";
+      password.placeholder = "At least 8 characters";
       valid = false;
+    } else {
+      // 檢查是否包含英文字母和數字
+      const hasLetter = /[a-zA-Z]/.test(password.value);
+      const hasNumber = /[0-9]/.test(password.value);
+      if (!hasLetter || !hasNumber) {
+        password.value = "";
+        password.placeholder = "Must contain letters and numbers";
+        valid = false;
+      }
     }
 
     // 如果驗證通過，發送註冊請求
@@ -772,7 +781,29 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function showForgotPasswordModal() {
-    // 創建模態視窗背景
+    // 動態創建 style 標籤來覆蓋全域的 placeholder 樣式
+    const styleElement = document.createElement("style");
+    styleElement.textContent = `
+      #forgot-email::placeholder,
+      #forgot-password::placeholder {
+        color: #666 !important;
+      }
+      #forgot-email::-webkit-input-placeholder,
+      #forgot-password::-webkit-input-placeholder {
+        color: #666 !important;
+      }
+      #forgot-email::-moz-placeholder,
+      #forgot-password::-moz-placeholder {
+        color: #666 !important;
+      }
+      #forgot-email:-ms-input-placeholder,
+      #forgot-password:-ms-input-placeholder {
+        color: #666 !important;
+      }
+    `;
+    document.head.appendChild(styleElement);
+
+    // 創建忘記密碼彈窗
     const modalOverlay = document.createElement("div");
     modalOverlay.id = "forgotPasswordModalOverlay";
     modalOverlay.style.cssText = `
@@ -1008,6 +1039,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 關閉忘記密碼模態視窗
   function closeForgotPasswordModal() {
+    // 移除動態創建的 style 標籤
+    const dynamicStyles = document.querySelectorAll("style");
+    dynamicStyles.forEach((style) => {
+      if (
+        style.textContent.includes("#forgot-email::placeholder") ||
+        style.textContent.includes("#forgot-password::placeholder")
+      ) {
+        style.remove();
+      }
+    });
+
     const modal = document.getElementById("forgotPasswordModalOverlay");
     if (modal) {
       modal.style.animation = "fadeOut 0.3s ease";
@@ -1136,6 +1178,243 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 初始化忘記密碼功能
   setupForgotPasswordModal();
+
+  // ========================================
+  // 忘記驗證Email功能
+  // ========================================
+  function setupForgotVerificationModal() {
+    const forgotVerificationLink = document.getElementById(
+      "forgot-verification-link"
+    );
+    if (forgotVerificationLink) {
+      forgotVerificationLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        showForgotVerificationModal();
+      });
+    }
+  }
+
+  function showForgotVerificationModal() {
+    // 創建模態視窗背景
+    const modalOverlay = document.createElement("div");
+    modalOverlay.id = "verificationModalOverlay";
+    modalOverlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      animation: fadeIn 0.3s ease;
+    `;
+
+    // 創建模態視窗內容
+    const modalContent = document.createElement("div");
+    modalContent.id = "verificationModalContent";
+    modalContent.style.cssText = `
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.3s ease;
+      position: relative;
+    `;
+
+    // 添加關閉按鈕
+    const closeBtn = document.createElement("button");
+    closeBtn.innerHTML = "&times;";
+    closeBtn.style.cssText = `
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background-color 0.2s;
+    `;
+    closeBtn.onmouseover = () => (closeBtn.style.backgroundColor = "#f0f0f0");
+    closeBtn.onmouseout = () =>
+      (closeBtn.style.backgroundColor = "transparent");
+    closeBtn.onclick = () => closeForgotVerificationModal();
+
+    // 創建標題
+    const title = document.createElement("h2");
+    title.textContent = "驗證您的Email";
+    title.style.cssText = `
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: 600;
+    `;
+
+    // 創建訊息
+    const messageDiv = document.createElement("div");
+    messageDiv.textContent = "我們將驗證信寄到您的信箱，若未收到可重新發送";
+    messageDiv.style.cssText = `
+      color: #666;
+      margin-bottom: 25px;
+      font-size: 16px;
+      line-height: 1.5;
+    `;
+
+    // 創建重寄驗證信區塊
+    const resendSection = document.createElement("div");
+    resendSection.style.cssText = `
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      border-radius: 15px;
+      padding: 25px;
+      margin: 20px 0;
+      border: 2px solid #dee2e6;
+    `;
+
+    const resendTitle = document.createElement("h3");
+    resendTitle.textContent = "重寄驗證信功能區塊";
+    resendTitle.style.cssText = `
+      color: #495057;
+      margin-bottom: 15px;
+      font-size: 18px;
+      font-weight: 600;
+    `;
+
+    const resendDescription = document.createElement("p");
+    resendDescription.textContent =
+      "如果您沒有收到驗證信，請輸入您的 email 地址重新發送驗證信。";
+    resendDescription.style.cssText = `
+      color: #6c757d;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.4;
+    `;
+
+    // 創建 email 輸入框
+    const emailInput = document.createElement("input");
+    emailInput.type = "email";
+    emailInput.id = "modalResendEmail";
+    emailInput.placeholder = "請輸入您的 email 地址";
+    emailInput.style.cssText = `
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    `;
+    emailInput.onfocus = () => (emailInput.style.borderColor = "#007bff");
+    emailInput.onblur = () => (emailInput.style.borderColor = "#dee2e6");
+
+    // 創建重寄按鈕
+    const resendButton = document.createElement("button");
+    resendButton.textContent = "重寄驗證信";
+    resendButton.style.cssText = `
+      background: linear-gradient(80deg, #886153d8, #fd1d1dca, #436727d0);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-right: 10px;
+    `;
+    resendButton.onmouseover = () => {
+      resendButton.style.transform = "translateY(-2px)";
+      resendButton.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+    };
+    resendButton.onmouseout = () => {
+      resendButton.style.transform = "translateY(0)";
+      resendButton.style.boxShadow = "none";
+    };
+    resendButton.onclick = () => {
+      const email = emailInput.value.trim();
+      if (!email) {
+        alert("請輸入 email 地址");
+        return;
+      }
+      resendVerificationFromModal(email);
+    };
+
+    // 創建關閉模態視窗按鈕
+    const closeModalBtn = document.createElement("button");
+    closeModalBtn.textContent = "關閉";
+    closeModalBtn.style.cssText = `
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    `;
+    closeModalBtn.onmouseover = () =>
+      (closeModalBtn.style.backgroundColor = "#5a6268");
+    closeModalBtn.onmouseout = () =>
+      (closeModalBtn.style.backgroundColor = "#6c757d");
+    closeModalBtn.onclick = () => closeForgotVerificationModal();
+
+    // 組裝模態視窗
+    resendSection.appendChild(resendTitle);
+    resendSection.appendChild(resendDescription);
+    resendSection.appendChild(emailInput);
+    resendSection.appendChild(resendButton);
+    resendSection.appendChild(closeModalBtn);
+
+    modalContent.appendChild(closeBtn);
+    modalContent.appendChild(title);
+    modalContent.appendChild(messageDiv);
+    modalContent.appendChild(resendSection);
+
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+
+    // 點擊背景關閉模態視窗
+    modalOverlay.onclick = (e) => {
+      if (e.target === modalOverlay) {
+        closeForgotVerificationModal();
+      }
+    };
+
+    // 聚焦到 email 輸入框
+    setTimeout(() => emailInput.focus(), 100);
+  }
+
+  // 關閉忘記驗證Email模態視窗
+  function closeForgotVerificationModal() {
+    const modal = document.getElementById("verificationModalOverlay");
+    if (modal) {
+      modal.style.animation = "fadeOut 0.3s ease";
+      modal.querySelector("#verificationModalContent").style.animation =
+        "slideOut 0.3s ease";
+
+      setTimeout(() => {
+        if (modal.parentNode) {
+          modal.parentNode.removeChild(modal);
+        }
+      }, 300);
+    }
+  }
+
+  // 初始化忘記驗證Email功能
+  setupForgotVerificationModal();
 
   // ========================================
   // Google OAuth2 功能
