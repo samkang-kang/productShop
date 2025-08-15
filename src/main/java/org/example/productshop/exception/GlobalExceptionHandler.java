@@ -83,4 +83,13 @@ public class GlobalExceptionHandler {
                 "message", "購物車是空的"
         ));
     }
+
+    //休市
+    @org.springframework.web.bind.annotation.ExceptionHandler(HolidayClosedException.class)
+    public org.springframework.http.ResponseEntity<?> handleHoliday(HolidayClosedException e) {
+        java.util.Map<String,Object> body = new java.util.HashMap<>();
+        body.put("status", "CLOSED");
+        body.put("message", "休市");
+        return org.springframework.http.ResponseEntity.ok(body);
+    }
 }

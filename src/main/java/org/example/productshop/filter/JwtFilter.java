@@ -36,7 +36,7 @@ public class JwtFilter implements Filter {
             "/img/",
             "/api/cart/add",  // ← 測試用放行購物車新增
             "/api/products/search",  // ← 測試用搜尋商品
-            "/api/products/{productId}/prices", // ← 價格自動更新
+            "/api/products/markets/sync", // ← 價格自動更新
             "/api/cart/remove" // 移除購物車
     );
 
