@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <title>購物車測試</title>
+  </head>
+  <body>
+    <form
+      id="ecpay-form"
+      action="https://ecpay-eee.zeabur.app/ecpay/checkout"
+      method="POST"
+    >
+      <input type="hidden" name="amount" id="amount" />
+      <input type="hidden" name="itemName" id="itemName" />
+      <button type="submit">前往結帳</button>
+    </form>
+
+    <script>
+      // 假設你的購物車長這樣
+      const cart = [
+        { name: "蘋果", price: 100, qty: 1 },
+        { name: "香蕉", price: 150, qty: 2 },
+        { name: "橘子", price: 50, qty: 1 },
+      ];
+
+      // 1) 組成能被綠界換行的字串（用 # 分隔）
+      const lines = cart.map((i) => `${i.name} ${i.price}元X${i.qty}`);
+      // 2) 自行計算總金額（綠界不會替你算）
+      const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+
+      // 3) 填到 hidden 欄位
+      document.getElementById("itemName").value = lines.join("#");
+      document.getElementById("amount").value = String(total);
+    </script>
+  </body>
+</html>
