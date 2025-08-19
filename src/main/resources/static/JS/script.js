@@ -150,7 +150,7 @@ window.onload = function () {
 // === 配置：後端 API（同源最穩） ===
 const onBackend = location.port === "8080";
 const API_BASE = onBackend ? "" : "http://localhost:8080";
-const FIXED_USER_ID = 1;
+const FIXED_USER_ID = 57;
 
 const API_ADD_TO_CART     = `${API_BASE}/api/cart/add`;
 const API_CART_REMOVE     = `${API_BASE}/api/cart/remove`;
