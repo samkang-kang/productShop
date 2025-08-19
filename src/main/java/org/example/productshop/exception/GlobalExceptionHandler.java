@@ -7,6 +7,9 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -28,5 +31,65 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleOtherErrors(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("server error"+e.getMessage());
+    }
+
+    //-----加入購物車------
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntime(RuntimeException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "RUNTIME_ERROR");
+        response.put("message", "執行期間發生錯誤");
+        return ResponseEntity.status(500).body(response);
+    }
+
+    //------搜尋商品------------
+
+    // 查無結果 → 404，照你規格回 JSON
+    @ExceptionHandler(NoResultsException.class)
+    public ResponseEntity<?> handleNoResults(NoResultsException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", "NO_RESULTS", "message", ex.getMessage()));
+    }
+
+    // 參數不合法（空字串、全是空白…）→ 400
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleBadRequest(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", "BAD_REQUEST", "message", ex.getMessage()));
+    }
+    @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<?> handleMethodNotSupported(org.springframework.web.HttpRequestMethodNotSupportedException ex) {
+        return ResponseEntity.status(405).body(Map.of(
+                "error", "METHOD_NOT_ALLOWED",
+                "message", "此路徑不支援 " + ex.getMethod() + "，請改用 GET"
+        ));
+    }
+
+    //刪除購物車商品
+    @ExceptionHandler(org.example.productshop.exception.ItemNotFoundException.class)
+    public ResponseEntity<?> handleCartItemNotFound(Exception e) {
+        return ResponseEntity.status(404).body(Map.of(
+                "error", "ITEM_NOT_FOUND",
+                "message", "購物車中沒有此商品"
+        ));
+    }
+
+    //顯示已加入購物車商品
+    @ExceptionHandler(org.example.productshop.exception.CartEmptyException.class)
+    public ResponseEntity<?> handleCartEmpty(Exception e) {
+        return ResponseEntity.status(404).body(Map.of(
+                "error", "CART_EMPTY",
+                "message", "購物車是空的"
+        ));
+    }
+
+    //休市
+    @org.springframework.web.bind.annotation.ExceptionHandler(HolidayClosedException.class)
+    public org.springframework.http.ResponseEntity<?> handleHoliday(HolidayClosedException e) {
+        java.util.Map<String,Object> body = new java.util.HashMap<>();
+        body.put("status", "CLOSED");
+        body.put("message", "休市");
+        return org.springframework.http.ResponseEntity.ok(body);
     }
 }

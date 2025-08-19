@@ -33,7 +33,12 @@ public class JwtFilter implements Filter {
             "/favicon.ico",
             "/CSS/",
             "/JS/",
-            "/img/"
+            "/img/",
+            "/api/cart/add",  // ← 測試用放行購物車新增
+            "/api/products/search",  // ← 測試用搜尋商品
+            "/api/products/markets/sync", // ← 價格自動更新
+            "/api/cart/remove", // 移除購物車
+            "/api/pricing", "/api/pricing/", "/api/pricing/quote", "/api/pricing/" //顯示市場價格 報價(依數量自動選價)
     );
 
     @Override
