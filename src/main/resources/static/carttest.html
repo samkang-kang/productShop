@@ -31,6 +31,18 @@
       // 3) 填到 hidden 欄位
       document.getElementById("itemName").value = lines.join("#");
       document.getElementById("amount").value = String(total);
+
+
+      //先登入才能結帳  (門神UI)
+      document.getElementById('ecpay-form').addEventListener('submit', function(e) {
+        const token = localStorage.getItem('jwt_token');
+        if (!token) {
+          e.preventDefault();
+          alert('請先登入才能結帳');
+          window.location.href = 'index.html';
+        }
+        // 有token才會真的送出表單
+      });
     </script>
   </body>
 </html>
