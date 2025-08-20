@@ -5,8 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="./CSS/queries.css" />
-  <link rel="stylesheet" href="./CSS/style.css" />
+  <link rel="stylesheet" href="./CSS/queries2.css" />
+  <link rel="stylesheet" href="./CSS/index.css" />
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <title>Prilist | Login & Registration</title>
 </head>
@@ -25,7 +25,7 @@
     <div class="nav-button">
       <button class="btn white-btn" id="loginBtn" onclick="login()">Sign In</button>
       <button class="btn" id="registerBtn" onclick="register()">Sign Up</button>
-      <!-- 新增：登入狀態顯示與登出 -->
+      <!-- 登入狀態顯示與登出 -->
       <span id="auth-welcome" style="margin-left:12px; display:none;"></span>
       <button class="btn" id="logoutBtn" style="display:none; margin-left:8px;">Logout</button>
     </div>
@@ -135,11 +135,7 @@
       </button>
     </div>
 
-    <!-- 新增：受保護 API 測試區 -->
-    <div id="secure-test-box" style="margin-top:16px; display:none;">
-      <button class="btn" id="secure-test-btn">呼叫 /secure/test</button>
-      <span id="secure-test-result" style="margin-left:8px;"></span>
-    </div>
+    <!-- （已移除 secure/test 測試區） -->
 
   </div>
 </div>
@@ -150,7 +146,7 @@
 <!-- ===== JWT 與 API 呼叫工具（已融合登入狀態 UI） ===== -->
 <script>
   (() => {
-    // ---- 基本設定（避免與其他檔案重複宣告）----
+    // ---- 基本設定 ----
     window.API_BASE = window.API_BASE || (
             window.location.hostname === "localhost"
                     ? "http://localhost:8080"
@@ -158,7 +154,7 @@
     );
     const __API_BASE = window.API_BASE;
 
-    // Token 儲存兩個位置：localStorage（永久）與 sessionStorage（當次）
+    // ---- Token 管理(SET GET CLEAR )     ----
     const TOKEN_KEY = "jwt_token";
     const setToken = (token, remember) => {
       localStorage.removeItem(TOKEN_KEY);
@@ -169,7 +165,11 @@
     const getToken = () => sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY);
     const clearToken = () => { localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY); };
 
-    // 解析 JWT（僅為了讀 exp/sub），不做簽章驗證
+
+
+
+
+    // ---- JWT 解析/過期判斷（僅用於 UI）----
     function parseJwt(token) {
       try {
         const base64 = token.split('.')[1];
@@ -177,14 +177,18 @@
         return JSON.parse(decodeURIComponent(escape(json)));
       } catch { return null; }
     }
-    
     function isTokenExpired(token) {
       const p = parseJwt(token);
-      if (!p || !p.exp) return false;
+      if (!p || !p.exp) return false; // 沒 exp 當作未過期（維持你原本的策略）
       return p.exp <= Math.floor(Date.now() / 1000);
     }
 
-    // 帶 Authorization 的 fetch 包裝
+
+
+
+
+
+    // ---- 帶 Authorization 的 fetch 包裝 ---- (fetch組裝)
     async function authFetch(path, options = {}) {
       const url = path.startsWith("http") ? path : __API_BASE + path;
       const headers = new Headers(options.headers || {});
@@ -209,47 +213,79 @@
       return resp;
     }
 
-    // === UI 切換 ===
-    function updateAuthUI() {
-      const token = getToken();
-      const isLoggedIn = token && !isTokenExpired(token);
-
+    // ---- UI：設定歡迎詞 ----
+    function setWelcome(text) {
       const welcome = document.getElementById("auth-welcome");
-      const logoutBtn = document.getElementById("logoutBtn");
-      const loginContainer = document.getElementById("login");
-      const registerContainer = document.getElementById("register");
-      const secureBox = document.getElementById("secure-test-box");
-
-      if (isLoggedIn) {
-        const payload = parseJwt(token);
-        const who = payload?.sub || payload?.email || "(unknown)";
-        if (welcome) { welcome.textContent = `已登入：${who}`; welcome.style.display = "inline-block"; }
-        if (logoutBtn) logoutBtn.style.display = "inline-block";
-        if (loginContainer) loginContainer.style.display = "none";
-        if (registerContainer) registerContainer.style.display = "none";
-        if (secureBox) secureBox.style.display = "block";
-      } else {
-        if (welcome) welcome.style.display = "none";
-        if (logoutBtn) logoutBtn.style.display = "none";
-        if (loginContainer) loginContainer.style.display = "block";
-        if (registerContainer) registerContainer.style.display = "block";
-        if (secureBox) secureBox.style.display = "none";
+      if (welcome) {
+        if (text) {
+          welcome.textContent = text;
+          welcome.style.display = "inline-block";
+        } else {
+          welcome.style.display = "none";
+        }
       }
     }
 
-    // ---- 頁面初始化（載入時驗證 token）----
-    document.addEventListener("DOMContentLoaded", async () => {
-      const existing = getToken();
-      if (existing && !isTokenExpired(existing)) {
-        try {
-          const r = await authFetch("/secure/test");
-          if (!r.ok) clearToken();
-        } catch (e) {
-          console.warn("Warm-up failed:", e);
-        }
-      }
-      updateAuthUI();
 
+
+    // ---- 立即用本地 token 畫 UI（秒出）----
+    function renderFromToken() {
+      const token = getToken();
+      const isLoggedIn = token && !isTokenExpired(token);
+
+      const logoutBtn = document.getElementById("logoutBtn");
+      const loginContainer = document.getElementById("login");
+      const registerContainer = document.getElementById("register");
+
+      if (isLoggedIn) {
+        const p = parseJwt(token);
+        const who = p?.sub || p?.email || "(unknown)";
+        setWelcome(`已登入：${who}（驗證中…）`);
+        if (logoutBtn) logoutBtn.style.display = "inline-block";
+        if (loginContainer) loginContainer.style.display = "none";
+        if (registerContainer) registerContainer.style.display = "none";
+      } else {
+        setWelcome("");
+        if (logoutBtn) logoutBtn.style.display = "none";
+        if (loginContainer) loginContainer.style.display = "block";
+        if (registerContainer) registerContainer.style.display = "block";
+      }
+    }
+
+    // ---- 向伺服器驗票（最終以後端為準）----
+    async function verifyWithServer() {
+      const token = getToken();
+      if (!token || isTokenExpired(token)) return;
+      try {
+        const r = await authFetch("/api/me"); // 後端不要把 /api/me 放白名單
+        if (!r.ok) throw new Error(r.status);
+        const data = await r.json(); // { email: ... }
+        setWelcome(`已登入：${data.email || "(未知)"}`);
+      } catch {
+        clearToken();
+        // 回未登入 UI
+        setWelcome("");
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) logoutBtn.style.display = "none";
+        const loginContainer = document.getElementById("login");
+        const registerContainer = document.getElementById("register");
+        if (loginContainer) loginContainer.style.display = "block";
+        if (registerContainer) registerContainer.style.display = "block";
+      }
+    }
+
+
+
+
+
+    // ---- 頁面初始化 ----
+    document.addEventListener("DOMContentLoaded", async () => {
+      // 1) 先用本地 token 立即渲染
+      renderFromToken();
+      // 2) 再向後端驗票，覆蓋顯示或清票
+      await verifyWithServer();
+
+      // 綁事件
       document.getElementById("login-submit")?.addEventListener("click", onLogin);
       document.getElementById("register-submit")?.addEventListener("click", onRegister);
 
@@ -267,19 +303,7 @@
 
       document.getElementById("logoutBtn")?.addEventListener("click", () => {
         clearToken();
-        updateAuthUI();
-      });
-
-      document.getElementById("secure-test-btn")?.addEventListener("click", async () => {
-        const box = document.getElementById("secure-test-result");
-        box.textContent = "測試中...";
-        try {
-          const r = await authFetch("/secure/test");
-          const text = await r.text();
-          box.textContent = r.ok ? text : `失敗：${r.status} ${text}`;
-        } catch (e) {
-          box.textContent = "請先登入或 Token 已失效";
-        }
+        renderFromToken(); // 立即回未登入 UI
       });
     });
 
@@ -307,7 +331,8 @@
           setToken(data.token, remember);
           resultBox.style.color = "#2e7d32";
           resultBox.textContent = "登入成功！";
-          updateAuthUI();
+          renderFromToken();        // 立即刷新 UI
+          verifyWithServer();       // 背後再校驗一次（不阻塞 UI）
         } else if (data.status === "failOfEmail") {
           resultBox.style.color = "#d32f2f";
           resultBox.textContent = data.message || "尚未註冊";
@@ -324,7 +349,7 @@
       }
     }
 
-    // ---- 註冊流程（如需直接在此頁送出）----
+    // ---- 註冊流程 ----
     async function onRegister(e) {
       e.preventDefault();
       const name = document.getElementById("register-firstname").value.trim();
