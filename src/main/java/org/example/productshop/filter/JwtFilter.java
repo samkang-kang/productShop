@@ -26,7 +26,7 @@ public class JwtFilter implements Filter {
             "/users/password/reset/request",
             "/users/password/reset/confirm",
             "/error",
-            "/",
+//            "/",
             "/index.html",
             "/login.html",
             "/register.html",
