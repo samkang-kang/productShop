@@ -24,6 +24,7 @@ public class LoginController {
     public Map<String, Object> login(@RequestBody Map<String,String> request) {
         String email = request.get("email");
         String password = request.get("password");
+        //產生token
         String token = loginService.login(email, password);
         String isemail = loginService.checkEmail(email);
         HashMap<String, Object> response = new HashMap<>();
@@ -52,9 +53,14 @@ public class LoginController {
     }
 
 
-    @GetMapping("/secure/test")
-    public String testSecure(HttpServletRequest request) {
-        return "Hello, " + request.getAttribute("userEmail");
+//    @GetMapping("/secure/test")
+//    public String testSecure(HttpServletRequest request) {
+//        return "Hello, " + request.getAttribute("userEmail");
+//    }
+
+    @GetMapping("/api/me")
+    public Map<String, Object> me(@RequestAttribute("userEmail") String email) {
+        return Map.of("email", email);
     }
 
 }
