@@ -7,7 +7,7 @@
   <body>
     <form
       id="ecpay-form"
-      action="https://ecpay-eee.zeabur.app/ecpay/checkout"
+      action="https://ericpay4.zeabur.app/ecpay/checkout"
       method="POST"
     >
       <input type="hidden" name="amount" id="amount" />
@@ -34,15 +34,15 @@
 
 
       //先登入才能結帳  (門神UI)
-      document.getElementById('ecpay-form').addEventListener('submit', function(e) {
-        const token = localStorage.getItem('jwt_token');
-        if (!token) {
-          e.preventDefault();
-          alert('請先登入才能結帳');
-          window.location.href = 'index.html';
-        }
-        // 有token才會真的送出表單
-      });
+      // document.getElementById('ecpay-form').addEventListener('submit', function(e) {
+      //   const token = localStorage.getItem('jwt_token');
+      //   if (!token) {
+      //     e.preventDefault();
+      //     alert('請先登入才能結帳');
+      //     window.location.href = 'index_test.html';
+      //   }
+      //   // 有token才會真的送出表單
+      // });
     </script>
   </body>
 </html>
