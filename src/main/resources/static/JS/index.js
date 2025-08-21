@@ -388,6 +388,11 @@ document.addEventListener("DOMContentLoaded", function () {
               // 顯示成功訊息
               showSuccessMessage("登入成功！");
 
+              // 0.5秒後跳轉到 landing.html
+              setTimeout(() => {
+                window.location.href = "landing.html";
+              }, 500);
+
               // 可以在這裡進行頁面跳轉或其他操作
               console.log("Token 已保存:", data.token);
             } else {
