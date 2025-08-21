@@ -2428,3 +2428,27 @@ footer a:hover {
     width: 260px;
   }
 }
+
+/* ===== 輪播圖白色透明遮罩 ===== */
+.slideshow {
+  position: relative;
+}
+
+.slideshow::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(160, 155, 85, 0.3);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.slideshow .slides,
+.slideshow .slide__item,
+.slideshow .slide__item img {
+  position: relative;
+  z-index: 0;
+}
