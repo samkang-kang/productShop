@@ -29,8 +29,8 @@
       const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
 
       // 3) 填到 hidden 欄位
-      document.getElementById("itemName").value = lines.join("#");
-      document.getElementById("amount").value = String(total);
+      document.getElementById("itemName").value = lines.join("#");//後端傳出購物車資訊內容
+      document.getElementById("amount").value = String(total);//後端傳出金額
 
 
       //先登入才能結帳  (門神UI)
