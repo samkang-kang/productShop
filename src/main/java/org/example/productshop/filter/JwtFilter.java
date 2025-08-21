@@ -45,7 +45,9 @@ public class JwtFilter implements Filter {
             "/api/cart/remove",
             "/api/products/",
             "/api/products/*/market-tiers",// 移除購物車
-
+            "/index.html", //測試用   
+            "/landing.html",//測試用
+            "/cart.html", //測試用
             // 其他
             "/error"
     );

@@ -1,0 +1,65 @@
+/* ===== 全頁載入器樣式 ===== */
+.page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.page-loader.show {
+  display: flex;
+  opacity: 1;
+}
+
+.loader-content {
+  text-align: center;
+}
+
+.loading-animation {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.loading-bar {
+  width: 8px;
+  height: 40px;
+  background-color: #222;
+  border-radius: 4px;
+  animation: loading-bounce 1.4s ease-in-out infinite both;
+}
+
+.loading-bar.bar1 {
+  animation-delay: -0.32s;
+}
+
+.loading-bar.bar2 {
+  animation-delay: -0.16s;
+}
+
+@keyframes loading-bounce {
+  0%,
+  80%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  40% {
+    transform: scaleY(1);
+  }
+}
+
+.loading-text {
+  font-size: 14px;
+  color: #222;
+  font-weight: 500;
+}

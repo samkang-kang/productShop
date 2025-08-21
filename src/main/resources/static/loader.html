@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>載入器範例</title>
+    <style>
+      /* 基本頁面樣式 */
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+      }
+
+      .demo-content {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .demo-buttons {
+        display: flex;
+        gap: 15px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+      }
+
+      .demo-btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+      }
+
+      .btn-primary {
+        background-color: #007bff;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: #0056b3;
+      }
+
+      .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background-color: #545b62;
+      }
+
+      /* ===== 全頁載入器樣式 ===== */
+      .page-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      .page-loader.show {
+        display: flex;
+        opacity: 1;
+      }
+
+      .loader-content {
+        text-align: center;
+      }
+
+      .loading-animation {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .loading-bar {
+        width: 8px;
+        height: 40px;
+        background-color: #222;
+        border-radius: 4px;
+        animation: loading-bounce 1.4s ease-in-out infinite both;
+      }
+
+      .loading-bar.bar1 {
+        animation-delay: -0.32s;
+      }
+
+      .loading-bar.bar2 {
+        animation-delay: -0.16s;
+      }
+
+      @keyframes loading-bounce {
+        0%,
+        80%,
+        100% {
+          transform: scaleY(0.4);
+        }
+        40% {
+          transform: scaleY(1);
+        }
+      }
+
+      .loading-text {
+        font-size: 14px;
+        color: #222;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-content">
+      <h1>全頁載入器範例</h1>
+      <p>點擊下方按鈕來測試載入器的顯示和隱藏功能：</p>
+
+      <div class="demo-buttons">
+        <button class="demo-btn btn-primary" onclick="Loader.show()">
+          顯示載入器
+        </button>
+        <button class="demo-btn btn-secondary" onclick="Loader.hide()">
+          隱藏載入器
+        </button>
+      </div>
+
+      <h3>功能說明：</h3>
+      <ul>
+        <li>
+          <strong>顯示載入器</strong
+          >：顯示載入器，帶有0.5秒淡入效果，並在0.5秒後自動隱藏
+        </li>
+        <li><strong>隱藏載入器</strong>：手動隱藏載入器並恢復頁面捲動</li>
+      </ul>
+
+      <h3>技術特點：</h3>
+      <ul>
+        <li>全頁透明白底遮罩</li>
+        <li>兩條柱狀上下跳動動畫</li>
+        <li>0.5秒淡入淡出過場效果</li>
+        <li>鎖住背景捲動（body overflow: hidden）</li>
+        <li>純原生 HTML/CSS/JS 實作</li>
+        <li>高 z-index 確保在最上層</li>
+      </ul>
+    </div>
+
+    <!-- 全頁載入器 -->
+    <div id="page-loader" class="page-loader">
+      <div class="loader-content">
+        <div class="loading-animation">
+          <div class="loading-bar bar1"></div>
+          <div class="loading-bar bar2"></div>
+        </div>
+        <div class="loading-text">資料讀取中…</div>
+      </div>
+    </div>
+
+    <script>
+      // 全頁載入器控制物件
+      const Loader = {
+        // 顯示載入器
+        show: function () {
+          const loader = document.getElementById("page-loader");
+
+          // 顯示載入器
+          loader.classList.add("show");
+
+          // 鎖住背景捲動
+          document.body.style.overflow = "hidden";
+
+          // 0.5秒後自動隱藏
+          setTimeout(() => {
+            this.hide();
+          }, 500);
+        },
+
+        // 隱藏載入器
+        hide: function () {
+          const loader = document.getElementById("page-loader");
+
+          // 隱藏載入器
+          loader.classList.remove("show");
+
+          // 恢復背景捲動
+          document.body.style.overflow = "";
+        },
+      };
+    </script>
+  </body>
+</html>

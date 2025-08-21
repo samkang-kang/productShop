@@ -2452,3 +2452,9 @@ footer a:hover {
   position: relative;
   z-index: 0;
 }
+
+/* ===== JWT 登入狀態樣式覆寫 ===== */
+/* 未登入狀態下取消 dropdown-header 的 padding */
+.dropdown-header.no-padding {
+  padding: 0;
+}
