@@ -48,6 +48,9 @@ public class JwtFilter implements Filter {
             "/index.html", //測試用   
             "/landing.html",//測試用
             "/cart.html", //測試用
+            "/mango_1.html",
+            "/peach_1.html",
+            "/litchi_1.html",
             // 其他
             "/error"
     );
