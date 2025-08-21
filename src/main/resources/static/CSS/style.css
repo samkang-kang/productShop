@@ -31,7 +31,6 @@ h2 {
   padding-left: 455px;
 }
 
-
 h4 {
   font-size: 20px;
   color: #222;
@@ -41,8 +40,6 @@ h6 {
   font-weight: 700;
   font-size: 12px;
 }
-
-
 
 /* ===== 段落樣式 ===== */
 p {
@@ -95,11 +92,8 @@ body {
 
 /* ===== 頁首導航列 ===== */
 #header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 45px 80px;
-  background: #83b1cb8f;
+  padding: 15px 80px;
+  background: #c943448f;
   position: sticky;
   top: 0;
   left: 0;
@@ -107,45 +101,77 @@ body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
 }
 
-#navbar {
+.header-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  width: 103%;
 }
 
-#navbar li {
-  list-style: none;
-  padding: 0 20px;
+/* 左側：Logo + 導航連結 */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+#logo-link {
+  display: flex;
+  align-items: center;
+}
+
+#fixed-logo {
+  height: 80px;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  color: #ffffff;
+  transition: 0.3s ease;
   position: relative;
 }
 
-#navbar li a {
-  text-decoration: none;
-  font-size: 20px;
-  font-weight: 600;
-  color: #1a1a1a;
-  transition: 0.3s ease;
+.nav-links a:hover,
+.nav-links a.active {
+  color: #243320;
 }
 
-#navbar li a:hover,
-#navbar li a.active {
-  color: #088178;
-}
-
-#navbar li a.active::after,
-#navbar li a:hover::after {
+.nav-links a.active::after,
+.nav-links a:hover::after {
   content: "";
   width: 30%;
   height: 2px;
-  background: #088178;
+  background: #243320;
   position: absolute;
   bottom: -4px;
-  left: 20px;
+  left: 0;
 }
 
-#navbar li a i {
-  font-weight: 500;
+/* 右側：購物車和人像圖標 */
+.right {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.nav-icon {
+  text-decoration: none;
+  color: #ffffff;
   font-size: 20px;
+  transition: 0.3s ease;
+}
+
+.nav-icon:hover {
+  color: #243320;
 }
 
 #mobile {
@@ -273,7 +299,7 @@ body {
   min-width: 200px;
   padding: 10px 12px;
   border: 1px solid #cce7d0;
-  /* border-radius: 25px; */
+  border-radius: 20px;
   transition: 0.2s;
   position: relative;
   cursor: pointer;
@@ -287,7 +313,7 @@ body {
 
 #product1 .pro img {
   width: 100%;
-  /* border-radius: 20px; */
+  border-radius: 20px;
 }
 
 #product1 .pro .des {
@@ -301,7 +327,7 @@ body {
 }
 
 /* ===== 商品標籤樣式 ===== */
-#product1 .pro .des .product-tag  {
+#product1 .pro .des .product-tag {
   display: inline-block;
   padding: 4px 8px;
   border: 2px solid #d0d0d0;
@@ -313,8 +339,6 @@ body {
   text-align: center;
   margin-bottom: 8px;
 }
-
-
 
 .product-tag.red {
   border-color: #e74c3c;
@@ -340,15 +364,15 @@ body {
 
 #product1 .pro .des h4 {
   padding-top: 7px;
-  font-size: 30px;
+  font-size: 18px;
   font-weight: 700;
   color: #088178;
 }
 
 #product1 .pro .cart {
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
   border-radius: 50px;
   background-color: #e8f6ea;
   font-weight: 500;
@@ -357,8 +381,8 @@ body {
   transition: 0.2s;
   position: absolute;
   bottom: 20px;
-  right: 10px;
-  font-size: xx-large;
+  right: 12px;
+  font-size: x-large;
 }
 
 #product1 .pro .cart:hover {
@@ -401,7 +425,7 @@ body {
 }
 
 #product1 .sidebar-title {
-  font-size: 35px;
+  font-size: 25px;
   font-weight: 700;
   color: #333;
   margin-bottom: 15px;
@@ -428,7 +452,7 @@ body {
   justify-content: space-between;
   color: #666;
   text-decoration: none;
-  font-size: 25px;
+  font-size: 18px;
   padding: 8px 0;
   transition: all 0.3s ease;
 }
@@ -478,9 +502,6 @@ body {
   justify-content: center;
   text-align: center;
 }
-
-
-
 
 #banner h4 {
   color: #1d1313;
@@ -1250,38 +1271,42 @@ footer a:hover {
   .section-p1 {
     padding: 40px;
   }
-  #navbar {
-    display: flex;
+
+  .header-container {
     flex-direction: column;
-    justify-content: flex-start;
     align-items: flex-start;
-    position: fixed;
-    top: 0px;
-    right: -300px;
-    width: 300px;
-    height: 100vh;
-    background: #e3e6f3;
-    box-shadow: 0 40px 60px rgba(0, 0, 0, 0.1);
-    transition: 0.3s;
-    padding: 80px 0 0 10px;
+    gap: 20px;
   }
-  #navbar li {
-    margin-bottom: 25px;
+
+  .left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
   }
-  #navbar.active {
-    right: 0;
+
+  .nav-links {
+    flex-direction: column;
+    gap: 15px;
   }
+
+  .right {
+    display: none;
+  }
+
   #mobile {
     display: flex;
   }
+
   #mobile i {
     color: #1a1a1a;
     font-size: 24px;
     padding-left: 20px;
   }
+
   #bar {
     display: initial;
   }
+
   #close {
     display: initial;
     font-size: 24px;
@@ -1289,10 +1314,6 @@ footer a:hover {
     top: 30px;
     left: 30px;
     color: #222;
-  }
-  #lg-bag,
-  #lg-search {
-    display: none;
   }
   #hero {
     padding: 0 80px;
@@ -1535,15 +1556,7 @@ footer a:hover {
 
 /* ---------------------------------- */
 
-#fixed-logo {
-  position: fixed;
-  top: 10px;
-  left: 2%;
-  height: 100px;
-  z-index: 1000;
-  cursor: pointer;
-}
-
+/* 舊的 fixed-logo 樣式已移除，新的樣式在 #header 區塊中 */
 
 .bottom-bar {
   position: fixed;
@@ -1559,7 +1572,6 @@ footer a:hover {
   z-index: 999;
   font-size: 18px;
 }
-
 
 .bottom-bar button {
   background-color: #697969;
@@ -1591,7 +1603,6 @@ footer a:hover {
   padding: 0;
 }
 
-
 .page-header {
   width: 100%;
   height: 50px;
@@ -1600,14 +1611,11 @@ footer a:hover {
   transition: 1.5s;
 }
 
-
-
 .slide__item {
   min-width: 100%;
   position: relative;
   overflow: hidden;
 }
-
 
 .slide__pagenumber {
   padding: 10px;
@@ -1668,8 +1676,9 @@ footer a:hover {
   cursor: pointer;
 }
 
-.fades { animation: none; }
-
+.fades {
+  animation: none;
+}
 
 @keyframes fades {
   from {
@@ -1679,7 +1688,6 @@ footer a:hover {
     opacity: 1;
   }
 }
-
 
 #page-header {
   padding: 0;
@@ -1695,24 +1703,28 @@ footer a:hover {
   width: 100%;
   height: auto;
   display: block;
-  -webkit-transform: translateZ(0);   /* 避免某些裝置位圖抖動/閃一下 */
+  -webkit-transform: translateZ(0); /* 避免某些裝置位圖抖動/閃一下 */
   transform: translateZ(0);
 }
 
 .slides {
   display: flex;
   transition: transform 0.6s ease;
-  will-change: transform;             /* 提示瀏覽器做動畫最佳化，減少閃爍 */
-  backface-visibility: hidden;        /* 再加一層保險 */
+  will-change: transform; /* 提示瀏覽器做動畫最佳化，減少閃爍 */
+  backface-visibility: hidden; /* 再加一層保險 */
 }
 
 /* -------------------------------------- */
 
 /* 表格儲存格垂直置中，讓「操作」的按鈕不會漂 */
-#cart table td { vertical-align: middle; }
+#cart table td {
+  vertical-align: middle;
+}
 
 /* 置中文字：空狀態用 */
-#empty-row { text-align: center !important; }
+#empty-row {
+  text-align: center !important;
+}
 
 /* 數量控制 */
 .qty {
@@ -1732,7 +1744,9 @@ footer a:hover {
   padding: 0;
   border-radius: 4px;
 }
-.qty-btn:hover { background: #e8f0f3; }
+.qty-btn:hover {
+  background: #e8f0f3;
+}
 .qty-input {
   width: 40px;
   height: 28px;
@@ -1745,12 +1759,13 @@ footer a:hover {
 }
 
 /* 共同置中輔助 */
-.cell-center { text-align: center; }
-
+.cell-center {
+  text-align: center;
+}
 
 .center-target h2,
 .center-target p {
-  padding-left: 0 !important;  /* 蓋掉 #product1 h2/p 既有的左側 padding */
+  padding-left: 0 !important; /* 蓋掉 #product1 h2/p 既有的左側 padding */
   text-align: center;
   margin-left: auto;
   margin-right: auto;
@@ -1759,46 +1774,49 @@ footer a:hover {
 /* ----------------------------------下方格子---------------- */
 #sm-banner {
   display: flex;
-  gap: 20px;               /* 兩塊之間間距 */
+  gap: 20px; /* 兩塊之間間距 */
   align-items: stretch;
-  flex-wrap: nowrap;       /* 禁止換行 */
+  flex-wrap: nowrap; /* 禁止換行 */
 }
 
-#sm-banner .banner-box {   /* 當季優惠 */
-  flex: 0 0 60%;           /* 佔 70% */
-  min-width: 0;            /* 避免撐破 */
+#sm-banner .banner-box {
+  /* 當季優惠 */
+  flex: 0 0 60%; /* 佔 70% */
+  min-width: 0; /* 避免撐破 */
 }
 
-#sm-banner .banner-box2 {  /* 夏日嚴選 */
-  flex: 0 0 35%;           /* 佔 30% */
+#sm-banner .banner-box2 {
+  /* 夏日嚴選 */
+  flex: 0 0 35%; /* 佔 30% */
   min-width: 0;
 }
 
 /* ------------------------------- */
 
-
 /* 響應式：平板 2 張、手機 1 張（可選） */
 @media (max-width: 799px) {
-  .three-cols .pro-container { grid-template-columns: repeat(2, 1fr); }
+  .three-cols .pro-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 @media (max-width: 477px) {
-  .three-cols .pro-container { grid-template-columns: 1fr; }
+  .three-cols .pro-container {
+    grid-template-columns: 1fr;
+  }
 }
-
-
 
 /* 1) 讓 .qty 只用 gap 控距離（左右一致） */
 .qty {
   display: inline-flex;
   align-items: center;
-  gap: 8px;            /* 想要多一點或少一點就改這裡 */
+  gap: 8px; /* 想要多一點或少一點就改這裡 */
 }
 
 /* 2) 清掉單品頁 input 的右邊距，避免不對稱 */
 #prodetails .single-pro-details .qty .qty-input {
   margin: 0 !important;
-  padding: 0;          /* 也順手清掉內距，讓視覺更齊 */
-  width: 48px;         /* 你喜歡的寬度 */
+  padding: 0; /* 也順手清掉內距，讓視覺更齊 */
+  width: 48px; /* 你喜歡的寬度 */
   height: 32px;
   text-align: center;
 }
@@ -1821,15 +1839,10 @@ footer a:hover {
 
 /* <!-- ===== 限量商品區塊 ===== --> */
 
-
-
-
-
 /* 標籤顏色 */
 .product-tag:hover {
   transform: scale(1.05);
 }
-
 
 .product-tag.red {
   background-color: #e53935 !important;
@@ -1939,23 +1952,17 @@ footer a:hover {
   background-color: #d4e157 !important;
 }
 
-
 /* 標籤顏色 */
 
-
 #product1 .pro .des .product-tag {
-  font-size: 16px;         /* 想更大就 18px */
-  line-height: 1.2;
-  padding: 6px 12px;
+  font-size: 12px; /* 想更大就 18px */
+  line-height: 1.5;
+  padding: 2px 12px;
   border-radius: 8px;
-  white-space: normal;     /* 重要：讓中文可換行 */
-  margin-right: 6px;       /* tag 之間留間距 */
-  margin-bottom: 6px;
+  white-space: normal; /* 重要：讓中文可換行 */
+  margin-right: 3px; /* tag 之間留間距 */
+  margin-bottom: 15px;
 }
-
-
-
-
 
 /* -------------------------測試 */
 
@@ -1970,7 +1977,7 @@ footer a:hover {
 
 /* 所有卡片文字大小 */
 #product1 .pro.featured .des .product-name {
-  font-size: 30px;   /* 原本是 14px */
+  font-size: 18px; /* 原本是 14px */
   font-weight: 700;
 }
 
@@ -1996,16 +2003,16 @@ footer a:hover {
 #sm-banner .banner-box {
   position: relative;
   overflow: hidden;
-  background-image: none;            /* 覆蓋掉舊的背景圖設定 */
+  background-image: none; /* 覆蓋掉舊的背景圖設定 */
 }
 
 /* 圖片鋪滿整個 banner-box，跟容器一樣大 */
 #sm-banner .banner-box > img {
   position: absolute;
-  inset: 0;                          /* top/right/bottom/left: 0 */
+  inset: 0; /* top/right/bottom/left: 0 */
   width: 100%;
   height: 100%;
-  object-fit: cover;                  /* 保持比例裁切鋪滿 */
+  object-fit: cover; /* 保持比例裁切鋪滿 */
   z-index: 0;
   display: block;
 }
@@ -2016,10 +2023,10 @@ footer a:hover {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-          to top,
-          rgba(0,0,0,.45),
-          rgba(0,0,0,.1) 60%,
-          rgba(0,0,0,0)
+    to top,
+    rgba(0, 0, 0, 0.45),
+    rgba(0, 0, 0, 0.1) 60%,
+    rgba(0, 0, 0, 0)
   );
   z-index: 1;
   pointer-events: none;
@@ -2034,21 +2041,20 @@ footer a:hover {
   z-index: 2;
 }
 
-
 /* --- 讓 #banner3 的三張卡片：圖片在下、文字在上 --- */
 #banner3 .banner-box {
   position: relative;
   overflow: hidden;
-  background-image: none !important;  /* 覆蓋原本的背景圖設定 */
+  background-image: none !important; /* 覆蓋原本的背景圖設定 */
 }
 
 /* 圖片鋪滿整個卡片（跟容器一樣大） */
 #banner3 .banner-box > img {
   position: absolute;
-  inset: 0;             /* top/right/bottom/left: 0 */
+  inset: 0; /* top/right/bottom/left: 0 */
   width: 100%;
   height: 100%;
-  object-fit: cover;     /* 保持比例、超出會裁切 */
+  object-fit: cover; /* 保持比例、超出會裁切 */
   z-index: 0;
   display: block;
 }
@@ -2059,10 +2065,10 @@ footer a:hover {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-          to top,
-          rgba(0,0,0,.35),
-          rgba(0,0,0,.1) 60%,
-          rgba(0,0,0,0)
+    to top,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0.1) 60%,
+    rgba(0, 0, 0, 0)
   );
   z-index: 1;
   pointer-events: none;
@@ -2076,46 +2082,51 @@ footer a:hover {
 }
 
 /*（可選）統一按鈕/文字顏色與排版 */
-#banner3 h2 { color: #fff; }
-#banner3 h3 { color: #ffd4cf; }
-
+#banner3 h2 {
+  color: #fff;
+}
+#banner3 h3 {
+  color: #ffd4cf;
+}
 
 /* === 推薦指數：純文字＋星星、單行不換、不浮起 === */
-.rating-tag{
-  display: inline-flex;      /* 讓文字與星星在同一行 */
+.rating-tag {
+  display: inline-flex; /* 讓文字與星星在同一行 */
   align-items: center;
-  gap: 2px;                  /* 文字與星星距離 */
-  white-space: nowrap;       /* 禁止換行 */
+  gap: 2px; /* 文字與星星距離 */
+  white-space: nowrap; /* 禁止換行 */
   line-height: 1;
-  border: none;              /* 確保沒有膠囊邊框 */
-  background: transparent;   /* 也不要有底色 */
-  box-shadow: none;          /* 不要浮起陰影 */
+  border: none; /* 確保沒有膠囊邊框 */
+  background: transparent; /* 也不要有底色 */
+  box-shadow: none; /* 不要浮起陰影 */
   padding: 0;
   margin: 0;
   cursor: default;
 }
-.rating-tag:hover{
+.rating-tag:hover {
   background: transparent;
   box-shadow: none;
   border: none;
 }
-.rating-tag .rating-label{   /* 「推薦指數：」與第一顆星之間留點距離 */
+.rating-tag .rating-label {
+  /* 「推薦指數：」與第一顆星之間留點距離 */
   margin-right: 4px;
 }
-.rating-tag i{               /* 防止星星被壓縮換行 */
+.rating-tag i {
+  /* 防止星星被壓縮換行 */
   flex: 0 0 auto;
 }
 
 /* 手機微調，避免擠爆換行 */
-@media (max-width: 477px){
+@media (max-width: 477px) {
   .rating-tag,
-  .rating-tag i{
+  .rating-tag i {
     font-size: 11px;
   }
 }
 
 /* === 備援：若某處仍保留 product-tag rating-tag，強制把膠囊效果拔掉 === */
-#product1 .pro .des .product-tag.rating-tag{
+#product1 .pro .des .product-tag.rating-tag {
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
@@ -2128,7 +2139,7 @@ footer a:hover {
   line-height: 1;
   cursor: default;
 }
-#product1 .pro .des .product-tag.rating-tag:hover{
+#product1 .pro .des .product-tag.rating-tag:hover {
   background: transparent !important;
   box-shadow: none !important;
   border: none !important;
@@ -2136,7 +2147,7 @@ footer a:hover {
 
 .product-tag {
   position: relative;
-  color: #333;   /* 確保文字不被淡化 */
+  color: #333; /* 確保文字不被淡化 */
   z-index: 1;
 }
 
@@ -2144,30 +2155,34 @@ footer a:hover {
   content: "";
   position: absolute;
   inset: 0; /* 上右下左全覆蓋 */
-  background: rgba(255,255,255,0.4); /* 白色半透明遮罩，可改成黑色 rgba(0,0,0,0.2) */
+  background: rgba(
+    255,
+    255,
+    255,
+    0.4
+  ); /* 白色半透明遮罩，可改成黑色 rgba(0,0,0,0.2) */
   z-index: -1;
   border-radius: inherit;
 }
-
 
 /* 限量區塊（在 .banner-container 裡的那組 #product1）—改成緊湊網格 */
 .banner-container section#product1 .pro-container {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr)); /* 一排三格 */
-  gap: 10px;                /* 卡片間距（可調 8~12px） */
-  justify-items: center;    /* 內容置中 */
+  gap: 10px; /* 卡片間距（可調 8~12px） */
+  justify-items: center; /* 內容置中 */
 }
 
 /* 讓卡片撐滿格子，移除預設 margin/寬度，縮小圖片與下緣距離 */
 .banner-container section#product1 .pro {
   width: 100%;
-  margin: 10px;                /* 覆蓋原本 #product1 .pro 的 margin:15px 0 */
+  margin: 10px; /* 覆蓋原本 #product1 .pro 的 margin:15px 0 */
 }
 
 .banner-container section#product1 .pro img {
-  width: 100%;               /* 圖片 100% -> 90% */
+  width: 100%; /* 圖片 100% -> 90% */
   display: block;
-  margin: 0 auto 6px;       /* 與文字更靠近 */
+  margin: 0 auto 6px; /* 與文字更靠近 */
 }
 
 /* RWD：平板兩欄、手機一欄 */
@@ -2184,25 +2199,24 @@ footer a:hover {
 
 /* === 限量區塊的商品格子整體縮小 === */
 .banner-container section#product1 .pro {
-  transform: scale(0.95);   /* 將整個卡片縮小到 90% */
+  transform: scale(0.95); /* 將整個卡片縮小到 90% */
   transform-origin: center; /* 從中間縮放 */
-  margin: 0 auto;          /* 保持居中 */
+  margin: 0 auto; /* 保持居中 */
 }
 
 /* 縮小後調整格子間距避免過擠 */
 .banner-container section#product1 .pro-container {
-  gap: 0px;   /* 卡片間距略放大一點，讓縮小後不至於太空 */
+  gap: 0px; /* 卡片間距略放大一點，讓縮小後不至於太空 */
 }
-
 
 /* === 僅 test.html 的果物標題置中 === */
 .fruit-title {
-  text-align: center;   /* 水平置中 */
+  text-align: center; /* 水平置中 */
 }
 
 .fruit-title h2,
 .fruit-title p {
-  margin: 0.5rem 0;     /* 上下間距一致 */
+  margin: 0.5rem 0; /* 上下間距一致 */
 }
 
 /* === test.html 專屬：放大 product-tag / 推薦指數 / 商品名稱 === */
@@ -2226,12 +2240,17 @@ footer a:hover {
 
 /* 手機微調，避免擠爆 */
 @media (max-width: 477px) {
-  #test-products .product-tag { font-size: 1.05rem; }
+  #test-products .product-tag {
+    font-size: 1.05rem;
+  }
   #test-products .rating-tag .rating-label,
-  #test-products .rating-tag i { font-size: 1.1rem; }
-  #test-products .product-name { font-size: 1.2rem; }
+  #test-products .rating-tag i {
+    font-size: 1.1rem;
+  }
+  #test-products .product-name {
+    font-size: 1.2rem;
+  }
 }
-
 
 /* 名稱 + 價格 一列排版（基礎） */
 #product1 .pro .des .title-row {
@@ -2241,7 +2260,7 @@ footer a:hover {
 }
 
 #product1 .pro .des .title-row .product-name {
-  flex: 1;           /* 自動吃掉剩餘寬度 */
+  flex: 1; /* 自動吃掉剩餘寬度 */
   min-width: 0;
 }
 
@@ -2253,20 +2272,159 @@ footer a:hover {
 
 /* 控制價格靠哪邊 —— 在 title-row 上加 class 即可 */
 #product1 .pro .des .title-row.price-right .price {
-  margin-left: auto;              /* 名稱在左，價格在右 */
+  margin-left: auto; /* 名稱在左，價格在右 */
 }
 
 #product1 .pro .des .title-row.price-left .price {
-  margin-right: auto;             /* 價格在左，名稱在右 */
-  order: -1;                      /* 把價格擺到最前面 */
+  margin-right: auto; /* 價格在左，名稱在右 */
+  order: -1; /* 把價格擺到最前面 */
 }
 
 #product1 .pro .des .title-row.price-center {
-  justify-content: center;        /* 價格置中（名稱會跟著排，視需求可隱藏名稱） */
+  justify-content: center; /* 價格置中（名稱會跟著排，視需求可隱藏名稱） */
 }
 
 /* 可選：微調單卡的水平位移（每張卡片都能自訂） */
-#product1 .pro { --price-nudge: -100px; }
+#product1 .pro {
+  --price-nudge: -100px;
+}
 #product1 .pro .des .title-row .price {
   transform: translateX(var(--price-nudge));
+}
+
+/* ===== 帳戶選單樣式 ===== */
+.account-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.account-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 3px;
+  width: 320px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  /* margin-top: -20px; */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+.account-dropdown.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-header {
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  background: #f8f9fa;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-size: 24px;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.user-email {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.dropdown-menu {
+  padding: 8px 0;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.menu-item:hover,
+.menu-item:focus {
+  background-color: #f8f9fa;
+  outline: none;
+}
+
+.menu-item i {
+  width: 20px;
+  text-align: center;
+  color: #6c757d;
+}
+
+.menu-item span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.menu-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 8px 0;
+}
+
+.menu-item.logout {
+  color: #dc3545;
+}
+
+.menu-item.logout i {
+  color: #dc3545;
+}
+
+.menu-item.logout:hover {
+  background-color: #fff5f5;
+}
+
+/* 響應式設計 */
+@media (max-width: 799px) {
+  .account-dropdown {
+    right: 20px;
+    width: 280px;
+  }
+}
+
+@media (max-width: 477px) {
+  .account-dropdown {
+    right: 10px;
+    width: 260px;
+  }
 }

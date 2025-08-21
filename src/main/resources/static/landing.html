@@ -17,40 +17,75 @@
 
 <body>
 <section id="header">
-  <a href="#" id="logo-link">
-    <img src="img/Logo2.png" alt="SwanGo Logo" id="fixed-logo" />
-  </a>
-  <div class="nav-wrapper">
-    <ul id="navbar">
-      <li><a href="landing.html">Home</a></li>
-      <li><a class="active" href="shop.html">Shop</a></li>
-      <li><a href="blog.html">Blog</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="contact.html">Contact</a></li>
-
-      <!-- 購物車 -->
-      <li id="lg-bag">
-        <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
-      </li>
-
-      <!-- 登入 -->
-      <li id="lg-login">
-        <a href="index.html"><i class="fas fa-user"></i></a>
-      </li>
-
-      <!-- 關閉按鈕（手機版用） -->
-      <li>
-        <a href="#" id="close"><i class="fas fa-times"></i></a>
-      </li>
-    </ul>
-
-    <!-- 手機版 -->
-    <div id="mobile">
-      <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
-      <a href="login.html"><i class="fas fa-user"></i></a>
-      <i id="bar" class="fas fa-outdent"></i>
+  <div class="header-container">
+    <!-- 左側：Logo + 導航連結 -->
+    <div class="left">
+      <a href="#" id="logo-link">
+        <img src="img/logo-1.png" alt="SwanGo Logo" id="fixed-logo" />
+      </a>
+      <nav class="nav-links">
+        <a href="landing.html">Home</a>
+        <a href="shop.html" class="active">Shop</a>
+        <a href="about.html">About</a>
+      </nav>
     </div>
-  </div></section>
+
+    <!-- 右側：購物車和人像圖標 -->
+    <div class="right">
+      <a href="#" class="nav-icon"><i class="fas fa-search"></i></a>
+      <a href="cart.html" class="nav-icon"><i class="far fa-shopping-bag"></i></a>
+      <button class="nav-icon account-btn" aria-haspopup="menu" aria-expanded="false">
+        <i class="fas fa-user"></i>
+      </button>
+    </div>
+
+    <!-- 帳戶選單 -->
+    <div class="account-dropdown" role="menu" hidden>
+      <div class="dropdown-header">
+        <div class="user-info">
+          <div class="user-avatar">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div class="user-details">
+            <div class="user-name">使用者名稱</div>
+            <div class="user-email">user@example.com</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="dropdown-menu">
+        <a href="#" class="menu-item" role="menuitem" tabindex="0">
+          <i class="fas fa-shopping-bag"></i>
+          <span>所有訂單</span>
+        </a>
+        <a href="#" class="menu-item" role="menuitem" tabindex="0">
+          <i class="fas fa-heart"></i>
+          <span>訂閱商品</span>
+        </a>
+        <a href="#" class="menu-item" role="menuitem" tabindex="0">
+          <i class="fas fa-cog"></i>
+          <span>帳戶設定</span>
+        </a>
+        <a href="#" class="menu-item" role="menuitem" tabindex="0">
+          <i class="fas fa-key"></i>
+          <span>修改密碼</span>
+        </a>
+        <div class="menu-divider"></div>
+        <a href="#" class="menu-item logout" role="menuitem" tabindex="0">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>登出</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手機版 -->
+  <div id="mobile">
+    <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
+    <a href="login.html"><i class="fas fa-user"></i></a>
+    <i id="bar" class="fas fa-outdent"></i>
+  </div>
+</section>
 
 <!-- ===== 主要橫幅區塊 ===== -->
 <!-- <section id="hero">
@@ -748,6 +783,7 @@
   </footer>
 
     <script src="./JS/script.js"></script>
+    <script src="./JS/account-dropdown.js"></script>
 </body>
 
 </html>
