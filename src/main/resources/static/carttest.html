@@ -16,6 +16,9 @@
     </form>
 
     <script>
+      window.onload = function() {
+        console.log("頁面 onload 完成");
+      };
       // 假設你的購物車長這樣
       const cart = [
         { name: "蘋果", price: 100, qty: 1 },
@@ -31,6 +34,8 @@
       // 3) 填到 hidden 欄位
       document.getElementById("itemName").value = lines.join("#");//後端傳出購物車資訊內容
       document.getElementById("amount").value = String(total);//後端傳出金額
+
+
 
 
       //先登入才能結帳  (門神UI)

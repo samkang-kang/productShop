@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 @Component
 public class CartPayDao {
-
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -16,16 +15,15 @@ public class CartPayDao {
         String sql = """
             SELECT 
                 c.id AS cart_item_id,
-                p.id AS product_id,
                 p.name,
-                p.market1_mid_price,
-                p.market2_mid_price,
-                c.quantity
-            FROM cart c
+                c.quantity,
+                c.price
+            FROM shopping_cart_items c
             JOIN products p ON c.product_id = p.id
             WHERE c.user_id = :userId
         """;
-        Map<String, Object> params = Map.of("userId", userId);
-        return jdbcTemplate.queryForList(sql, params);
+        return jdbcTemplate.queryForList(sql, Map.of("userId", userId));
     }
+
+
 }

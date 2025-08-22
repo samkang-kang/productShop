@@ -49,6 +49,7 @@ public class JwtFilter implements Filter {
             "/api/cart/add",
             "/api/cart/remove",
             "/api/cart/update",
+            "/carpay_test.html",
 
             // 其他
             "/error"
