@@ -77,6 +77,36 @@ button.white {
   transition: 0.2 ease;
 }
 
+/* ===== 數量標籤樣式 ===== */
+.quantity {
+  font-size: 0.7em; /* 比父元素小 30% */
+}
+
+/* ===== 商品詳情頁按鈕樣式 ===== */
+.single-pro-details button {
+  background: #088178;
+  color: #fff;
+}
+
+/* ===== 市場按鈕樣式 ===== */
+button.market-btn {
+  background: transparent;
+  border: none;
+  color: rgb(56, 52, 52);
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  box-shadow: none;
+}
+
+button.market-btn:hover {
+  color: #088178;
+  text-decoration: underline;
+}
+
 /* ===== 通用區塊樣式 ===== */
 .section-p1 {
   padding: 40px 80px;
@@ -819,11 +849,6 @@ footer a:hover {
 
 #prodetails .single-pro-details input:focus {
   outline: none;
-}
-
-#prodetails .single-pro-details button {
-  background: #088178;
-  color: #fff;
 }
 
 #prodetails .single-pro-details span {

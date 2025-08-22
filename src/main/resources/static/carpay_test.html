@@ -1,54 +1,57 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <title>購物車結帳</title>
-</head>
-<body>
-<form
-        id="ecpay-form"
-        action="https://ericpay4.zeabur.app/ecpay/checkout"
-        method="POST"
->
-    <input type="hidden" name="amount" id="amount" />
-    <input type="hidden" name="itemName" id="itemName" />
-    <button type="submit">前往綠界結帳</button>
-</form>
+  </head>
+  <body>
+    <form
+      id="ecpay-form"
+      action="https://ecpay-eee.zeabur.app/ecpay/checkout"
+      method="POST"
+    >
+      <input type="hidden" name="amount" id="amount" />
+      <input type="hidden" name="itemName" id="itemName" />
+      <button type="submit">前往綠界結帳</button>
+    </form>
 
-<script>
-    async function loadCartAndCheckout() {
+    <script>
+      async function loadCartAndCheckout() {
         const userId = 57; // 假設登入後知道 userId
         const token = localStorage.getItem("jwt_token");
 
         // 判斷目前在哪個 port
         const baseUrl =
-            window.location.port === "63342"
-                ? "http://localhost:8080" // 前端用 IDE 的 web server 開 → API 走 8080
-                : "";                      // 如果 HTML 被丟進 Spring Boot /static，就用相對路徑
+          window.location.port === "63342"
+            ? "http://localhost:8080" // 前端用 IDE 的 web server 開 → API 走 8080
+            : ""; // 如果 HTML 被丟進 Spring Boot /static，就用相對路徑
 
         try {
-            const res = await fetch(`${baseUrl}/api/cart/checkout?userId=${userId}`, {
-                headers: {
-                    "Authorization": token ? `Bearer ${token}` : ""
-                }
-            });
-
-            if (!res.ok) {
-                throw new Error(`後端錯誤: ${res.status}`);
+          const res = await fetch(
+            `${baseUrl}/api/cart/checkout?userId=${userId}`,
+            {
+              headers: {
+                Authorization: token ? `Bearer ${token}` : "",
+              },
             }
+          );
 
-            const data = await res.json();
+          if (!res.ok) {
+            throw new Error(`後端錯誤: ${res.status}`);
+          }
 
-            // 後端傳回 { itemName: "...", amount: 1234 }
-            document.getElementById("itemName").value = data.itemName;
-            document.getElementById("amount").value = data.amount;
+          const data = await res.json();
+
+          // 後端傳回 { itemName: "...", amount: 1234 }
+          document.getElementById("itemName").value = data.itemName;
+          document.getElementById("amount").value = data.amount;
         } catch (err) {
-            console.error("載入購物車失敗", err);
-            alert("載入購物車失敗，請確認後端有啟動並登入成功");
+          console.error("載入購物車失敗", err);
+          alert("載入購物車失敗，請確認後端有啟動並登入成功");
         }
-    }
+      }
 
-    loadCartAndCheckout();
-</script>
-</body>
+      loadCartAndCheckout();
+    </script>
+  </body>
 </html>
