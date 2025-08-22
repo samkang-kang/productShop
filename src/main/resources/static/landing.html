@@ -3,6 +3,11 @@
 <!-- ===== HTML 文件結構 ===== -->
 
 <head>
+  <script>
+    if (location.origin.startsWith('file://')) {
+      window.API_BASE = 'http://localhost:8080';
+    }
+  </script>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -786,7 +791,27 @@
     <script src="./JS/account-dropdown.js"></script>
     
     <!-- 引入統一的 auth.js -->
-    <script src="/JS/auth.js"></script>
+    <script src="./JS/auth.js"></script>
+    
+    <!-- 購物車連結回跳邏輯 -->
+    <script>
+      (function() {
+        function needLogin() {
+          const t = window.Auth?.getToken?.();
+          return !t || window.Auth.isTokenExpired(t);
+        }
+        const cartLink = document.querySelector('a[href="/cart.html"], .to-cart, #go-cart');
+        if (cartLink) {
+          cartLink.addEventListener('click', function(e) {
+            if (needLogin()) {
+              e.preventDefault();
+              sessionStorage.setItem('return_to', '/cart.html');
+              location.href = '/index.html';
+            }
+          });
+        }
+      })();
+    </script>
     
     <!-- 引入載入器樣式 -->
     <style>

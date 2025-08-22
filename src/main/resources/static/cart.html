@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
   <head>
+    <script>
+      if (location.origin.startsWith("file://")) {
+        window.API_BASE = "http://localhost:8080";
+      }
+    </script>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -232,7 +237,22 @@
     <script src="./JS/account-dropdown.js"></script>
 
     <!-- 引入統一的 auth.js -->
-    <script src="/JS/auth.js"></script>
+    <script src="./JS/auth.js"></script>
+
+    <!-- 前端守門員：未登入就導回 /index.html -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const t = window.Auth?.getToken?.();
+        if (!t || window.Auth.isTokenExpired(t)) {
+          // 記住想看的頁面，之後登入成功導回這裡
+          sessionStorage.setItem(
+            "return_to",
+            location.pathname + location.search + location.hash
+          );
+          location.href = "/index.html";
+        }
+      });
+    </script>
 
     <!-- JWT 用戶資訊顯示邏輯 -->
     <script>

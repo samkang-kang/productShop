@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script>
+      if (location.origin.startsWith("file://")) {
+        window.API_BASE = "http://localhost:8080";
+      }
+    </script>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -288,8 +293,15 @@
                 Auth.setToken(data.token, remember);
                 // 顯示成功訊息
                 alert("登入成功！正在跳轉...");
-                // 跳轉到 landing.html
-                window.location.href = "/landing.html";
+                // 檢查是否有回跳 URL，優先導回記住的 URL
+                const rt = sessionStorage.getItem("return_to");
+                if (rt) {
+                  sessionStorage.removeItem("return_to");
+                  location.href = rt;
+                } else {
+                  // 跳轉到 landing.html
+                  location.href = "/landing.html";
+                }
               } else {
                 alert(data.message || "登入失敗");
               }
