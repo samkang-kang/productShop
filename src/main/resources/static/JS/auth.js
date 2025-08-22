@@ -3,7 +3,7 @@
   const API_BASE =
     window.API_BASE ||
     (location.hostname === "localhost"
-      ? "http://localhost:63342"
+      ? "http://localhost:8080"
       : location.origin);
 
   const TOKEN_KEY = "jwt_token";

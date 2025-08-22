@@ -17,9 +17,12 @@ public class JwtFilter implements Filter {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // 白名單路徑（不需要驗證 JWT）
+    /**
+     * 只保留「真的公開」的 API；靜態頁面與資源不用列在這裡，
+     * 因為非 /api/** 請求會在前面直接放行。
+     */
     private static final List<String> WHITELIST = Arrays.asList(
-            // 使用者相關
+            // 使用者公開動作
             "/users/register",
             "/users/login",
             "/users/verify",
@@ -27,30 +30,17 @@ public class JwtFilter implements Filter {
             "/users/password/reset/request",
             "/users/password/reset/confirm",
 
-            // 靜態資源
-            "/**/*.html",
-            "/favicon.ico",
-            "/CSS/",
-            "/JS/",
-            "/img/",
-
-            // 公開 API
+            // 公開 API（依你的需求保留）
             "/api/products/search",
-            "/api/products/markets/sync", // 價格自動更新
-            "/api/pricing/",              // 報價根路徑
-            "/api/pricing",               // 單一請求 (避免不一致)
+            "/api/products/markets/sync",
+            "/api/pricing",
             "/api/pricing/quote",
-            "/api/pricing/**",            // 通配所有 pricing API
-            "/api/cart/add",              // 測試用新增
+            "/api/pricing/**",
+            "/api/cart/add",                 // 若只測試用，之後可移除
             "/api/cart/remove",
             "/api/products/",
-            "/api/products/*/market-tiers",// 移除購物車
-            "/index.html", //測試用   
-            "/landing.html",//測試用
-            // "/cart.html", //測試用
-            "/mango_1.html",
-            "/peach_1.html",
-            "/litchi_1.html",
+            "/api/products/*/market-tiers",
+
             // 其他
             "/error"
     );
@@ -62,13 +52,17 @@ public class JwtFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-        // CORS 設定
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:63342");
+        // ---------- CORS ----------
+        String origin = req.getHeader("Origin");
+        if (origin != null) { // 有跨網域請求時回傳對應的 Origin
+            res.setHeader("Access-Control-Allow-Origin", origin);
+        }
+        res.setHeader("Vary", "Origin");
+        res.setHeader("Access-Control-Allow-Credentials", "true");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
-        res.setHeader("Access-Control-Allow-Credentials", "true");
 
-        // OPTIONS 預檢請求直接放行
+        // OPTIONS 預檢直接結束
         if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
             res.setStatus(HttpServletResponse.SC_OK);
             return;
@@ -76,25 +70,29 @@ public class JwtFilter implements Filter {
 
         String path = req.getRequestURI();
 
-        // 白名單比對（精準 or 前綴）
-        boolean isWhitelisted = WHITELIST.stream().anyMatch(whitelistPath -> {
+        // ---------- 核心：非 /api/** 的請求（.html/.css/.js/圖片…）一律放行 ----------
+        if (!path.startsWith("/api/")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        // /api/** 之下的白名單 API 放行
+        boolean isWhitelistedApi = WHITELIST.stream().anyMatch(whitelistPath -> {
             if (whitelistPath.endsWith("/")) {
                 return path.startsWith(whitelistPath); // 目錄前綴
             } else {
                 return path.equals(whitelistPath) || path.startsWith(whitelistPath + "/");
             }
         });
-
-        if (isWhitelisted) {
+        if (isWhitelistedApi) {
             chain.doFilter(request, response);
             return;
         }
 
-        // 驗證 Token
+        // ---------- 需要 JWT 的 /api/** ----------
         String authHeader = req.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-
             try {
                 if (jwtUtil.validateToken(token)) {
                     String email = jwtUtil.getEmailFromToken(token);
@@ -105,7 +103,7 @@ public class JwtFilter implements Filter {
             } catch (Exception e) {
                 e.printStackTrace();
                 res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                res.setContentType("application/json");
+                res.setContentType("application/json;charset=UTF-8");
                 res.getWriter().write("{\"error\":\"Invalid token\"}");
                 return;
             }
@@ -113,7 +111,7 @@ public class JwtFilter implements Filter {
 
         // 沒有 Token 或驗證失敗
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        res.setContentType("application/json");
+        res.setContentType("application/json;charset=UTF-8");
         res.getWriter().write("{\"error\":\"Authorization header required\"}");
     }
 }
