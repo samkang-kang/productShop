@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
   <head>
+    <script>
+      if (location.origin.startsWith("file://")) {
+        window.API_BASE = "http://localhost:8080";
+      }
+    </script>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -230,5 +235,216 @@
 
     <script src="./JS/script.js"></script>
     <script src="./JS/account-dropdown.js"></script>
+
+    <!-- 引入統一的 auth.js -->
+    <script src="./JS/auth.js"></script>
+
+    <!-- 前端守門員：未登入就導回 /index.html -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const t = window.Auth?.getToken?.();
+        if (!t || window.Auth.isTokenExpired(t)) {
+          // 記住想看的頁面，之後登入成功導回這裡
+          sessionStorage.setItem(
+            "return_to",
+            location.pathname + location.search + location.hash
+          );
+          location.href = "/index.html";
+        }
+      });
+    </script>
+
+    <!-- JWT 用戶資訊顯示邏輯 -->
+    <script>
+      // 定義填充帳戶 email 的函式
+      function fillAccountEmail() {
+        const userEmailElement = document.querySelector(".user-email");
+        const userNameElement = document.querySelector(".user-name");
+        const logoutBtn = document.querySelector(".logout");
+        const accountBtn = document.querySelector(".account-btn");
+        const userInfoSection = document.querySelector(".user-info");
+
+        if (!userEmailElement) return;
+
+        const token = Auth.getToken();
+        if (!token || Auth.isTokenExpired(token)) {
+          // 未登入狀態 - 隱藏使用者資訊區塊
+          if (userInfoSection) {
+            userInfoSection.style.display = "none";
+          }
+
+          // 隱藏需要登入的功能選項
+          hideLoginRequiredItems();
+
+          // 取消 dropdown-header 的 padding
+          const dropdownHeader = document.querySelector(".dropdown-header");
+          if (dropdownHeader) {
+            dropdownHeader.classList.add("no-padding");
+          }
+
+          // 將登出按鈕改為登入按鈕
+          if (logoutBtn) {
+            logoutBtn.innerHTML =
+              '<i class="fas fa-sign-in-alt"></i><span>登入</span>';
+            logoutBtn.classList.add("login-btn");
+            logoutBtn.classList.remove("logout");
+            logoutBtn.href = "/index.html";
+            logoutBtn.style.display = "block";
+          }
+          return;
+        }
+
+        // 已登入狀態
+        try {
+          const claims = Auth.parseJwt(token);
+          const email = claims.email || claims.sub || "user@example.com";
+          const name = claims.name || claims.firstName || "使用者";
+
+          // 顯示使用者資訊區塊
+          if (userInfoSection) {
+            userInfoSection.style.display = "flex";
+          }
+
+          // 恢復 dropdown-header 的 padding
+          const dropdownHeader = document.querySelector(".dropdown-header");
+          if (dropdownHeader) {
+            dropdownHeader.classList.remove("no-padding");
+          }
+
+          userEmailElement.textContent = email;
+          if (userNameElement) userNameElement.textContent = name;
+
+          // 顯示所有功能選項
+          showAllItems();
+
+          // 恢復登出按鈕
+          if (logoutBtn) {
+            logoutBtn.innerHTML =
+              '<i class="fas fa-sign-out-alt"></i><span>登出</span>';
+            logoutBtn.classList.remove("login-btn");
+            logoutBtn.classList.add("logout");
+            logoutBtn.href = "#";
+            logoutBtn.style.display = "block";
+          }
+        } catch (error) {
+          // 隱藏使用者資訊區塊
+          if (userInfoSection) {
+            userInfoSection.style.display = "none";
+          }
+          hideLoginRequiredItems();
+        }
+
+        // 若 token 未過期，再以 Auth.authFetch 取得 { email } 成功後覆寫
+        if (!Auth.isTokenExpired(token)) {
+          Auth.authFetch("/api/me")
+            .then((response) => {
+              if (response.ok) {
+                return response.json();
+              }
+              throw new Error("API 請求失敗");
+            })
+            .then((data) => {
+              if (data.email) {
+                userEmailElement.textContent = data.email;
+              }
+              if (data.name && userNameElement) {
+                userNameElement.textContent = data.name;
+              }
+            })
+            .catch((error) => {
+              if (error.status === 401) {
+                // 401 時隱藏使用者資訊並隱藏登入功能選項
+                if (userInfoSection) {
+                  userInfoSection.style.display = "none";
+                }
+                hideLoginRequiredItems();
+                // 清除過期的 token
+                Auth.clearToken();
+              }
+            });
+        }
+      }
+
+      // 隱藏需要登入的功能選項
+      function hideLoginRequiredItems() {
+        // 隱藏除了登入/登出按鈕之外的所有選單項目
+        const loginRequiredItems = document.querySelectorAll(
+          ".menu-item:not(.logout):not(.login-btn)"
+        );
+        loginRequiredItems.forEach((item) => {
+          item.style.display = "none";
+        });
+
+        // 隱藏分隔線
+        const divider = document.querySelector(".menu-divider");
+        if (divider) {
+          divider.style.display = "none";
+        }
+      }
+
+      // 顯示所有功能選項
+      function showAllItems() {
+        const allItems = document.querySelectorAll(".menu-item");
+        allItems.forEach((item) => {
+          item.style.display = "block";
+        });
+
+        // 顯示分隔線
+        const divider = document.querySelector(".menu-divider");
+        if (divider) {
+          divider.style.display = "block";
+        }
+      }
+
+      // 處理登出功能
+      function handleLogout() {
+        if (confirm("確定要登出嗎？")) {
+          // 清除 JWT token
+          Auth.clearToken();
+
+          // 更新 UI 顯示
+          fillAccountEmail();
+        }
+      }
+
+      // 綁定在選單展開時觸發 fillAccountEmail()
+      document.addEventListener("DOMContentLoaded", function () {
+        const accountBtn = document.querySelector(".account-btn");
+        const logoutBtn = document.querySelector(".logout");
+
+        if (accountBtn) {
+          accountBtn.addEventListener("click", function () {
+            // 點擊後延遲一下再填充，確保選單已展開
+            setTimeout(fillAccountEmail, 100);
+          });
+        }
+
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            // 檢查是否為登入按鈕
+            if (this.classList.contains("login-btn")) {
+              // 跳轉到登入頁面
+              window.location.href = "/index.html";
+              return;
+            }
+
+            // 處理登出
+            handleLogout();
+          });
+        }
+
+        // 在 DOMContentLoaded 也先呼叫一次 fillAccountEmail() 以避免空白
+        fillAccountEmail();
+      });
+
+      // 監聽 window 'storage' 事件（key='jwt_token'）時再次呼叫 fillAccountEmail()
+      window.addEventListener("storage", function (e) {
+        if (e.key === "jwt_token") {
+          fillAccountEmail();
+        }
+      });
+    </script>
   </body>
 </html>
