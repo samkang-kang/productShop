@@ -104,37 +104,37 @@
   <div class="slides">
     <div class="slide__item fades">
       <div class="slide__pagenumber">1 / 7</div>
-      <img src="./img/banner/banner (1).jpg" alt="" />
+      <img src="./img/banner/banner-5.jpg" alt="" />
       <div class="slide__content"></div>
     </div>
     <div class="slide__item fades">
       <div class="slide__pagenumber">2 / 7</div>
-      <img src="./img/banner/banner (2).jpg" alt="" />
+      <img src="./img/banner/banner-7.jpg" alt="" />
       <div class="slide__content"></div>
     </div>
     <div class="slide__item fades">
       <div class="slide__pagenumber">3 / 7</div>
-      <img src="./img/banner/banner (3).jpg" alt="" />
+      <img src="./img/banner/banner-5.jpg" alt="" />
       <div class="slide__content"></div>
     </div>
     <div class="slide__item fades">
       <div class="slide__pagenumber">4 / 7</div>
-      <img src="./img/banner/banner (4).jpg" alt="" />
+      <img src="./img/banner/banner-7.jpg" alt="" />
       <div class="slide__content"></div>
     </div>
     <div class="slide__item fades">
       <div class="slide__pagenumber">5 / 7</div>
-      <img src="./img/banner/banner (5).jpg" alt="" />
+      <img src="./img/banner/banner-5.jpg" alt="" />
       <div class="slide__content"></div>
     </div>
     <div class="slide__item fades">
       <div class="slide__pagenumber">6 / 7</div>
-      <img src="./img/banner/banner (6).jpg" alt="" />
+      <img src="./img/banner/banner-7.jpg" alt="" />
       <div class="slide__content"></div>
     </div>
     <div class="slide__item fades">
       <div class="slide__pagenumber">7 / 7</div>
-      <img src="./img/banner/banner (7).jpg" alt="" />
+      <img src="./img/banner/banner-5.jpg" alt="" />
       <div class="slide__content"></div>
     </div>
   </div>
@@ -1086,6 +1086,104 @@
         }
       });
     </script>
+    
+         <!-- 智能 Navbar 隱藏/顯示邏輯 -->
+     <script>
+       (function() {
+         const header = document.getElementById('header');
+         let isMouseNearTop = false;
+         let hideTimeout = null;
+         
+         // 初始化：顯示 navbar（因為在頂端）
+         header.style.transform = 'translateY(0)';
+         header.style.transition = 'transform 0.3s ease';
+         
+         // 檢查滑鼠是否在視窗頂端附近（32px 內）
+         function checkMousePosition(e) {
+           isMouseNearTop = e.clientY <= 50;
+           
+           if (isMouseNearTop) {
+             showNavbar();
+             clearTimeout(hideTimeout);
+           } else if (window.scrollY > 0 && !isMouseNearTop) {
+             // 延遲隱藏，避免滑鼠移動時閃爍
+             hideTimeout = setTimeout(() => {
+               if (!isMouseNearTop && window.scrollY > 0) {
+                 hideNavbar();
+               }
+             }, 300);
+           }
+         }
+         
+         // 顯示 navbar
+         function showNavbar() {
+           header.style.transform = 'translateY(0)';
+         }
+         
+         // 隱藏 navbar
+         function hideNavbar() {
+           header.style.transform = 'translateY(-100%)';
+         }
+         
+         // 處理滾動事件
+         function handleScroll() {
+           if (window.scrollY === 0) {
+             // 在頂端時顯示 navbar
+             showNavbar();
+           } else {
+             // 離開頂端時隱藏 navbar（除非滑鼠在上緣）
+             if (!isMouseNearTop) {
+               hideNavbar();
+             }
+           }
+         }
+         
+         // 檢查是否為觸控裝置
+         function isTouchDevice() {
+           return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+         }
+         
+         // 觸控裝置的簡化邏輯
+         function handleTouchDevice() {
+           window.addEventListener('scroll', handleScroll);
+         }
+         
+         // 滑鼠裝置的完整邏輯
+         function handleMouseDevice() {
+           // 滑鼠移動事件
+           document.addEventListener('mousemove', checkMousePosition);
+           
+           // 滑鼠進入 navbar 事件
+           header.addEventListener('mouseenter', () => {
+             clearTimeout(hideTimeout);
+           });
+           
+           // 滑鼠離開 navbar 事件
+           header.addEventListener('mouseleave', () => {
+             if (window.scrollY > 0 && !isMouseNearTop) {
+               hideTimeout = setTimeout(() => {
+                 if (!isMouseNearTop && window.scrollY > 0) {
+                   hideNavbar();
+                 }
+               }, 300);
+             }
+           });
+           
+           // 滾動事件
+           window.addEventListener('scroll', handleScroll);
+         }
+         
+         // 初始化
+         if (isTouchDevice()) {
+           handleTouchDevice();
+         } else {
+           handleMouseDevice();
+         }
+         
+         // 視窗大小改變時重新檢查
+         window.addEventListener('resize', handleScroll);
+       })();
+     </script>
     
     <!-- 全頁載入器 -->
     <div id="page-loader" class="page-loader">

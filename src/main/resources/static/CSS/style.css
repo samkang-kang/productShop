@@ -118,11 +118,12 @@ button.market-btn:hover {
 
 body {
   width: 100%;
+  background-color: #fff8f0; /* 淺灰色背景 */
 }
 
 /* ===== 頁首導航列 ===== */
 #header {
-  padding: 15px 80px;
+  padding: 2px 80px;
   background: #c943448f;
   position: sticky;
   top: 0;
