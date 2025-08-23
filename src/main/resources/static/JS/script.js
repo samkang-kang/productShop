@@ -178,7 +178,7 @@ async function syncQty(row, newQty) {
   );
 
   try {
-    const res = await fetch(`${API_CART_UPDATE_QTY}`, {
+    const res = await Auth.authFetch(`${API_CART_UPDATE_QTY}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -292,7 +292,7 @@ function bindRemoveRows() {
     icon.style.pointerEvents = "none";
 
     try {
-      const res = await fetch(
+      const res = await Auth.authFetch(
         `${API_CART_REMOVE}?cartItemId=${encodeURIComponent(
           cartId
         )}&userId=${encodeURIComponent(userId)}`,
@@ -427,7 +427,7 @@ async function loadCart() {
   console.log("[DEBUG] loadCart() start =>", API_CART_GET);
 
   try {
-    const res = await fetch(API_CART_GET, { method: "GET" });
+    const res = await Auth.authFetch(API_CART_GET, { method: "GET" });
     const text = await res.text();
     let data = {};
     try {
