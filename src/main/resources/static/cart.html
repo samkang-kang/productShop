@@ -176,7 +176,7 @@
             <td><strong id="summary-total">$ 0</strong></td>
           </tr>
         </table>
-        <button class="normal">前往結帳</button>
+        <button class="normal" onclick="handleCheckout()">前往結帳</button>
       </div>
     </section>
 
@@ -230,8 +230,19 @@
 
     <div class="bottom-bar">
       <div id="bottom-total">總金額：$0</div>
-      <button onclick="alert('尚未開放')">結帳</button>
+      <button onclick="handleCheckout()">結帳</button>
     </div>
+
+    <!-- 隱藏的 ECPay 結帳表單 -->
+    <form
+      id="ecpay-form"
+      action="https://ecpay-eee.zeabur.app/ecpay/checkout"
+      method="POST"
+      style="display: none"
+    >
+      <input type="hidden" name="amount" id="amount" />
+      <input type="hidden" name="itemName" id="itemName" />
+    </form>
     <!-- 引入統一的 auth.js -->
     <script src="./JS/auth.js"></script>
 
@@ -444,6 +455,44 @@
           fillAccountEmail();
         }
       });
+    </script>
+
+    <!-- 結帳功能 -->
+    <script>
+      async function handleCheckout() {
+        const userId = 57; // 假設登入後知道 userId
+        const token = Auth.getToken();
+
+        if (!token || Auth.isTokenExpired(token)) {
+          alert("請先登入");
+          return;
+        }
+
+        try {
+          const res = await Auth.authFetch(
+            `/api/cart/checkout?userId=${userId}`,
+            {
+              method: "GET",
+            }
+          );
+
+          if (!res.ok) {
+            throw new Error(`後端錯誤: ${res.status}`);
+          }
+
+          const data = await res.json();
+
+          // 後端傳回 { itemName: "...", amount: 1234 }
+          document.getElementById("itemName").value = data.itemName;
+          document.getElementById("amount").value = data.amount;
+
+          // 提交表單到綠界
+          document.getElementById("ecpay-form").submit();
+        } catch (err) {
+          console.error("結帳失敗", err);
+          alert("結帳失敗，請稍後再試");
+        }
+      }
     </script>
   </body>
 </html>
