@@ -468,6 +468,19 @@
           return;
         }
 
+        // 檢查購物車是否有商品
+        const cartTbody = document.querySelector("#cart tbody, #cart-tbody");
+        if (!cartTbody) {
+          alert("找不到購物車，請重新整理頁面");
+          return;
+        }
+
+        const cartItems = cartTbody.querySelectorAll("tr[data-cart-item-id]");
+        if (cartItems.length === 0) {
+          alert("購物車內沒有商品，無法結帳");
+          return;
+        }
+
         try {
           const res = await Auth.authFetch(
             `/api/cart/checkout?userId=${userId}`,
