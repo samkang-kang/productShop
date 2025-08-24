@@ -124,7 +124,7 @@ body {
 /* ===== 頁首導航列 ===== */
 #header {
   padding: 2px 80px;
-  background: #c943448f;
+  background: rgb(167 143 101);
   position: sticky;
   top: 0;
   left: 0;
@@ -326,6 +326,7 @@ body {
 
 /* 商品卡片設計 */
 #product1 .pro {
+  background-color: #fffefdab;
   width: 30%;
   min-width: 200px;
   padding: 10px 12px;
@@ -614,7 +615,7 @@ body {
 
 #banner3 .banner-box {
   background-image: url("img/bannerdefule/banner3_box1G1-5.jpg");
-  min-width: 30%;
+  min-width: 32%;
   height: 30vh;
   background-size: cover;
   background-position: center;
@@ -651,7 +652,7 @@ body {
   background-image: url("img/banner/b14.png");
   background-repeat: no-repeat;
   background-position: 20% 30%;
-  background-color: #041e42;
+  background-color: #544833;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -667,7 +668,7 @@ body {
 #newsletter p {
   font-size: 14px;
   font-weight: 600;
-  color: #818ea0;
+  color: #e5ddd1;
 }
 
 #newsletter p span {
@@ -692,7 +693,7 @@ body {
 }
 
 #newsletter button {
-  background-color: #088178;
+  background-color: #da602a;
   color: #fff;
   white-space: nowrap;
   border-top-left-radius: 0px;
@@ -1813,7 +1814,7 @@ footer a:hover {
 
 #sm-banner .banner-box2 {
   /* 夏日嚴選 */
-  flex: 0 0 35%; /* 佔 30% */
+  flex: 1 0 35%; /* 佔 30% */
   min-width: 0;
 }
 
@@ -2483,4 +2484,233 @@ footer a:hover {
 /* 未登入狀態下取消 dropdown-header 的 padding */
 .dropdown-header.no-padding {
   padding: 0;
+}
+
+/*===== 結帳後訂單明細 =====*/
+/* 容器與排版 */
+.order-page {
+  max-width: 1100px;
+  margin: 32px auto 64px;
+  padding: 0 20px;
+  color: #222;
+  font-family: system-ui, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei",
+    sans-serif;
+  line-height: 1.8;
+}
+.order-header {
+  display: grid;
+  gap: 12px;
+  align-items: center;
+  grid-template-columns: 1fr auto;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+.order-title {
+  font-size: 24px;
+  margin: 0;
+}
+.back-link {
+  color: #666;
+  text-decoration: none;
+}
+.back-link:hover {
+  text-decoration: underline;
+}
+.order-ids {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.order-ids .muted {
+  color: #888;
+}
+.order-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.order-body {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) 320px; /* 左主右側欄 */
+}
+.order-main {
+  display: grid;
+  gap: 20px;
+}
+.order-aside {
+  position: sticky;
+  top: 88px;
+  height: max-content;
+}
+
+/* 區塊 */
+.block {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 16px;
+}
+.block-title {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+/* 出貨/付款表格 */
+.meta-table {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 14px;
+}
+.meta-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 1fr 1fr;
+}
+.meta-row > div {
+  padding: 10px 12px;
+  border-top: 1px solid #f2f2f2;
+}
+.meta-head {
+  background: #fafafa;
+  font-weight: 600;
+}
+.meta-ops {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+/* 商品表 */
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.items-table th,
+.items-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+}
+.items-table thead th {
+  background: #fafafa;
+  text-align: left;
+}
+.t-right {
+  text-align: right;
+}
+.t-center {
+  text-align: center;
+}
+
+/* 定義清單 (收件資訊) */
+.dl-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 8px 16px;
+  margin: 0;
+}
+.dl-grid dt {
+  color: #666;
+}
+.block-help {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* 右側摘要卡 */
+.summary-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 16px;
+}
+.summary-card h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+.price-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+}
+.price-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed #eee;
+}
+.price-list li:last-child {
+  border-bottom: none;
+}
+.price-list .muted {
+  color: #888;
+}
+.price-list .total {
+  font-weight: 800;
+  font-size: 18px;
+}
+
+/* 按鈕 */
+.btn {
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn:hover {
+  background: #f7f7f7;
+}
+.btn-primary {
+  background: #222;
+  color: #fff;
+  border-color: #222;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+}
+.btn-outline {
+  background: #fff;
+  color: #222;
+}
+.btn-sm {
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+}
+.btn-full {
+  width: 100%;
+}
+
+/* RWD */
+@media (max-width: 960px) {
+  .order-body {
+    grid-template-columns: 1fr;
+  }
+  .order-aside {
+    position: static;
+  }
+}
+@media (max-width: 560px) {
+  .meta-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .dl-grid {
+    grid-template-columns: 1fr;
+  }
+  .order-header {
+    grid-template-columns: 1fr;
+  }
+  .order-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
 }

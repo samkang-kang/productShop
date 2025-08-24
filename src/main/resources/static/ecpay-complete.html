@@ -2,61 +2,261 @@
 <html lang="zh-Hant">
   <head>
     <meta charset="utf-8" />
-    <title>付款完成</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>訂購成功</title>
+
+    <!-- Google Fonts：Poppins + Noto Sans TC -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
+      :root {
+        --bg: #f7faf9ca;
+        --card: #ffffff;
+        --ok: #28c37b;
+        --text: #222;
+        --muted: #667085;
+        --btn: #0f766e;
+        --btn-hover: #0b5f59;
+        --radius: 18px;
+      }
+
+      /* 全版置中 + 字體設定 */
       body {
-        font-family: system-ui, -apple-system, sans-serif;
-        max-width: 680px;
-        margin: 40px auto;
-        padding: 0 16px;
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        /* 中文以 Noto Sans TC 為主；英數/標題用 Poppins 更柔和 */
+        font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui,
+          -apple-system, sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 1.8;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+
+      .wrap {
+        width: min(680px, 92vw);
+        text-align: center;
+        padding: 24px;
+      }
+
+      h1 {
+        font-family: "Poppins", "Noto Sans TC", sans-serif;
+        font-weight: 500;
+        font-size: clamp(28px, 5vw, 44px);
+        margin: 4px 0 16px;
+        letter-spacing: 0.5px; /* 微調字距讓視覺更柔和 */
+      }
+
+      /* 卡片（直向長方形） */
+      .card {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+        max-width: 420px;
+        padding: 60px 40px;
+        margin: 0 auto;
+      }
+
+      /* 成功圓 + 打勾動畫 */
+      .ok {
+        width: 136px;
+        height: 136px;
+        margin: 0 auto 12px;
+        border-radius: 50%;
+        background: var(--ok);
+        display: grid;
+        place-items: center;
+        transform: scale(0.8);
+        opacity: 0;
+        animation: pop 0.6s 0.05s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+        position: relative;
+      }
+      .ok::after {
+        content: "";
+        position: absolute;
+        inset: -10px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 0 rgba(40, 195, 123, 0.35);
+        animation: halo 1.2s 0.4s ease-out forwards;
+      }
+      @keyframes pop {
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes halo {
+        50% {
+          box-shadow: 0 0 0 12px rgba(40, 195, 123, 0.12);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(40, 195, 123, 0);
+        }
+      }
+
+      .check {
+        width: 64px;
+        height: 64px;
+      }
+      .check path {
+        stroke: #fff;
+        stroke-width: 10;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 120;
+        stroke-dashoffset: 120;
+        animation: draw 0.6s 0.28s ease-out forwards;
+      }
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      .title-sub {
+        color: var(--muted);
+        margin-top: 6px;
+        font-size: 15px;
+      }
+      .order-id {
+        font-family: "Poppins", "Noto Sans TC", sans-serif; /* 讓數字用 Poppins 更漂亮 */
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        font-variant-numeric: tabular-nums; /* 數字齊排更穩定 */
+      }
+
+      .actions {
+        margin-top: 18px;
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn {
+        appearance: none;
+        border: 1px solid transparent;
+        cursor: pointer;
+        padding: 10px 16px;
+        border-radius: 10px;
+        font-weight: 600;
+        background: var(--btn);
+        color: #fff;
+        font-family: "Poppins", "Noto Sans TC", sans-serif;
+        letter-spacing: 0.3px;
+      }
+      .btn:hover {
+        background: var(--btn-hover);
+      }
+      .btn.outline {
+        background: #fff;
+        color: var(--btn);
+        border-color: var(--btn);
+      }
+      .countdown {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .ok,
+        .ok::after,
+        .check path {
+          animation: none !important;
+        }
       }
     </style>
   </head>
   <body>
-    <h2>感謝您的訂購！</h2>
-    <p id="msg">我們正在確認您的付款狀態...</p>
-    <div id="detail" style="display: none">
-      <p>訂單編號：<span id="oid"></span></p>
-      <p>交易序號：<span id="tno"></span></p>
-      <p>狀態：<span id="status"></span></p>
+    <div class="wrap">
+      <h1>訂購成功</h1>
+
+      <div class="card">
+        <div class="ok" id="ok">
+          <svg class="check" viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M16 34 L28 46 L48 20"></path>
+          </svg>
+        </div>
+
+        <div class="title-sub">我們已收到您的訂單</div>
+        <div class="title-sub">
+          您的訂單編號：<span class="order-id" id="orderNo">1069810</span>
+        </div>
+
+        <div class="actions">
+          <a class="btn outline" id="toMember" href="order.html"
+            >前往會員中心</a
+          >
+          <a class="btn" id="toShop" href="/shop">再去逛逛</a>
+        </div>
+
+        <div class="countdown" id="countdown">3 秒後將自動前往會員中心…</div>
+      </div>
     </div>
 
+    <!-- canvas-confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
     <script>
-      const qs = new URLSearchParams(location.search);
-      const orderId = qs.get("orderId");
-      const tradeNo = qs.get("tradeNo");
-      document.getElementById("oid").textContent = orderId || "-";
-      document.getElementById("tno").textContent = tradeNo || "-";
+      // ====== 可帶入後端參數 ======
+      const ORDER_NO =
+        new URL(location.href).searchParams.get("orderNo") || "1069810";
+      const REDIRECT_TO = "order.html"; // 3 秒後導向的頁面
+      const SECONDS = 3; // 目前你設 50 秒（要回 3 秒就改成 3）
+      // ==============================================
 
-      // 由於後端（n8n→Node）會在背景更新資料庫，這裡輪詢查詢狀態（或用 WebSocket/SSE）
-      async function poll() {
-        try {
-          // 建議 Spring Boot 提供查詢 API，直接讀同一顆 DB
-          const r = await fetch(`/api/orders/status?orderId=${orderId}`);
-          if (!r.ok) throw new Error("not ok");
-          const data = await r.json(); // {status:'PAID'|'PENDING'|'FAILED', paymentDate, ...}
+      document.getElementById("orderNo").textContent = ORDER_NO;
 
-          if (data.status === "PAID") {
-            document.getElementById("msg").textContent = "付款成功 ✅";
-            document.getElementById("status").textContent = "已付款";
-            document.getElementById("detail").style.display = "";
-          } else if (data.status === "FAILED") {
-            document.getElementById("msg").textContent = "付款失敗或已取消 ❌";
-            document.getElementById("status").textContent = "失敗";
-            document.getElementById("detail").style.display = "";
-          } else {
-            // PENDING 繼續等
-            setTimeout(poll, 1500);
+      function celebrate() {
+        const defaults = {
+          particleCount: 70,
+          spread: 60,
+          startVelocity: 45,
+          ticks: 200,
+        };
+        confetti({ ...defaults, angle: 60, origin: { x: 0, y: 0.4 } });
+        confetti({ ...defaults, angle: 120, origin: { x: 1, y: 0.4 } });
+        setTimeout(
+          () => confetti({ particleCount: 80, spread: 90, origin: { y: 0.6 } }),
+          180
+        );
+        setTimeout(
+          () =>
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              scalar: 0.9,
+              origin: { y: 0.5 },
+            }),
+          380
+        );
+      }
+      setTimeout(celebrate, 250);
+
+      (function countdown() {
+        const label = document.getElementById("countdown");
+        let t = SECONDS;
+        const tick = () => {
+          label.textContent = `${t} 秒後將自動前往會員中心…`;
+          if (t <= 0) {
+            location.href = REDIRECT_TO;
             return;
           }
-        } catch (e) {
-          // 後端尚未寫入前可能 404，稍後再試
-          setTimeout(poll, 1500);
-        }
-      }
-      if (orderId) poll();
-      else document.getElementById("msg").textContent = "未帶入訂單編號";
+          t--;
+          setTimeout(tick, 1000);
+        };
+        tick();
+      })();
     </script>
   </body>
 </html>
