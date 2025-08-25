@@ -10,8 +10,12 @@ function myMenuFunction() {
 
   if (i.className === "nav-menu") {
     i.className += " responsive";
+    // 展開漢堡時鎖住背景滾動，避免視覺上露出上下空白
+    document.body.style.overflow = "hidden";
   } else {
     i.className = "nav-menu";
+    // 關閉漢堡時恢復滾動
+    document.body.style.overflow = "";
   }
 }
 
@@ -44,6 +48,13 @@ function login() {
   document.querySelector(".register-google-btn").style.left = "auto";
   document.querySelector(".login-google-btn").style.opacity = "1";
   document.querySelector(".register-google-btn").style.opacity = "0";
+
+  // 設定模式類別，讓 CSS 能區分 login / register 的版位調整
+  const formBox = document.querySelector(".form-box");
+  if (formBox) {
+    formBox.classList.add("mode-login");
+    formBox.classList.remove("mode-register");
+  }
 }
 
 // 切換到註冊表單
@@ -66,6 +77,13 @@ function register() {
   document.querySelector(".register-google-btn").style.left = "auto";
   document.querySelector(".register-google-btn").style.opacity = "1";
   document.querySelector(".login-google-btn").style.opacity = "0";
+
+  // 設定模式類別，讓 CSS 能區分 login / register 的版位調整
+  const formBox = document.querySelector(".form-box");
+  if (formBox) {
+    formBox.classList.add("mode-register");
+    formBox.classList.remove("mode-login");
+  }
 }
 
 // ========================================
