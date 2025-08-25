@@ -60,6 +60,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const emptyExists = !!document.getElementById("empty-row");
 
     if (productRows.length === 0) {
+      // 徽章歸零
+      try {
+        localStorage.setItem("cart_count", "0");
+        window.updateCartBadge?.(0);
+      } catch {}
       if (!emptyExists) {
         const emptyMessage = document.createElement("tr");
         emptyMessage.innerHTML = `<td colspan="7" id="empty-row" style="text-align:center; padding:40px;">購物車內無商品</td>`;
@@ -76,6 +81,12 @@ document.addEventListener("DOMContentLoaded", function () {
       if (removeHeader && removeHeader.style.visibility === "hidden") {
         removeHeader.style.visibility = "visible";
       }
+      // 更新徽章為目前列數
+      try {
+        const count = productRows.length;
+        localStorage.setItem("cart_count", String(count));
+        window.updateCartBadge?.(count);
+      } catch {}
     }
   }
 
@@ -91,6 +102,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 讓其他地方可呼叫
   window.__ensureEmptyRow = ensureEmptyRow;
+
+  // ====== Navbar 購物車徽章 ======
+  function updateCartBadge(count) {
+    const badge = document.getElementById("cart-badge");
+    if (!badge) return;
+    const n = Number(count || 0);
+    if (n > 0) {
+      badge.textContent = String(n);
+      badge.style.display = "inline-block";
+    } else {
+      badge.textContent = "0";
+      badge.style.display = "none";
+    }
+  }
+  window.updateCartBadge = updateCartBadge;
+
+  // 從 localStorage 讀取先前數量（若你有存），否則先隱藏
+  try {
+    const cached = Number(localStorage.getItem("cart_count") || 0);
+    updateCartBadge(cached);
+  } catch {}
 });
 
 // ============================
@@ -543,6 +575,34 @@ async function loadCart() {
       localStorage.setItem(`price:${productId}`, numericPrice);
 
       alert(data.message || "已加入購物車");
+      // 更新徽章數：以後端目前購物車「不同品項數」為準，避免同品項數量增加造成誤加
+      try {
+        let count = NaN;
+        try {
+          const resp = await Auth.authFetch(API_CART_GET, { method: "GET" });
+          const txt = await resp.text();
+          let j = {};
+          try {
+            j = JSON.parse(txt);
+          } catch {}
+          if (Array.isArray(j.items)) count = j.items.length;
+          if (!Number.isFinite(count) && Number.isFinite(j.count))
+            count = Number(j.count);
+        } catch {}
+
+        // 後端若無提供，使用前端集合（以 productId 去重）當作後援
+        if (!Number.isFinite(count)) {
+          const set = new Set(
+            JSON.parse(localStorage.getItem("cart_products") || "[]")
+          );
+          set.add(productId);
+          count = set.size;
+          localStorage.setItem("cart_products", JSON.stringify([...set]));
+        }
+
+        localStorage.setItem("cart_count", String(count));
+        window.updateCartBadge?.(count);
+      } catch {}
     } catch (err) {
       console.error("AddToCart(single) error:", err);
       alert("加入失敗：" + (err.message || "請稍後再試"));
