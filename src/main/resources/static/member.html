@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <title>個人資料</title>
+  <style>
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .big-button {
+      display: block;
+      width: 100%;
+      margin: 20px 0;
+      padding: 16px 0;
+      background-color: black;
+      color: white;
+      text-align: center;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .big-button:hover {
+      background-color: #333;
+    }
+
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      background-color: #fff;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .title {
+      font-size: 18px;
+      margin-bottom: 30px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .title span {
+      color: #888;
+      cursor: pointer;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .row>div {
+      flex: 1;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    .readonly {
+      background-color: #f5f5f5;
+    }
+
+    .gender {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .gender label {
+      font-weight: normal;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="title">
+      <a href="./member.html">個人資料</a>
+      <a href="#">帳號綁定</a>
+      <a href="./address.html">收件地址</a>
+    </div>
+
+    <form>
+      <label>姓名＊</label>
+      <input type="text" placeholder="輸入姓名" required>
+
+      <label>電子信箱＊</label>
+      <input type="email" placeholder="輸入電子信箱" required>
+
+      <label>手機＊</label>
+      <div class="row">
+        <input type="tel" placeholder="輸入手機號碼" required>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="city">城市</label>
+          <select id="city" onchange="updateDistricts()">
+            <option value="">請選擇縣市</option>
+          </select>
+        </div>
+        <div>
+          <label for="district">鄉鎮區</label>
+          <select id="district" onchange="updateZip()">
+            <option value="">請先選擇縣市</option>
+          </select>
+        </div>
+        <div>
+          <label for="zip">郵遞區號</label>
+          <input type="text" id="zip" class="readonly" readonly>
+        </div>
+      </div>
+
+      <label>地址＊</label>
+      <input type="text" placeholder="輸入地址" required>
+
+      <label>出生年月日＊</label>
+      <div class="row">
+        <select id="birthYear"></select>
+        <select id="birthMonth"></select>
+        <select id="birthDay"></select>
+      </div>
+
+      <label>性別＊</label>
+      <div class="gender">
+        <label><input type="radio" name="gender" value="男">男</label>
+        <label><input type="radio" name="gender" value="女">女</label>
+      </div>
+
+      <button class="big-button">保存</button>
+    </form>
+  </div>
+
+  <script>
+    
+    const yearSelect = document.getElementById('birthYear');
+    const monthSelect = document.getElementById('birthMonth');
+    const daySelect = document.getElementById('birthDay');
+
+    for (let y = 1900; y <= new Date().getFullYear(); y++) {
+      const opt = document.createElement('option');
+      opt.value = opt.text = y;
+      yearSelect.appendChild(opt);
+    }
+
+    for (let m = 1; m <= 12; m++) {
+      const opt = document.createElement('option');
+      opt.value = opt.text = m.toString().padStart(2, '0');
+      monthSelect.appendChild(opt);
+    }
+
+    for (let d = 1; d <= 31; d++) {
+      const opt = document.createElement('option');
+      opt.value = opt.text = d.toString().padStart(2, '0');
+      daySelect.appendChild(opt);
+    }
+    // 出生年月日預設我先預設1990/01/
+    yearSelect.value = 1990;
+    monthSelect.value = '01';
+    daySelect.value = '01';
+
+    let taiwanData = [];
+    let currentDistricts = [];
+
+    window.addEventListener("DOMContentLoaded", () => {
+      fetch("TwCities.json")
+        .then(res => res.json())
+        .then(data => {
+          taiwanData = data;
+          const citySelect = document.getElementById("city");
+          data.forEach(city => {
+            const opt = document.createElement("option");
+            opt.value = city.name;
+            opt.textContent = city.name;
+            citySelect.appendChild(opt);
+          });
+        })
+        .catch(err => console.error("載入城市資料錯誤：", err));
+    });
+
+    function updateDistricts() {
+      const cityName = document.getElementById("city").value;
+      const districtSelect = document.getElementById("district");
+      const zipInput = document.getElementById("zip");
+
+      districtSelect.innerHTML = "";
+      zipInput.value = "";
+
+      const cityData = taiwanData.find(city => city.name === cityName);
+      if (cityData) {
+        currentDistricts = cityData.districts;
+
+        currentDistricts.forEach(dist => {
+          const opt = document.createElement("option");
+          opt.value = dist.name;
+          opt.textContent = dist.name;
+          districtSelect.appendChild(opt);
+        });
+
+        districtSelect.value = currentDistricts[0].name;
+        zipInput.value = currentDistricts[0].zip;
+      } else {
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "請先選擇縣市";
+        districtSelect.appendChild(defaultOption);
+      }
+    }
+
+    function updateZip() {
+      const distName = document.getElementById("district").value;
+      const zipInput = document.getElementById("zip");
+      const dist = currentDistricts.find(d => d.name === distName);
+      zipInput.value = dist ? dist.zip : "";
+    }
+  </script>
+</body>
+
+</html>

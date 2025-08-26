@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>收件地址</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    .tab {
+      margin-bottom: 10px;
+    }
+
+    .tab a {
+      margin-right: 10px;
+      text-decoration: none;
+      color: black;
+    }
+
+    .tab .active {
+      background-color: black;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+    }
+
+    .address-list {
+      margin-top: 20px;
+      color: #888;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .modal input,
+    .modal select {
+      width: 100%;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .modal label {
+      display: block;
+      font-weight: bold;
+    }
+
+    .modal .btn {
+      margin-top: 10px;
+      background: black;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .modal .checkbox {
+      display: flex;
+      align-items: center;
+    }
+
+    .modal .checkbox input {
+      width: auto;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="title">
+      <a href="./member.html">個人資料</a>
+      <a href="#">帳號綁定</a>
+      <a href="./address.html">收件地址</a>
+    </div>
+    <br>
+
+    <a href="#" onclick="showModal()">＋新增地址</a>
+  </div>
+
+  <hr />
+
+
+
+  <!-- 1) 新增：地址列表容器（可選，用來顯示已儲存的地址） -->
+  <div id="addressList" class="address-list"></div>
+
+  <!-- 新增地址 Modal -->
+  <div class="modal" id="addressModal">
+    <h2>新增地址</h2>
+
+    <label for="name">真實姓名＊</label>
+    <input type="text" id="name" placeholder="輸入真實姓名" />
+
+    <label for="phone">手機號碼＊</label>
+    <input type="text" id="phone" placeholder="輸入手機號碼" />
+
+    <label>城市</label>
+    <select id="city" onchange="updateDistricts()">
+      <option value="">請選擇縣市</option>
+    </select>
+
+    <label>鄉鎮區</label>
+    <select id="district" onchange="updateZip()">
+      <option value="">請先選擇縣市</option>
+    </select>
+
+    <label>郵遞區號</label>
+    <input type="text" id="zip" value="100" readonly />
+
+    <label for="address">地址＊</label>
+    <input type="text" id="address" placeholder="輸入地址" />
+
+    <div class="checkbox">
+      <input type="checkbox" id="default" />
+      <label for="default">儲存為預設地址</label>
+    </div>
+
+    <!-- 2) 這裡改成 submitAddress() -->
+    <button class="btn" onclick="submitAddress()">確認</button>
+  </div>
+
+  <script>
+    // ---- 3) 串接後端必備：API_BASE 與 token 幫手 ----
+    const API_BASE = window.API_BASE || 'http://localhost:8080'; // 有全域就用全域，沒有就用 localhost
+    function getToken() {
+      // 視你的專案而定：localStorage / cookie / 你自己的 auth.js
+      // 這裡先用最常見的 localStorage
+      return localStorage.getItem('token') || '';
+    }
+
+    // 全域資料（你原本用了未宣告變數，這裡顯式宣告避免嚴格模式錯誤）
+    let taiwanData = [];
+    let currentDistricts = [];
+
+    function showModal() {
+      document.getElementById('addressModal').style.display = 'block';
+    }
+    function hideModal() {
+      document.getElementById('addressModal').style.display = 'none';
+    }
+
+    // 初始載入：縣市資料、以及（可選）已儲存地址
+    window.addEventListener("DOMContentLoaded", () => {
+      fetch("Data/TwCities.json")
+              .then(res => res.json())
+              .then(data => {
+                taiwanData = data;
+                const citySelect = document.getElementById("city");
+                data.forEach(city => {
+                  const opt = document.createElement("option");
+                  opt.value = city.name;
+                  opt.textContent = city.name;
+                  citySelect.appendChild(opt);
+                });
+              })
+              .catch(err => console.error("載入城市資料錯誤：", err));
+
+      loadAddresses(); // 可選：登入後會成功載到列表
+    });
+
+    function updateDistricts() {
+      const cityName = document.getElementById("city").value;
+      const districtSelect = document.getElementById("district");
+      const zipInput = document.getElementById("zip");
+
+      districtSelect.innerHTML = "";
+      zipInput.value = "";
+
+      const cityData = taiwanData.find(city => city.name === cityName);
+      if (cityData) {
+        currentDistricts = cityData.districts;
+
+        currentDistricts.forEach(dist => {
+          const opt = document.createElement("option");
+          opt.value = dist.name;
+          opt.textContent = dist.name;
+          districtSelect.appendChild(opt);
+        });
+
+        // 預設選第一個
+        if (currentDistricts.length) {
+          districtSelect.value = currentDistricts[0].name;
+          zipInput.value = currentDistricts[0].zip;
+        }
+      } else {
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "請先選擇縣市";
+        districtSelect.appendChild(defaultOption);
+      }
+    }
+
+    function updateZip() {
+      const distName = document.getElementById("district").value;
+      const zipInput = document.getElementById("zip");
+      const dist = currentDistricts.find(d => d.name === distName);
+      zipInput.value = dist ? dist.zip : "";
+    }
+
+    // ====== 串後端：送出新增地址 ======
+    async function submitAddress() {
+      const token = getToken();
+      if (!token) {
+        alert("請先登入，才能新增地址");
+        return;
+      }
+
+      // 基本欄位
+      const body = {
+        recipientName: document.getElementById('name').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        city: document.getElementById('city').value,
+        district: document.getElementById('district').value,
+        postalCode: document.getElementById('zip').value.trim(),
+        detailAddress: document.getElementById('address').value.trim(),
+        isDefault: document.getElementById('default').checked
+      };
+
+      // 簡單必填驗證
+      if (!body.recipientName || !body.phone || !body.detailAddress) {
+        alert("請填寫必填欄位：姓名、手機、地址");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/addresses/add`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(body)
+        });
+
+        if (!res.ok) {
+          const txt = await res.text();
+          throw new Error(`新增失敗：${res.status} ${txt}`);
+        }
+
+        // 成功
+        hideModal();
+        clearForm();
+        await loadAddresses(); // 可選：重新載入列表
+        alert("地址新增成功");
+      } catch (err) {
+        console.error(err);
+        if (String(err).includes('401')) {
+          alert("未授權或登入已過期，請重新登入");
+        } else {
+          alert("新增失敗，請稍後再試");
+        }
+      }
+    }
+
+    function clearForm() {
+      document.getElementById('name').value = '';
+      document.getElementById('phone').value = '';
+      document.getElementById('city').value = '';
+      document.getElementById('district').innerHTML = '<option value="">請先選擇縣市</option>';
+      document.getElementById('zip').value = '100';
+      document.getElementById('address').value = '';
+      document.getElementById('default').checked = false;
+    }
+
+    // ====== 可選：取得我的地址清單並渲染 ======
+    async function loadAddresses() {
+      const token = getToken();
+      if (!token) return; // 未登入就不載
+
+      try {
+        const res = await fetch(`${API_BASE}/api/addresses/my`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const list = await res.json();
+        renderAddressList(list);
+      } catch (e) {
+        console.warn('讀取地址列表失敗：', e);
+      }
+    }
+
+    function renderAddressList(list) {
+      const box = document.getElementById('addressList');
+      if (!box) return;
+
+      if (!Array.isArray(list) || list.length === 0) {
+        box.innerHTML = '目前沒有已儲存的地址';
+        return;
+      }
+
+      box.innerHTML = list.map(a => `
+      <div style="padding:10px 0;border-bottom:1px solid #eee">
+        <div><strong>${a.recipientName}</strong>（${a.phone}）${a.isDefault ? ' <span style="color:#2c7">[預設]</span>' : ''}</div>
+        <div>${a.postalCode} ${a.city}${a.district}${a.detailAddress}</div>
+      </div>
+    `).join('');
+    }
+  </script>
+
+</body>
+
+</html>
