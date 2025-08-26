@@ -1,56 +1,296 @@
 @media only screen and (max-width: 786px) {
-    .nav-button {
-        display: none;
-    }
-    .nav-menu.responsive {
-        top: 100px;
-    }
-    .nav-menu {
-        position: absolute;
-        top: -800px;
-        display: flex;
-        justify-content: center;
-        background: rgba(255, 255, 255, 0.2);
-        width: 100%;
-        height: 90vh;
-        backdrop-filter: blur(20px);
-        transition: 0.3s;
-    }
-    .nav-menu ul {
-        flex-direction: column;
-        text-align: center;
-    }
-    .nav-menu-btn {
-        display: block;
-    }
-    .nav-menu-btn i {
-        font-size: 25px;
-        color: #fff;
-        padding: 10px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    .nav-menu-btn i:hover {
-        background: rgba(255, 255, 255, 0.15);
-    }
+  .nav-button {
+    display: none;
+  }
+  .nav-menu.responsive {
+    top: 100px;
+  }
+  .nav-menu {
+    position: fixed;
+    inset: 0; /* top/right/bottom/left: 0 完整覆蓋 */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: rgba(0, 0, 0, 0.25);
+    width: 100vw;
+    height: 100svh; /* 更佳的行動端高度 */
+    min-height: 100dvh; /* 兼容新版視窗高度 */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1001;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .nav-menu ul {
+    flex-direction: column;
+    text-align: center;
+  }
+  .nav-menu-btn {
+    display: block;
+  }
+  .nav-menu-btn i {
+    font-size: 25px;
+    color: #fff;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .nav-menu-btn i:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  /* 修復下方物件的 RWD 問題 */
+  .welcome-container {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    max-width: none;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .mini-footer {
+    justify-content: center;
+  }
+
+  .mini-footer-inner {
+    width: 100%;
+    margin-right: 0;
+    padding: 0 20px;
+  }
+
+  .mini-footer-text {
+    position: static;
+    transform: none;
+    text-align: center;
+  }
 }
 @media only screen and (max-width: 540px) {
-    .wrapper {
-        min-height: 100vh;
-    }
-    .form-box {
-        width: 100%;
-        height: 500px;
-    }
-    .register-container,
-    .login-container {
-        width: 100%;
-        padding: 0 20px;
-    }
-    .register-container .two-forms {
-        flex-direction: column;
-        gap: 0;
-    }
+  .wrapper {
+    min-height: 100vh;
+    width: 100%;
+    height: 100vh;
+    padding-top: 100px;
+    justify-content: center;
+    margin-right: 0;
+  }
+  .form-box {
+    width: 100%;
+    height: 500px;
+    margin-right: 0;
+  }
+  .register-container,
+  .login-container {
+    width: 100%;
+    padding: 0 20px;
+  }
+  .register-container .two-forms {
+    flex-direction: column;
+    gap: 0;
+  }
+  .welcome-container {
+    padding: 0 20px;
+    margin-top: 10px;
+  }
+  .welcome-title {
+    font-size: 24px;
+    text-align: center;
+  }
+  .welcome-text {
+    font-size: 14px;
+    text-align: center;
+  }
+  .welcome-text p {
+    margin: 0 0 10px 0;
+  }
+
+  /* 小螢幕下方物件優化 */
+  .mini-footer {
+    height: auto;
+    min-height: 60px;
+    padding: 15px 0;
+  }
+
+  .mini-footer-inner {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mini-footer-text p {
+    font-size: 12px;
+  }
+
+  .get-started-btn {
+    width: 80%;
+    margin: 20px auto 0;
+  }
+
+  .get-started-block {
+    width: 80%;
+    margin: -45px auto 0;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .wrapper {
+    justify-content: center;
+    margin-right: 0;
+    padding-top: 120px;
+  }
+  .form-box {
+    margin-right: 50px;
+    width: 90%;
+    max-width: 450px;
+  }
+  .nav-logo img {
+    height: 40px;
+    margin-top: 20px;
+  }
+
+  /* 中等螢幕下方物件調整 */
+  .welcome-container {
+    left: 50px;
+    width: 500px;
+    max-width: calc(100vw - 100px);
+  }
+
+  .welcome-title {
+    font-size: 48px;
+  }
+
+  .mini-footer-inner {
+    margin-right: 50px;
+    width: 450px;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .wrapper {
+    justify-content: center;
+    margin-right: 0;
+  }
+  .form-box {
+    margin-right: 80px;
+  }
+}
+
+/* 1200px 斷點：把表單推到歡迎區塊下方（適用像 1147px 這類寬度） */
+@media only screen and (max-width: 1200px) {
+  .wrapper {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 64px; /* 再往上貼近 Logo */
+  }
+  /* 取消歡迎字串與 Get Started 按鈕 */
+  .welcome-container {
+    display: none;
+  }
+  .welcome-container {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 80%;
+    max-width: 900px;
+    margin: 0 auto 24px;
+  }
+  .form-box {
+    width: 80%;
+    max-width: 560px;
+    margin: -3px auto 0; /* 再向上微調 */
+  }
+  /* 註冊表單本體（不影響下方白線與 Google 按鈕）微向左位移 */
+  .register-container {
+    transform: translateX(-22px);
+  }
+  /* 註冊表單：將「已經有帳號了嗎？」往下移一些 */
+  .register-container .top {
+    margin-top: 20px;
+  }
+  .register-container .top span {
+    padding-top: 30px;
+  }
+
+  /* Google 按鈕與上方欄位對齊高度與寬度 */
+  .google-login-btn {
+    height: 50px;
+    border-radius: 30px;
+  }
+
+  /* 調整 Google 按鈕（登入/註冊）在 ≤1200 時略為縮小並置中，與上方欄位對齊 */
+  .login-google-btn .google-login-btn,
+  .register-google-btn .google-login-btn {
+    width: 88%;
+    max-width: 500px;
+    height: 46px;
+    margin: 6px auto 0;
+  }
+  /* Login 表單：Google 按鈕稍微向左偏移，不影響註冊表單 */
+  .login-google-btn .google-login-btn {
+    margin-left: 1.5%;
+    margin-right: auto;
+  }
+  /* Login 表單：下移一點，避免貼到白色細線 */
+  .login-google-btn {
+    bottom: -92px;
+  }
+  /* 讓底部白線和 Google 按鈕再往下些，避免貼太近 */
+  /* 只在註冊模式時調整白線位置，避免影響登入 */
+  .form-box.mode-register::after {
+    bottom: -36px;
+    left: 10px; /* 白色細線往右一些 */
+  }
+  .form-box.mode-login::after {
+    bottom: -36px;
+    left: -10px; /* 將登入恢復到原本置中（或微向左）*/
+  }
+  .register-google-btn {
+    bottom: -100px;
+  }
+  .mini-footer-inner {
+    margin-right: 0;
+  }
+
+  /* 將導覽收進右側漢堡按鈕（與 786px 行為一致，但提前到 1200px） */
+  .nav-button {
+    /* 可保留或隱藏右上角 Sign In/Up；若要更精簡可設 display:none */
+  }
+  .nav-menu-btn {
+    display: block;
+  }
+  .nav-menu {
+    position: absolute;
+    top: -800px;
+    display: flex;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    width: 100%;
+    height: 90vh;
+    backdrop-filter: blur(20px);
+    transition: 0.3s;
+    right: 0;
+  }
+  .nav-menu ul {
+    flex-direction: column;
+    text-align: center;
+  }
+  .nav-menu.responsive {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  /* 讓漢堡按鈕浮在最上層，使用者可關閉選單 */
+  .nav-menu-btn {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 1102; /* 高於選單，確保可關閉 */
+  }
 }
