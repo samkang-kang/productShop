@@ -6,12 +6,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+
 @Component
 public class CartPayDao {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public List<Map<String, Object>> getCartItems(int userId) {
+    public List<Map<String, Object>> getCartItems(long userId) {
         String sql = """
             SELECT 
                 c.id AS cart_item_id,
@@ -24,6 +25,4 @@ public class CartPayDao {
         """;
         return jdbcTemplate.queryForList(sql, Map.of("userId", userId));
     }
-
-
 }

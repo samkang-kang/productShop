@@ -15,9 +15,9 @@ import java.util.List;
 public class CartService {
 
     @Autowired
-    private ShoppingCartItemDao cartDao; // 合併成一個欄位，統一使用
+    private ShoppingCartItemDao cartDao;
 
-    // 加入購物車（保留你的原邏輯）
+    // 加入購物車（不用更改）
     public String addToCart(Integer userId, Integer productId, Integer quantity) {
         ShoppingCartItem item = cartDao.findByUserIdAndProductId(userId, productId);
         if (item == null) {
@@ -30,24 +30,24 @@ public class CartService {
         }
     }
 
-    // 移除購物車
+    // 刪除（不用更改）
     public int removeCartItem(long userId, long cartItemId) {
         int rows = cartDao.deleteCartItem(userId, cartItemId);
         if (rows == 0) throw new ItemNotFoundException("購物車中沒有此商品");
         return rows;
     }
 
-    // 更新數量（保留你的庫存檢查）
-    public void updateQuantity(long cartItemId, int quantity) {
-        Integer stock = cartDao.getStockByCartItemId(cartItemId);
+    // ✅ 更新數量：帶 userId + cartItemId
+    public void updateQuantity(long userId, long cartItemId, int quantity) {
+        Integer stock = cartDao.getStockByCartItemId(userId, cartItemId);
         if (stock == null) throw new RuntimeException("ITEM_NOT_FOUND");
         if (quantity > stock) throw new RuntimeException("OUT_OF_STOCK");
 
-        int rows = cartDao.updateCartItemQuantity(cartItemId, quantity);
+        int rows = cartDao.updateCartItemQuantity(userId, cartItemId, quantity);
         if (rows == 0) throw new RuntimeException("ITEM_NOT_FOUND");
     }
 
-    // ★★ 關鍵：不要拋 CartEmptyException；回空清單＋總額 0，避免 /api/cart/{userId} 變 400
+    // 取購物車內容（不用更改）
     public CartSummary getCart(long userId) {
         List<CartItemView> items = cartDao.listCartItemsByUserId(userId);
         if (items == null || items.isEmpty()) {
@@ -56,7 +56,6 @@ public class CartService {
 
         BigDecimal total = BigDecimal.ZERO;
         for (CartItemView it : items) {
-            // 小計優先用 DAO 提供的 subtotal；若沒有就用 price*quantity 計算
             BigDecimal line = it.getSubtotal();
             if (line == null) {
                 BigDecimal price = it.getPrice() != null ? it.getPrice() : BigDecimal.ZERO;

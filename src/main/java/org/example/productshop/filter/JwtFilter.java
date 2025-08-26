@@ -17,6 +17,7 @@ public class JwtFilter implements Filter {
     @Autowired
     private JwtUtil jwtUtil;
 
+
     /**
      * 只保留「真的公開」的 API；靜態頁面與資源不用列在這裡，
      * 因為非 /api/** 請求會在前面直接放行。
@@ -36,12 +37,11 @@ public class JwtFilter implements Filter {
             "/api/pricing",
             "/api/pricing/quote",
             "/api/pricing/**",
-            "/api/cart/add",                 // 若只測試用，之後可移除
-            "/api/cart/remove",
             "/api/products/",
             "/api/products/*/market-tiers",
             "/api/addresses",
             "/api/addresses/**",
+            "/api/orders/**",
 
             // 其他
             "/error"
