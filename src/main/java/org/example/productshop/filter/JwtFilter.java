@@ -40,6 +40,8 @@ public class JwtFilter implements Filter {
             "/api/cart/remove",
             "/api/products/",
             "/api/products/*/market-tiers",
+            "/api/addresses",
+            "/api/addresses/**",
 
             // 其他
             "/error"
@@ -113,5 +115,7 @@ public class JwtFilter implements Filter {
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         res.setContentType("application/json;charset=UTF-8");
         res.getWriter().write("{\"error\":\"Authorization header required\"}");
+
     }
+
 }
