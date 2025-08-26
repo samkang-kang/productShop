@@ -771,6 +771,116 @@
       })();
     </script>
 
+    <!-- 覆寫單品頁加入購物車：改用新版 /api/cart/add（需 JWT） -->
+    <script>
+      (function () {
+        const btn = document.getElementById("btnAddSingle");
+        const qtyInput = document.getElementById("sp-qty");
+        const bodyEl = document.querySelector("body[data-product-id]");
+        if (!btn || !qtyInput || !bodyEl) return;
+
+        // 以 clone 技巧移除舊有監聽器，避免重複送出
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+
+        function getProductId() {
+          return Number(bodyEl.dataset.productId);
+        }
+
+        function captureMainImage(pid) {
+          const mainImg =
+            document.getElementById("MainImg") ||
+            document.querySelector(
+              ".main-img,.product-main img,.pro img, .gallery img, img"
+            );
+          if (mainImg && mainImg.src) {
+            localStorage.setItem(`img:${pid}`, mainImg.src);
+          }
+        }
+
+        function getDisplayedUnitPrice() {
+          const txt = document.querySelector(".price")?.textContent || "";
+          const n = Number(txt.replace(/[^\d.]/g, ""));
+          return isFinite(n) ? n : 0;
+        }
+
+        function showPageLoader() {
+          const loader = document.getElementById("page-loader");
+          if (loader) {
+            loader.classList.add("show");
+            document.body.style.overflow = "hidden";
+            setTimeout(() => {
+              window.location.href = "/index.html";
+            }, 500);
+          } else {
+            window.location.href = "/index.html";
+          }
+        }
+
+        newBtn.addEventListener("click", async function () {
+          const pid = getProductId();
+          const qty = Math.max(1, Number(qtyInput.value || 1));
+          if (!pid || Number.isNaN(pid)) {
+            alert(
+              '找不到商品編號，請檢查 <body data-product-id="..."> 是否正確。'
+            );
+            return;
+          }
+
+          // 需 JWT；未登入則導向至登入頁
+          const token = window.Auth?.getToken?.();
+          if (!token || window.Auth?.isTokenExpired?.(token)) {
+            alert("請先登入後再加入購物車");
+            showPageLoader();
+            return;
+          }
+
+          const API_BASE =
+            window.API_BASE ||
+            (location.port === "8080" ? "" : "http://localhost:8080");
+          const endpoint = `${API_BASE}/api/cart/add`;
+
+          const prevText = newBtn.textContent;
+          newBtn.disabled = true;
+          newBtn.textContent = "加入中…";
+
+          try {
+            const res = await window.Auth.authFetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ productId: pid, quantity: qty }),
+            });
+            const text = await res.text();
+            let data = {};
+            try {
+              data = JSON.parse(text);
+            } catch {}
+
+            if (!res.ok) {
+              if (res.status === 401) {
+                showPageLoader();
+                return;
+              }
+              throw new Error(data.message || text || res.statusText);
+            }
+
+            // 成功：保存當時單價與主圖，供購物車顯示使用
+            const price = getDisplayedUnitPrice();
+            if (price) localStorage.setItem(`price:${pid}`, String(price));
+            captureMainImage(pid);
+
+            alert(data.message || "已加入購物車");
+          } catch (err) {
+            console.error("[add-to-cart] error:", err);
+            alert("加入失敗：" + (err?.message || "請稍後再試"));
+          } finally {
+            newBtn.disabled = false;
+            newBtn.textContent = prevText;
+          }
+        });
+      })();
+    </script>
+
     <!-- 全頁載入器 -->
     <div id="page-loader" class="page-loader">
       <div class="loader-content">
