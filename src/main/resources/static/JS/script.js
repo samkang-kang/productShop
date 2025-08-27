@@ -186,11 +186,11 @@ window.onload = function () {
 // === 配置：後端 API（同源最穩） ===
 const onBackend = location.port === "8080";
 const API_BASE = onBackend ? "" : "http://localhost:8080";
-const FIXED_USER_ID = 57;
+const FIXED_USER_ID = 57; // 僅作為前端顯示用途，後端以 JWT 判斷使用者
 
 const API_ADD_TO_CART = `${API_BASE}/api/cart/add`;
 const API_CART_REMOVE = `${API_BASE}/api/cart/remove`;
-const API_CART_GET = `${API_BASE}/api/cart/${FIXED_USER_ID}`;
+const API_CART_GET = `${API_BASE}/api/cart/me`;
 const API_CART_UPDATE_QTY = `${API_BASE}/api/cart/update`; // PUT with JSON body
 
 // ============================
@@ -311,7 +311,6 @@ function bindRemoveRows() {
     if (!row) return;
 
     const cartId = row.dataset.cartItemId;
-    const userId = row.dataset.userId || FIXED_USER_ID;
     const name =
       row.querySelector("td:nth-child(3)")?.textContent?.trim() || "此商品";
 
@@ -325,9 +324,7 @@ function bindRemoveRows() {
 
     try {
       const res = await Auth.authFetch(
-        `${API_CART_REMOVE}?cartItemId=${encodeURIComponent(
-          cartId
-        )}&userId=${encodeURIComponent(userId)}`,
+        `${API_CART_REMOVE}?cartItemId=${encodeURIComponent(cartId)}`,
         { method: "GET" }
       );
       const text = await res.text();

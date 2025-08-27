@@ -870,6 +870,35 @@
             if (price) localStorage.setItem(`price:${pid}`, String(price));
             captureMainImage(pid);
 
+            // 立刻重算並更新 Navbar 徽章數（呼叫 /api/cart/me）
+            try {
+              let count = NaN;
+              try {
+                const r = await window.Auth.authFetch(
+                  `${API_BASE}/api/cart/me`,
+                  { method: "GET" }
+                );
+                const t = await r.text();
+                let j = {};
+                try {
+                  j = JSON.parse(t);
+                } catch {}
+                if (Array.isArray(j.items)) count = j.items.length;
+                if (!Number.isFinite(count) && Number.isFinite(j.count))
+                  count = Number(j.count);
+              } catch {}
+              if (!Number.isFinite(count)) {
+                const set = new Set(
+                  JSON.parse(localStorage.getItem("cart_products") || "[]")
+                );
+                set.add(pid);
+                count = set.size;
+                localStorage.setItem("cart_products", JSON.stringify([...set]));
+              }
+              localStorage.setItem("cart_count", String(count));
+              window.updateCartBadge?.(count);
+            } catch {}
+
             alert(data.message || "已加入購物車");
           } catch (err) {
             console.error("[add-to-cart] error:", err);
