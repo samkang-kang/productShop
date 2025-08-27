@@ -1001,7 +1001,13 @@ async function hydrateListingCardPrices() {
       renderPrice(card, unitPrice, 1);
     } catch (e) {
       console.warn("[pricing] card price failed:", e);
-      priceEl.textContent = "—";
+      // Fallback: 使用本地快取價格（若有）
+      const cached = Number(localStorage.getItem(`price:${pid}`));
+      if (Number.isFinite(cached) && cached > 0) {
+        renderPrice(card, cached, 1);
+      } else {
+        priceEl.textContent = "—";
+      }
     }
   }
 }
@@ -1059,6 +1065,27 @@ async function initSingleProductPrice() {
     qtyInput?.addEventListener("change", () => apply(tiers));
   } catch (e) {
     console.warn("[single price] failed", e);
+    // Fallback: 若 API 失敗，改用本地快取價格顯示
+    const container =
+      document.querySelector(".single-pro-details") || document.body;
+    if (!document.querySelector(".price")) {
+      const h = document.createElement("h2");
+      h.innerHTML =
+        '單價：<span class="price" aria-live="polite">—</span> <small class="unit"></small>';
+      container.prepend(h);
+      const subtotalP = document.createElement("p");
+      subtotalP.className = "subtotal";
+      subtotalP.innerHTML = '小計：<span class="total-price">—</span>';
+      container.appendChild(subtotalP);
+    }
+    const cached = Number(localStorage.getItem(`price:${pid}`));
+    const qty = Number(qtyInput?.value || 1);
+    if (Number.isFinite(cached) && cached > 0) {
+      renderPrice(document, cached, qty);
+    } else {
+      // 沒快取就維持破折號
+      renderPrice(document, null, qty);
+    }
   }
 }
 
