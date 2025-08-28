@@ -7,10 +7,7 @@ function getCartTbody() {
 
 // 商品 ID -> 單品頁檔名
 const DETAIL_PAGE_MAP = {
-  23: "cantaloupe_1.html",
-  12: "litchi_1.html",
-  13: "mango_1.html",
-  19: "peach_1.html",
+  12: "mango_1.html",
 };
 
 function buildDetailUrl(item) {
@@ -169,12 +166,12 @@ window.onload = function () {
   let timer = setInterval(nextSlide, 4000);
   ["click", "touchstart", "mouseenter"].forEach((evt) => {
     slidesWrap.addEventListener(
-      evt,
-      () => {
-        clearInterval(timer);
-        timer = setInterval(nextSlide, 3000);
-      },
-      { passive: true }
+        evt,
+        () => {
+          clearInterval(timer);
+          timer = setInterval(nextSlide, 3000);
+        },
+        { passive: true }
     );
   });
 };
@@ -186,7 +183,7 @@ window.onload = function () {
 // === 配置：後端 API（同源最穩） ===
 const onBackend = location.port === "8080";
 const API_BASE = onBackend ? "" : "http://localhost:8080";
-const FIXED_USER_ID = 57; // 僅作為前端顯示用途，後端以 JWT 判斷使用者
+const FIXED_USER_ID = 65; // 僅作為前端顯示用途，後端以 JWT 判斷使用者
 
 const API_ADD_TO_CART = `${API_BASE}/api/cart/add`;
 const API_CART_REMOVE = `${API_BASE}/api/cart/remove`;
@@ -201,12 +198,12 @@ async function syncQty(row, newQty) {
   const userId = row.dataset.userId || FIXED_USER_ID;
 
   console.log(
-    "[DEBUG] syncQty() start => cartItemId:",
-    cartItemId,
-    "userId:",
-    userId,
-    "newQty:",
-    newQty
+      "[DEBUG] syncQty() start => cartItemId:",
+      cartItemId,
+      "userId:",
+      userId,
+      "newQty:",
+      newQty
   );
 
   try {
@@ -253,7 +250,8 @@ function bindQtyControls() {
   if (window.__qtyBound) return;
   window.__qtyBound = true;
 
-  cart.addEventListener("click", (e) => {
+  cart.addEventListener("click", async (e) => {
+
     const btn = e.target.closest(".qty-btn");
     if (!btn) return;
     e.preventDefault();
@@ -282,6 +280,8 @@ function bindQtyControls() {
     console.log("[DEBUG] 更新後數量:", val);
 
     input.value = String(val);
+
+    await updateRowPriceForQty(row, val);
 
     recalcRowSubtotal(row);
     recalcTotals();
@@ -312,7 +312,7 @@ function bindRemoveRows() {
 
     const cartId = row.dataset.cartItemId;
     const name =
-      row.querySelector("td:nth-child(3)")?.textContent?.trim() || "此商品";
+        row.querySelector("td:nth-child(3)")?.textContent?.trim() || "此商品";
 
     if (!cartId) {
       alert("缺少 cartItemId，請在 <tr> 上加 data-cart-item-id。");
@@ -324,8 +324,8 @@ function bindRemoveRows() {
 
     try {
       const res = await Auth.authFetch(
-        `${API_CART_REMOVE}?cartItemId=${encodeURIComponent(cartId)}`,
-        { method: "GET" }
+          `${API_CART_REMOVE}?cartItemId=${encodeURIComponent(cartId)}`,
+          { method: "GET" }
       );
       const text = await res.text();
       let data = {};
@@ -391,7 +391,7 @@ function deriveUnitPriceFromItem(item) {
 
   const tier = qty < 10 ? "high" : qty < 21 ? "mid" : "low";
   const a = m1[tier],
-    b = m2[tier];
+      b = m2[tier];
 
   if (a == null && b == null) return 0;
   return tier === "low" ? Math.min(a ?? b, b ?? a) : Math.max(a ?? b, b ?? a);
@@ -409,7 +409,7 @@ function renderCartRow(item) {
   const tr = document.createElement("tr");
   tr.dataset.cartItemId = item.cartItemId;
   tr.dataset.userId =
-    typeof item.userId !== "undefined" ? item.userId : FIXED_USER_ID;
+      typeof item.userId !== "undefined" ? item.userId : FIXED_USER_ID;
   tr.dataset.productId = item.productId;
   tr.dataset.price = unit;
 
@@ -418,16 +418,16 @@ function renderCartRow(item) {
     <td><a href="#" class="btn-remove"><i class="far fa-times-circle"></i></a></td>
     <td>
       <a class="detail-link" href="${buildDetailUrl(item)}" data-pid="${
-    item.productId
+      item.productId
   }">
         <img src="${item.imageUrl || "img/FruitsImg/null/G2_0.jpg"}" alt="${
-    item.name || ""
+      item.name || ""
   }"/>
       </a>
     </td>
     <td>
       <a class="detail-link" href="${buildDetailUrl(item)}" data-pid="${
-    item.productId
+      item.productId
   }">
         ${item.name || "—"}
       </a>
@@ -534,7 +534,7 @@ async function loadCart() {
 
     // ★ 讀取當前頁面顯示的單價
     const currentUnitPrice =
-      document.querySelector(".price")?.textContent || "";
+        document.querySelector(".price")?.textContent || "";
     const numericPrice = Number(currentUnitPrice.replace(/[^\d.]/g, "")) || 0;
 
     btn.disabled = true;
@@ -590,7 +590,7 @@ async function loadCart() {
         // 後端若無提供，使用前端集合（以 productId 去重）當作後援
         if (!Number.isFinite(count)) {
           const set = new Set(
-            JSON.parse(localStorage.getItem("cart_products") || "[]")
+              JSON.parse(localStorage.getItem("cart_products") || "[]")
           );
           set.add(productId);
           count = set.size;
@@ -637,12 +637,12 @@ function resetCartRowNumbers() {
 }
 
 window.formatCurrency =
-  window.formatCurrency ||
-  ((n) =>
-    new Intl.NumberFormat("zh-TW", {
-      style: "currency",
-      currency: "TWD",
-    }).format(Number(n || 0)));
+    window.formatCurrency ||
+    ((n) =>
+        new Intl.NumberFormat("zh-TW", {
+          style: "currency",
+          currency: "TWD",
+        }).format(Number(n || 0)));
 
 /* =========================
    做法A：依商品ID決定圖片路徑
@@ -678,8 +678,8 @@ function resolveImageUrl(item) {
 
   const getProductId = () => Number(body.dataset.productId);
   const mainImg =
-    document.getElementById("MainImg") ||
-    document.querySelector(".main-img,.product-main img");
+      document.getElementById("MainImg") ||
+      document.querySelector(".main-img,.product-main img");
 
   // 綁定兩種可能的加入按鈕
   const btns = [
@@ -717,7 +717,7 @@ function resolveImageUrl(item) {
   cards.forEach((card) => {
     const id = card.dataset.productId;
     const img =
-      card.querySelector("img.product-img") || card.querySelector("img");
+        card.querySelector("img.product-img") || card.querySelector("img");
     if (!img) return;
 
     // 若已有 src 就不覆蓋；沒有就依規則補上
@@ -729,19 +729,19 @@ function resolveImageUrl(item) {
 
     // 破圖備援：退到 jpg 或 placeholder
     img.addEventListener(
-      "error",
-      () => {
-        const fallback = ruleImageUrlById(id);
-        if (
-          img.src !== location.origin + "/" + fallback &&
-          !img.src.endsWith(fallback)
-        ) {
-          img.src = fallback;
-        } else {
-          img.src = "img/placeholder.png";
-        }
-      },
-      { once: true }
+        "error",
+        () => {
+          const fallback = ruleImageUrlById(id);
+          if (
+              img.src !== location.origin + "/" + fallback &&
+              !img.src.endsWith(fallback)
+          ) {
+            img.src = fallback;
+          } else {
+            img.src = "img/placeholder.png";
+          }
+        },
+        { once: true }
     );
   });
 })();
@@ -768,7 +768,7 @@ function resolveImageUrl(item) {
       // 若原本沒有圖片欄位，補一個（放在第二欄）
       const td = document.createElement("td");
       td.innerHTML = `<img src="${url}" alt="${
-        item.name || ""
+          item.name || ""
       }" width="80" height="80" style="object-fit:cover">`;
       const first = tr.children[0];
       if (first && first.nextSibling) {
@@ -788,10 +788,10 @@ function resolveImageUrl(item) {
 
     tr.innerHTML = `
         <td><a href="#" class="remove-item" data-id="${
-          item.productId
-        }"><i class="far fa-times-circle"></i></a></td>
+        item.productId
+    }"><i class="far fa-times-circle"></i></a></td>
         <td><img src="${item.imageUrl || "img/default.png"}" alt="${
-      item.name
+        item.name
     }" /></td>
         <td>${item.name || "未命名商品"}</td>
         <td>
@@ -800,8 +800,8 @@ function resolveImageUrl(item) {
         </td>
         <td>
             <input type="number" class="cart-qty" data-id="${
-              item.productId
-            }" value="${item.quantity ?? 1}" min="1">
+        item.productId
+    }" value="${item.quantity ?? 1}" min="1">
         </td>
         <td>${formatCurrency(subtotal)}</td>
     `;
@@ -828,8 +828,8 @@ function resolveImageUrl(item) {
 ========================= */
 (async function fallbackCartRenderIfNeeded() {
   const tbody =
-    document.getElementById("cart-tbody") ||
-    document.getElementById("cartTableBody");
+      document.getElementById("cart-tbody") ||
+      document.getElementById("cartTableBody");
   if (!tbody) return;
 
   // 若專案已有全功能的 loadCart，就不介入
@@ -907,35 +907,46 @@ function chooseTier(qty, t1 = DEFAULT_T1, t2 = DEFAULT_T2) {
   return "low";
 }
 
-// 3) 依數量 → 取價（小/中量取高，大量取低）
+// 3) 依數量 → 取價（小/中量取高，大量取低）+ 可指定 preferMarket
 function pickPriceForQty(
-  data,
-  qty,
-  t1 = DEFAULT_T1,
-  t2 = DEFAULT_T2,
-  {
-    smallPolicy = "highest",
-    midPolicy = "highest",
-    largePolicy = "lowest",
-  } = {}
+    data,
+    qty,
+    t1 = DEFAULT_T1,
+    t2 = DEFAULT_T2,
+    {
+      smallPolicy = "highest",
+      midPolicy   = "highest",
+      largePolicy = "lowest",
+      preferMarket = "auto",   // ★ 新增：可 "M1"、"M2"、"auto"
+    } = {}
 ) {
   const tier = chooseTier(qty, t1, t2);
   const m1 = data?.m1?.[tier];
   const m2 = data?.m2?.[tier];
+
+  // 若強制指定市場：先用指定市場，沒有再後援另一個
+  if (preferMarket === "M1") {
+    const price = (m1 ?? m2 ?? null);
+    return { unitPrice: price, sourceMarket: price == null ? null : (m1 != null ? "M1" : "M2"), tier };
+  }
+  if (preferMarket === "M2") {
+    const price = (m2 ?? m1 ?? null);
+    return { unitPrice: price, sourceMarket: price == null ? null : (m2 != null ? "M2" : "M1"), tier };
+  }
   const picked =
-    m1 == null && m2 == null
-      ? { price: null, source: null }
-      : m1 == null
-      ? { price: m2, source: "M2" }
-      : m2 == null
-      ? { price: m1, source: "M1" }
-      : tier === "low"
-      ? m1 <= m2
-        ? { price: m1, source: "M1" }
-        : { price: m2, source: "M2" }
-      : m1 >= m2
-      ? { price: m1, source: "M1" }
-      : { price: m2, source: "M2" };
+      m1 == null && m2 == null
+          ? { price: null, source: null }
+          : m1 == null
+              ? { price: m2, source: "M2" }
+              : m2 == null
+                  ? { price: m1, source: "M1" }
+                  : tier === "low"
+                      ? m1 <= m2
+                          ? { price: m1, source: "M1" }
+                          : { price: m2, source: "M2" }
+                      : m1 >= m2
+                          ? { price: m1, source: "M1" }
+                          : { price: m2, source: "M2" };
   return { unitPrice: picked.price, sourceMarket: picked.source, tier };
 }
 
@@ -987,15 +998,15 @@ async function hydrateListingCardPrices() {
       if (!res.ok) throw new Error("server error" + (await res.text()));
       const tiers = normalizeTiers(await res.json());
       const { unitPrice, sourceMarket } = pickPriceForQty(
-        tiers,
-        1,
-        DEFAULT_T1,
-        DEFAULT_T2,
-        {
-          smallPolicy: "highest",
-          midPolicy: "highest",
-          largePolicy: "lowest",
-        }
+          tiers,
+          1,
+          DEFAULT_T1,
+          DEFAULT_T2,
+          {
+            smallPolicy: "highest",
+            midPolicy: "highest",
+            largePolicy: "lowest",
+          }
       );
       card.dataset.market = sourceMarket || "";
       renderPrice(card, unitPrice, 1);
@@ -1019,24 +1030,19 @@ async function initSingleProductPrice() {
   const pid = Number(body.dataset.productId);
   const t1 = Number(body.dataset.tier1 || DEFAULT_T1);
   const t2 = Number(body.dataset.tier2 || DEFAULT_T2);
-  const qtyInput = document.querySelector(
-    '#sp-qty, input.qty, input[name="quantity"], #quantity'
-  );
+  const qtyInput = document.querySelector('#sp-qty, input.qty, input[name="quantity"], #quantity');
+
+  // ★ 新增：當前市場（預設 M1=台北一）
+  let currentMarket = "M1";
 
   function apply(tiers) {
     const qty = Number(qtyInput?.value || 1);
-    const { unitPrice, sourceMarket, tier } = pickPriceForQty(
-      tiers,
-      qty,
-      t1,
-      t2,
-      {
-        smallPolicy: "highest",
-        midPolicy: "highest",
-        largePolicy: "lowest",
-      }
+    // ★ 帶入 preferMarket: currentMarket
+    const { unitPrice, tier } = pickPriceForQty(
+        tiers, qty, t1, t2,
+        { smallPolicy: "highest", midPolicy: "highest", largePolicy: "lowest", preferMarket: currentMarket }
     );
-    document.body.dataset.market = sourceMarket || "";
+    document.body.dataset.market = currentMarket; // 標記目前市場
     document.body.dataset.tier = tier || "";
     renderPrice(document, unitPrice, qty);
   }
@@ -1045,21 +1051,19 @@ async function initSingleProductPrice() {
     const res = await fetch(API_MARKET_TIERS(pid));
     if (!res.ok) throw new Error("server error " + (await res.text()));
     const tiers = normalizeTiers(await res.json());
-    // ensure price placeholders exist
-    if (!document.querySelector(".price")) {
-      const h = document.createElement("h2");
-      h.innerHTML =
-        '單價：<span class="price" aria-live="polite">載入中…</span> <small class="unit"></small>';
-      (document.querySelector(".single-pro-details") || document.body).prepend(
-        h
-      );
-      const subtotalP = document.createElement("p");
-      subtotalP.className = "subtotal";
-      subtotalP.innerHTML = '小計：<span class="total-price">—</span>';
-      (
-        document.querySelector(".single-pro-details") || document.body
-      ).appendChild(subtotalP);
-    }
+
+    // ★ 新增：綁定「台北一 / 台北二」切換
+    document.querySelectorAll(".market-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const mk = (btn.dataset.market || "").toLowerCase(); // taipei1 / taipei2
+        currentMarket = mk.includes("2") ? "M2" : "M1";
+        // 樣式切換（可選）
+        document.querySelectorAll(".market-btn").forEach(b => b.classList.toggle("active", b === btn));
+        apply(tiers); // 依目前數量重算
+      });
+    });
+
+    // 初始化價格（預設 M1，qty=1 會走上價）
     apply(tiers);
     qtyInput?.addEventListener("input", () => apply(tiers));
     qtyInput?.addEventListener("change", () => apply(tiers));
@@ -1067,11 +1071,11 @@ async function initSingleProductPrice() {
     console.warn("[single price] failed", e);
     // Fallback: 若 API 失敗，改用本地快取價格顯示
     const container =
-      document.querySelector(".single-pro-details") || document.body;
+        document.querySelector(".single-pro-details") || document.body;
     if (!document.querySelector(".price")) {
       const h = document.createElement("h2");
       h.innerHTML =
-        '單價：<span class="price" aria-live="polite">—</span> <small class="unit"></small>';
+          '單價：<span class="price" aria-live="polite">—</span> <small class="unit"></small>';
       container.prepend(h);
       const subtotalP = document.createElement("p");
       subtotalP.className = "subtotal";
@@ -1136,7 +1140,7 @@ function renderTotals(sum) {
 // 重新計算整張表的小計/總計（前端算）
 function recalcTotals() {
   const tbody =
-    getCartTbody?.() || document.querySelector("#cart tbody, #cart-tbody");
+      getCartTbody?.() || document.querySelector("#cart tbody, #cart-tbody");
   if (!tbody) return;
 
   let sum = 0;
@@ -1144,4 +1148,45 @@ function recalcTotals() {
     sum += recalcRowSubtotal(row);
   });
   renderTotals(sum);
+}
+
+
+// ====== Helpers for cart tiered pricing on +/- in cart ======
+const __tiersCache = new Map();
+async function getTiers(pid) {
+  if (__tiersCache.has(pid)) return __tiersCache.get(pid);
+  const res = await fetch(API_MARKET_TIERS(pid));
+  if (!res.ok) throw new Error(await res.text());
+  const tiers = normalizeTiers(await res.json());
+  __tiersCache.set(pid, tiers);
+  return tiers;
+}
+
+function getPreferMarketForRow(row) {
+  const pid = row?.dataset?.productId;
+  const code = row?.dataset?.marketCode
+      || localStorage.getItem(`market:${pid}`)
+      || "M1";
+  return String(code).toUpperCase() === "M2" ? "M2" : "M1";
+}
+
+async function updateRowPriceForQty(row, qty) {
+  const pid = Number(row?.dataset?.productId || 0);
+  if (!pid) return;
+  const tiers = await getTiers(pid);
+  const preferMarket = "auto";
+  const picked = pickPriceForQty(tiers, qty, DEFAULT_T1, DEFAULT_T2, {
+    smallPolicy: "highest",
+    midPolicy:   "highest",
+    largePolicy: "lowest",
+    preferMarket
+  });
+  const unitPrice = Number(picked?.unitPrice || 0);
+  row.dataset.price = String(unitPrice);
+
+  const unitTd = row.querySelector(".unit-price");
+  if (unitTd) {
+    const label = preferMarket === "M2" ? "台北二" : "台北一";
+    unitTd.textContent = formatCurrency(unitPrice);
+  }
 }

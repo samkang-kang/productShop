@@ -1,610 +1,1106 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-  <head>
-    <script>
-      if (location.origin.startsWith("file://")) {
-        window.API_BASE = "http://localhost:8080";
-      }
-    </script>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>選果 || 選擇最好的果</title>
+<head>
+  <script>
+    if (location.origin.startsWith("file://")) {
+      window.API_BASE = "http://localhost:8080";
+    }
+  </script>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>選果 || 選擇最好的果</title>
 
-    <link
-      rel="stylesheet"
-      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-    />
-    <link rel="stylesheet" href="./CSS/style.css" />
-  </head>
+  <link
+          rel="stylesheet"
+          href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+  <link rel="stylesheet" href="./CSS/style.css" />
+  <style>
 
-  <body>
-    <section id="header">
-      <div class="header-container">
-        <!-- 左側：Logo + 導航連結 -->
-        <div class="left">
-          <a href="#" id="logo-link">
-            <img src="img/logo-1.png" alt="SwanGo Logo" id="fixed-logo" />
-          </a>
-          <nav class="nav-links">
-            <a href="landing.html">Home</a>
-            <a href="shop.html">Shop</a>
-            <a href="about.html">About</a>
-            <!-- <a href="FAQ.html">FAQ</a> -->
-          </nav>
+
+    .tab {
+      margin-bottom: 10px;
+    }
+
+    .tab a {
+      margin-right: 10px;
+      text-decoration: none;
+      color: black;
+    }
+
+    .tab .active {
+      background-color: black;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+    }
+
+    .address-list {
+      margin-top: 20px;
+      color: #888;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .modal input,
+    .modal select {
+      width: 100%;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .modal label {
+      display: block;
+      font-weight: bold;
+    }
+
+    .modal .btn {
+      margin-top: 10px;
+      background: black;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .modal .checkbox {
+      display: flex;
+      align-items: center;
+    }
+
+    .modal .checkbox input {
+      width: auto;
+      margin-right: 5px;
+
+    }
+    .modal { z-index: 9999; }
+
+    #address-block .address-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin:0 0 8px;
+    }
+    #address-block .address-row h3{ margin:0; }
+    #address-block .add-link{ color:#0a7; text-decoration:none; font-weight:600; }
+    #address-block .add-link:hover{ text-decoration:underline; }
+
+    /* 小螢幕自動換行（可留可不留） */
+    @media (max-width:600px){
+      #address-block .address-row{ flex-wrap:wrap; }
+    }
+
+    /* 讓標題與「＋新增地址」同一橫排 */
+    .address-row{
+      display:flex;
+      align-items:center;     /* 垂直置中 */
+      gap:12px;
+    }
+
+
+    /* h3 預設有外距，拿掉免得把整行撐開 */
+    .address-row .address-title{ margin:0; }
+
+
+
+    /* 按鈕高度也統一（你兩邊 class 都是 .normal） */
+    #coupon .normal,
+    #address-block .normal{
+      height: 40px;
+      padding: 0 18px;
+      border-radius: 6px;
+    }
+
+    /* 輸入列外框：用來當清單的定位基準 */
+    .address-input-row{
+      position: relative;
+      width: 100%;
+    }
+
+    /* 原本的輸入列維持橫排 */
+    .address-input{
+      display: flex;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    /* 讓清單像下拉建議，貼在輸入框下方 */
+    #addressList{
+      position: absolute;
+      left: 0;
+      top: calc(100% + 1px);      /* 在輸入列底下 4px */
+      width: 60%;                 /* 跟你的輸入框寬一致 */
+      max-height: 240px;
+      overflow: auto;
+      background: #fff;
+      border: 1px solid #e2e9e1;
+      border-radius: 6px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.08);
+      padding: 6px 0;
+      z-index: 50;
+    }
+
+    #addressList[hidden]{ display: none; }
+
+    #addressList .addr-item{
+      padding: 10px 12px;
+      cursor: pointer;
+      line-height: 1.35;
+    }
+    #addressList .addr-item:hover{
+      background: #f6f7f8;
+    }
+    #addressList .addr-item .addr{
+      color:#666; font-size: 13px; margin-top: 2px;
+    }
+    #addressList .tag{
+      display:inline-block;margin-left:6px;padding:0 6px;
+      font-size:12px;border-radius:10px;background:#e8f6ea;color:#088178;
+    }
+
+    /* ── 地址 & 優惠碼：輸入框統一 ── */
+
+    .address-input-row input[type="text"],   /* 地址輸入框（實際存在） */
+    #cuopon input[type="text"] {             /* 優惠碼輸入框（實際 id） */
+      padding: 12px 20px;
+      height: 50px;
+      font-size: 16px;
+      width: 50%;
+      border: 1px solid #e2e9e1;
+      border-radius: 6px;
+      outline: none;
+      box-sizing: border-box;
+      flex: none;
+    }
+
+    /* ── 地址 & 優惠碼：按鈕統一 ── */
+    .address-input .normal,                  /* 地址旁的按鈕（實際結構） */
+    #cuopon .normal {                        /* 優惠碼按鈕（實際 id） */
+      height: 50px;
+      padding: 0 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      background: #088178;
+      color: #fff;
+    }
+
+    /* 兩排都橫向排列、間距一致 */
+    .address-input,
+    #cuopon > div {
+      display: flex;
+      gap: 10px;
+    }
+
+
+
+
+  </style>
+</head>
+
+<body>
+<section id="header">
+  <div class="header-container">
+    <!-- 左側：Logo + 導航連結 -->
+    <div class="left">
+      <a href="#" id="logo-link">
+        <img src="img/logo-1.png" alt="SwanGo Logo" id="fixed-logo" />
+      </a>
+      <nav class="nav-links">
+        <a href="landing.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <!-- <a href="FAQ.html">FAQ</a> -->
+      </nav>
+    </div>
+
+    <!-- 右側：搜尋、購物車和人像圖標 -->
+    <div class="right">
+      <a href="#" class="nav-icon"><i class="fas fa-search"></i></a>
+      <a href="cart.html" class="nav-icon active"
+      ><i class="far fa-shopping-bag"></i
+      ></a>
+      <button
+              class="nav-icon account-btn"
+              aria-haspopup="menu"
+              aria-expanded="false"
+      >
+        <i class="fas fa-user"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 帳戶選單 -->
+  <div class="account-dropdown" role="menu" hidden>
+    <div class="dropdown-header">
+      <div class="user-info">
+        <div class="user-avatar">
+          <i class="fas fa-user-circle"></i>
         </div>
-
-        <!-- 右側：搜尋、購物車和人像圖標 -->
-        <div class="right">
-          <a href="#" class="nav-icon"><i class="fas fa-search"></i></a>
-          <a href="cart.html" class="nav-icon active" id="nav-cart"
-            ><i class="far fa-shopping-bag"></i>
-            <span class="cart-badge" id="cart-badge">0</span>
-          </a>
-          <button
-            class="nav-icon account-btn"
-            aria-haspopup="menu"
-            aria-expanded="false"
-          >
-            <i class="fas fa-user"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- 帳戶選單 -->
-      <div class="account-dropdown" role="menu" hidden>
-        <div class="dropdown-header">
-          <div class="user-info">
-            <div class="user-avatar">
-              <i class="fas fa-user-circle"></i>
-            </div>
-            <div class="user-details">
-              <div class="user-name">使用者名稱</div>
-              <div class="user-email">user@example.com</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="dropdown-menu">
-          <a href="#" class="menu-item" role="menuitem" tabindex="0">
-            <i class="fas fa-shopping-bag"></i>
-            <span>所有訂單</span>
-          </a>
-          <a href="#" class="menu-item" role="menuitem" tabindex="0">
-            <i class="fas fa-heart"></i>
-            <span>訂閱商品</span>
-          </a>
-          <a href="#" class="menu-item" role="menuitem" tabindex="0">
-            <i class="fas fa-cog"></i>
-            <span>帳戶設定</span>
-          </a>
-          <a href="#" class="menu-item" role="menuitem" tabindex="0">
-            <i class="fas fa-key"></i>
-            <span>修改密碼</span>
-          </a>
-          <div class="menu-divider"></div>
-          <a href="#" class="menu-item logout" role="menuitem" tabindex="0">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>登出</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- 手機版 -->
-      <div id="mobile">
-        <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
-        <i id="bar" class="fas fa-outdent"></i>
-      </div>
-    </section>
-
-    <!-- 輪播 -->
-    <div class="slideshow">
-      <div class="slides">
-        <div class="slide__item fades">
-          <!-- <div class="slide__pagenumber">1 / 3</div> -->
-          <img src="./img/banner/banner-5.jpg" alt="" />
-          <div class="slide__content"></div>
-        </div>
-        <div class="slide__item fades">
-          <!-- <div class="slide__pagenumber">2 / 3</div> -->
-          <img src="./img/banner/banner-7.jpg" alt="" />
-          <div class="slide__content"></div>
-        </div>
-        <div class="slide__item fades">
-          <!-- <div class="slide__pagenumber">3 / 3</div> -->
-          <img src="./img/banner/banner-5.jpg" alt="" />
-          <div class="slide__content"></div>
+        <div class="user-details">
+          <div class="user-name">使用者名稱</div>
+          <div class="user-email">user@example.com</div>
         </div>
       </div>
     </div>
-    <a id="prev" class="slide__arraw slide__arraw--prev"> ❮ </a>
-    <a id="next" class="slide__arraw slide__arraw--next"> ❯ </a>
-    <div class="slide__dot">
-      <div class="dot" data-value="1"></div>
-      <div class="dot" data-value="2"></div>
-      <div class="dot" data-value="3"></div>
+
+    <div class="dropdown-menu">
+      <a href="#" class="menu-item" role="menuitem" tabindex="0">
+        <i class="fas fa-shopping-bag"></i>
+        <span>所有訂單</span>
+      </a>
+      <a href="#" class="menu-item" role="menuitem" tabindex="0">
+        <i class="fas fa-heart"></i>
+        <span>訂閱商品</span>
+      </a>
+      <a href="#" class="menu-item" role="menuitem" tabindex="0">
+        <i class="fas fa-cog"></i>
+        <span>帳戶設定</span>
+      </a>
+      <a href="#" class="menu-item" role="menuitem" tabindex="0">
+        <i class="fas fa-key"></i>
+        <span>修改密碼</span>
+      </a>
+      <div class="menu-divider"></div>
+      <a href="#" class="menu-item logout" role="menuitem" tabindex="0">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>登出</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 手機版 -->
+  <div id="mobile">
+    <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
+    <i id="bar" class="fas fa-outdent"></i>
+  </div>
+</section>
+
+<!-- 輪播 -->
+<div class="slideshow">
+  <div class="slides">
+    <div class="slide__item fades">
+      <!-- <div class="slide__pagenumber">1 / 3</div> -->
+      <img src="./img/banner/banner-5.jpg" alt="" />
+      <div class="slide__content"></div>
+    </div>
+    <div class="slide__item fades">
+      <!-- <div class="slide__pagenumber">2 / 3</div> -->
+      <img src="./img/banner/banner-7.jpg" alt="" />
+      <div class="slide__content"></div>
+    </div>
+    <div class="slide__item fades">
+      <!-- <div class="slide__pagenumber">3 / 3</div> -->
+      <img src="./img/banner/banner-5.jpg" alt="" />
+      <div class="slide__content"></div>
+    </div>
+  </div>
+</div>
+<a id="prev" class="slide__arraw slide__arraw--prev"> ❮ </a>
+<a id="next" class="slide__arraw slide__arraw--next"> ❯ </a>
+<div class="slide__dot">
+  <div class="dot" data-value="1"></div>
+  <div class="dot" data-value="2"></div>
+  <div class="dot" data-value="3"></div>
+</div>
+
+<!-- 購物車 -->
+<section id="cart" class="section-p1">
+  <table width="100%">
+    <colgroup>
+      <col style="width: 8%" />
+      <col style="width: 12%" />
+      <col style="width: 30%" />
+      <col style="width: 12%" />
+      <col style="width: 14%" />
+      <col style="width: 24%" />
+    </colgroup>
+
+    <thead>
+    <tr>
+      <td>移除</td>
+      <td>圖片</td>
+      <td>商品名稱</td>
+      <td>單價</td>
+      <td>數量</td>
+      <td>小計</td>
+    </tr>
+    </thead>
+
+    <tbody id="cart-tbody"></tbody>
+  </table>
+</section>
+
+
+
+
+
+<section id="cart-add" class="section-p1">
+  <div class="cart-left">
+    <!-- 新增：地址欄位（樣式等一下用 CSS 共用） -->
+    <div class="address-row">
+      <h3>收件地址</h3>
+      <a id="openAddressModal" href="#" class="add-link">＋新增地址</a>
+    </div>
+    <!-- 已儲存地址列表（可選） -->
+    <div class="address-input-row">
+      <div class="address-input">
+        <input type="text" id="addressInput" placeholder="請輸入收件地址" autocomplete="off"/>
+        <button id="addressApplyBtn" class="normal">選擇地址</button>
+      </div>
+
+      <!-- 這個清單會顯示在輸入框正下方 -->
+      <div id="addressList" class="address-list" hidden></div>
     </div>
 
-    <!-- 購物車 -->
-    <section id="cart" class="section-p1">
-      <table width="100%">
-        <colgroup>
-          <col style="width: 8%" />
-          <col style="width: 12%" />
-          <col style="width: 30%" />
-          <col style="width: 12%" />
-          <col style="width: 14%" />
-          <col style="width: 24%" />
-        </colgroup>
+    <!-- 新增地址 Modal（置中） -->
+    <div class="modal" id="addressModal" aria-hidden="true">
+      <h2>新增地址</h2>
 
-        <thead>
-          <tr>
-            <td>移除</td>
-            <td>圖片</td>
-            <td>商品名稱</td>
-            <td>單價</td>
-            <td>數量</td>
-            <td>小計</td>
-          </tr>
-        </thead>
+      <label for="name">真實姓名＊</label>
+      <input type="text" id="name" placeholder="輸入真實姓名" />
 
-        <tbody id="cart-tbody"></tbody>
-      </table>
-    </section>
+      <label for="phone">手機號碼＊</label>
+      <input type="text" id="phone" placeholder="輸入手機號碼" />
 
-    <section id="cart-add" class="section-p1">
-      <div id="cuopon">
-        <h3>使用優惠券</h3>
-        <div>
-          <input type="text" placeholder="請輸入優惠碼" />
-          <button id="applyBtn" class="normal">套用</button>
-        </div>
+      <label for="city">城市</label>
+      <select id="city">
+        <option value="">請選擇縣市</option>
+      </select>
+
+      <label for="district">鄉鎮區</label>
+      <select id="district">
+        <option value="">請先選擇縣市</option>
+      </select>
+
+      <label for="zip">郵遞區號</label>
+      <input type="text" id="zip" value="100" readonly />
+
+      <label for="address">地址＊</label>
+      <input type="text" id="address" placeholder="輸入地址" />
+
+      <div class="checkbox">
+        <input type="checkbox" id="default" />
+        <label for="default">儲存為預設地址</label>
       </div>
 
-      <div id="subtotal">
-        <h3>購物車總計</h3>
-        <table>
-          <tr>
-            <td>購物車小計</td>
-            <td id="summary-subtotal">$ 0</td>
-          </tr>
-          <tr>
-            <td>運費</td>
-            <td id="summary-shipping">免運費</td>
-          </tr>
-          <tr>
-            <td><strong>總計</strong></td>
-            <td><strong id="summary-total">$ 0</strong></td>
-          </tr>
-        </table>
-        <button class="normal" onclick="handleCheckout()">前往結帳</button>
+      <div style="display:flex;justify-content:flex-end;gap:8px;">
+        <button id="submitAddressBtn" class="btn">確認</button>
       </div>
-    </section>
-
-    <footer class="section-p1">
-      <div class="col">
-        <img class="logo" src="img/Logo2.png" alt="" />
-        <h4>Contact</h4>
-        <p><strong>Address:</strong> 408 台中市 南屯區 公益路二段 51號18樓</p>
-        <p><strong>Phone:</strong> +04 1234 5678 /(+886) 12 2345 6789</p>
-        <p><strong>Hours:</strong> 10:00 - 18:00, Mon - Sat</p>
-        <div class="follow">
-          <h4>Follow Us</h4>
-          <div class="icon">
-            <i class="fab fa-facebook-f"></i>
-            <i class="fab fa-twitter"></i>
-            <i class="fab fa-instagram"></i>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <h4>About</h4>
-        <a href="#">About Us</a>
-        <a href="#">Delivery Information</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms & Conditions</a>
-        <a href="#">Contact Us</a>
-      </div>
-      <div class="col">
-        <h4>My Account</h4>
-        <a href="#">Sign In</a>
-        <a href="#">View Cart</a>
-        <a href="#">My Wishlist</a>
-        <a href="#">Track My Order</a>
-        <a href="#">Help</a>
-      </div>
-      <div class="col install">
-        <h4>Install App</h4>
-        <p>From App Store or Google Play</p>
-        <div class="row">
-          <img src="img/pay/app.jpg" alt="" />
-          <img src="img/pay/play.jpg" alt="" />
-        </div>
-        <p>Secured Payment Gateways</p>
-        <img src="img/pay/pay.png" alt="" />
-      </div>
-
-      <div class="copyright">
-        <p>© 2025.Big company</p>
-      </div>
-    </footer>
-
-    <div class="bottom-bar">
-      <div id="bottom-total">總金額：$0</div>
-      <button onclick="handleCheckout()">結帳</button>
     </div>
 
-    <!-- 隱藏的 ECPay 結帳表單 -->
-    <form
-      id="ecpay-form"
-      action="https://ecpay-eee.zeabur.app/ecpay/checkout"
-      method="POST"
-      style="display: none"
-    >
-      <input type="hidden" name="amount" id="amount" />
-      <input type="hidden" name="itemName" id="itemName" />
-    </form>
-    <!-- 引入統一的 auth.js -->
-    <script src="./JS/auth.js"></script>
 
-    <script src="./JS/script.js"></script>
-    <script src="./JS/account-dropdown.js"></script>
+    <!-- 原本的優惠券 -->
+    <div id="cuopon">
+      <h3>使用優惠券</h3>
+      <div>
+        <input type="text" placeholder="請輸入優惠碼" />
+        <button id="applyBtn" class="normal">套用</button>
+      </div>
+    </div>
+  </div>
 
-    <!-- 前端守門員：未登入就導回 /index.html -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const t = window.Auth?.getToken?.();
-        if (!t || window.Auth.isTokenExpired(t)) {
-          // 記住想看的頁面，之後登入成功導回這裡
-          sessionStorage.setItem(
-            "return_to",
-            location.pathname + location.search + location.hash
-          );
-          location.href = "/index.html";
-        }
-      });
-    </script>
+  <div id="subtotal">
+    <h3>購物車總計</h3>
+    <table>
+      <tr>
+        <td>購物車小計</td>
+        <td id="summary-subtotal">$ 0</td>
+      </tr>
+      <tr>
+        <td>運費</td>
+        <td id="summary-shipping">免運費</td>
+      </tr>
+      <tr>
+        <td><strong>總計</strong></td>
+        <td><strong id="summary-total">$ 0</strong></td>
+      </tr>
+    </table>
+    <button class="normal" onclick="handleCheckout()">前往結帳</button>
+  </div>
+  </div>
+</section>
 
-    <!-- JWT 用戶資訊顯示邏輯 -->
-    <script>
-      // 定義填充帳戶 email 的函式
-      function fillAccountEmail() {
-        const userEmailElement = document.querySelector(".user-email");
-        const userNameElement = document.querySelector(".user-name");
-        const logoutBtn = document.querySelector(".logout");
-        const accountBtn = document.querySelector(".account-btn");
-        const userInfoSection = document.querySelector(".user-info");
+<footer class="section-p1">
+  <div class="col">
+    <img class="logo" src="img/Logo2.png" alt="" />
+    <h4>Contact</h4>
+    <p><strong>Address:</strong> 408 台中市 南屯區 公益路二段 51號18樓</p>
+    <p><strong>Phone:</strong> +04 1234 5678 /(+886) 12 2345 6789</p>
+    <p><strong>Hours:</strong> 10:00 - 18:00, Mon - Sat</p>
+    <div class="follow">
+      <h4>Follow Us</h4>
+      <div class="icon">
+        <i class="fab fa-facebook-f"></i>
+        <i class="fab fa-twitter"></i>
+        <i class="fab fa-instagram"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <h4>About</h4>
+    <a href="#">About Us</a>
+    <a href="#">Delivery Information</a>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms & Conditions</a>
+    <a href="#">Contact Us</a>
+  </div>
+  <div class="col">
+    <h4>My Account</h4>
+    <a href="#">Sign In</a>
+    <a href="#">View Cart</a>
+    <a href="#">My Wishlist</a>
+    <a href="#">Track My Order</a>
+    <a href="#">Help</a>
+  </div>
+  <div class="col install">
+    <h4>Install App</h4>
+    <p>From App Store or Google Play</p>
+    <div class="row">
+      <img src="img/pay/app.jpg" alt="" />
+      <img src="img/pay/play.jpg" alt="" />
+    </div>
+    <p>Secured Payment Gateways</p>
+    <img src="img/pay/pay.png" alt="" />
+  </div>
 
-        if (!userEmailElement) return;
+  <div class="copyright">
+    <p>© 2025.Big company</p>
+  </div>
+</footer>
 
-        const token = Auth.getToken();
-        if (!token || Auth.isTokenExpired(token)) {
-          // 未登入狀態 - 隱藏使用者資訊區塊
-          if (userInfoSection) {
-            userInfoSection.style.display = "none";
-          }
+<div class="bottom-bar">
+  <div id="bottom-total">總金額：$0</div>
+  <button onclick="handleCheckout()">結帳</button>
+</div>
 
-          // 隱藏需要登入的功能選項
-          hideLoginRequiredItems();
+<!-- 隱藏的 ECPay 結帳表單 -->
+<form
+        id="ecpay-form"
+        action="https://sam86541919.zeabur.app/ecpay/checkout"
+        method="POST"
+        style="display: none"
+>
+  <input type="hidden" name="amount" id="amount" />
+  <input type="hidden" name="itemName" id="itemName" />
+</form>
+<!-- 引入統一的 auth.js -->
+<script src="./JS/auth.js"></script>
 
-          // 取消 dropdown-header 的 padding
-          const dropdownHeader = document.querySelector(".dropdown-header");
-          if (dropdownHeader) {
-            dropdownHeader.classList.add("no-padding");
-          }
+<script src="./JS/script.js"></script>
+<script src="./JS/account-dropdown.js"></script>
 
-          // 將登出按鈕改為登入按鈕
-          if (logoutBtn) {
-            logoutBtn.innerHTML =
-              '<i class="fas fa-sign-in-alt"></i><span>登入</span>';
-            logoutBtn.classList.add("login-btn");
-            logoutBtn.classList.remove("logout");
-            logoutBtn.href = "/index.html";
-            logoutBtn.style.display = "block";
-          }
-          return;
-        }
+<!-- Address modal backdrop -->
+<div id="cartAddressBackdrop"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9998;"></div>
 
-        // 已登入狀態
-        try {
-          const claims = Auth.parseJwt(token);
-          const email = claims.email || claims.sub || "user@example.com";
-          const name = claims.name || claims.firstName || "使用者";
 
-          // 顯示使用者資訊區塊
-          if (userInfoSection) {
-            userInfoSection.style.display = "flex";
-          }
+<!-- 前端守門員：未登入就導回 /index.html -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const t = window.Auth?.getToken?.();
+    if (!t || window.Auth.isTokenExpired(t)) {
+      // 記住想看的頁面，之後登入成功導回這裡
+      sessionStorage.setItem(
+              "return_to",
+              location.pathname + location.search + location.hash
+      );
+      location.href = "/index.html";
+    }
+  });
+</script>
 
-          // 恢復 dropdown-header 的 padding
-          const dropdownHeader = document.querySelector(".dropdown-header");
-          if (dropdownHeader) {
-            dropdownHeader.classList.remove("no-padding");
-          }
+<!-- JWT 用戶資訊顯示邏輯 -->
+<script>
+  // 定義填充帳戶 email 的函式
+  function fillAccountEmail() {
+    const userEmailElement = document.querySelector(".user-email");
+    const userNameElement = document.querySelector(".user-name");
+    const logoutBtn = document.querySelector(".logout");
+    const accountBtn = document.querySelector(".account-btn");
+    const userInfoSection = document.querySelector(".user-info");
 
-          userEmailElement.textContent = email;
-          if (userNameElement) userNameElement.textContent = name;
+    if (!userEmailElement) return;
 
-          // 顯示所有功能選項
-          showAllItems();
-
-          // 恢復登出按鈕
-          if (logoutBtn) {
-            logoutBtn.innerHTML =
-              '<i class="fas fa-sign-out-alt"></i><span>登出</span>';
-            logoutBtn.classList.remove("login-btn");
-            logoutBtn.classList.add("logout");
-            logoutBtn.href = "#";
-            logoutBtn.style.display = "block";
-          }
-        } catch (error) {
-          // 隱藏使用者資訊區塊
-          if (userInfoSection) {
-            userInfoSection.style.display = "none";
-          }
-          hideLoginRequiredItems();
-        }
-
-        // 若 token 未過期，再以 Auth.authFetch 取得 { email } 成功後覆寫
-        if (!Auth.isTokenExpired(token)) {
-          Auth.authFetch("/api/me")
-            .then((response) => {
-              if (response.ok) {
-                return response.json();
-              }
-              throw new Error("API 請求失敗");
-            })
-            .then((data) => {
-              if (data.email) {
-                userEmailElement.textContent = data.email;
-              }
-              if (data.name && userNameElement) {
-                userNameElement.textContent = data.name;
-              }
-            })
-            .catch((error) => {
-              if (error.status === 401) {
-                // 401 時隱藏使用者資訊並隱藏登入功能選項
-                if (userInfoSection) {
-                  userInfoSection.style.display = "none";
-                }
-                hideLoginRequiredItems();
-                // 清除過期的 token
-                Auth.clearToken();
-              }
-            });
-        }
+    const token = Auth.getToken();
+    if (!token || Auth.isTokenExpired(token)) {
+      // 未登入狀態 - 隱藏使用者資訊區塊
+      if (userInfoSection) {
+        userInfoSection.style.display = "none";
       }
 
       // 隱藏需要登入的功能選項
-      function hideLoginRequiredItems() {
-        // 隱藏除了登入/登出按鈕之外的所有選單項目
-        const loginRequiredItems = document.querySelectorAll(
-          ".menu-item:not(.logout):not(.login-btn)"
-        );
-        loginRequiredItems.forEach((item) => {
-          item.style.display = "none";
-        });
+      hideLoginRequiredItems();
 
-        // 隱藏分隔線
-        const divider = document.querySelector(".menu-divider");
-        if (divider) {
-          divider.style.display = "none";
-        }
+      // 取消 dropdown-header 的 padding
+      const dropdownHeader = document.querySelector(".dropdown-header");
+      if (dropdownHeader) {
+        dropdownHeader.classList.add("no-padding");
       }
+
+      // 將登出按鈕改為登入按鈕
+      if (logoutBtn) {
+        logoutBtn.innerHTML =
+                '<i class="fas fa-sign-in-alt"></i><span>登入</span>';
+        logoutBtn.classList.add("login-btn");
+        logoutBtn.classList.remove("logout");
+        logoutBtn.href = "/index.html";
+        logoutBtn.style.display = "block";
+      }
+      return;
+    }
+
+    // 已登入狀態
+    try {
+      const claims = Auth.parseJwt(token);
+      const email = claims.email || claims.sub || "user@example.com";
+      const name = claims.name || claims.firstName || "使用者";
+
+      // 顯示使用者資訊區塊
+      if (userInfoSection) {
+        userInfoSection.style.display = "flex";
+      }
+
+      // 恢復 dropdown-header 的 padding
+      const dropdownHeader = document.querySelector(".dropdown-header");
+      if (dropdownHeader) {
+        dropdownHeader.classList.remove("no-padding");
+      }
+
+      userEmailElement.textContent = email;
+      if (userNameElement) userNameElement.textContent = name;
 
       // 顯示所有功能選項
-      function showAllItems() {
-        const allItems = document.querySelectorAll(".menu-item");
-        allItems.forEach((item) => {
-          item.style.display = "block";
-        });
+      showAllItems();
 
-        // 顯示分隔線
-        const divider = document.querySelector(".menu-divider");
-        if (divider) {
-          divider.style.display = "block";
-        }
+      // 恢復登出按鈕
+      if (logoutBtn) {
+        logoutBtn.innerHTML =
+                '<i class="fas fa-sign-out-alt"></i><span>登出</span>';
+        logoutBtn.classList.remove("login-btn");
+        logoutBtn.classList.add("logout");
+        logoutBtn.href = "#";
+        logoutBtn.style.display = "block";
       }
-
-      // 處理登出功能
-      function handleLogout() {
-        if (confirm("確定要登出嗎？")) {
-          // 清除 JWT token
-          Auth.clearToken();
-
-          // 更新 UI 顯示
-          fillAccountEmail();
-        }
+    } catch (error) {
+      // 隱藏使用者資訊區塊
+      if (userInfoSection) {
+        userInfoSection.style.display = "none";
       }
+      hideLoginRequiredItems();
+    }
 
-      // 綁定在選單展開時觸發 fillAccountEmail()
-      document.addEventListener("DOMContentLoaded", function () {
-        const accountBtn = document.querySelector(".account-btn");
-        const logoutBtn = document.querySelector(".logout");
+    // 若 token 未過期，再以 Auth.authFetch 取得 { email } 成功後覆寫
+    if (!Auth.isTokenExpired(token)) {
+      Auth.authFetch("/api/me")
+              .then((response) => {
+                if (response.ok) {
+                  return response.json();
+                }
+                throw new Error("API 請求失敗");
+              })
+              .then((data) => {
+                if (data.email) {
+                  userEmailElement.textContent = data.email;
+                }
+                if (data.name && userNameElement) {
+                  userNameElement.textContent = data.name;
+                }
+              })
+              .catch((error) => {
+                if (error.status === 401) {
+                  // 401 時隱藏使用者資訊並隱藏登入功能選項
+                  if (userInfoSection) {
+                    userInfoSection.style.display = "none";
+                  }
+                  hideLoginRequiredItems();
+                  // 清除過期的 token
+                  Auth.clearToken();
+                }
+              });
+    }
+  }
 
-        if (accountBtn) {
-          accountBtn.addEventListener("click", function () {
-            // 點擊後延遲一下再填充，確保選單已展開
-            setTimeout(fillAccountEmail, 100);
-          });
-        }
+  // 隱藏需要登入的功能選項
+  function hideLoginRequiredItems() {
+    // 隱藏除了登入/登出按鈕之外的所有選單項目
+    const loginRequiredItems = document.querySelectorAll(
+            ".menu-item:not(.logout):not(.login-btn)"
+    );
+    loginRequiredItems.forEach((item) => {
+      item.style.display = "none";
+    });
 
-        if (logoutBtn) {
-          logoutBtn.addEventListener("click", function (e) {
-            e.preventDefault();
+    // 隱藏分隔線
+    const divider = document.querySelector(".menu-divider");
+    if (divider) {
+      divider.style.display = "none";
+    }
+  }
 
-            // 檢查是否為登入按鈕
-            if (this.classList.contains("login-btn")) {
-              // 跳轉到登入頁面
-              window.location.href = "/index.html";
-              return;
-            }
+  // 顯示所有功能選項
+  function showAllItems() {
+    const allItems = document.querySelectorAll(".menu-item");
+    allItems.forEach((item) => {
+      item.style.display = "block";
+    });
 
-            // 處理登出
-            handleLogout();
-          });
-        }
+    // 顯示分隔線
+    const divider = document.querySelector(".menu-divider");
+    if (divider) {
+      divider.style.display = "block";
+    }
+  }
 
-        // 在 DOMContentLoaded 也先呼叫一次 fillAccountEmail() 以避免空白
-        fillAccountEmail();
+  // 處理登出功能
+  function handleLogout() {
+    if (confirm("確定要登出嗎？")) {
+      // 清除 JWT token
+      Auth.clearToken();
+
+      // 更新 UI 顯示
+      fillAccountEmail();
+    }
+  }
+
+  // 綁定在選單展開時觸發 fillAccountEmail()
+  document.addEventListener("DOMContentLoaded", function () {
+    const accountBtn = document.querySelector(".account-btn");
+    const logoutBtn = document.querySelector(".logout");
+
+    if (accountBtn) {
+      accountBtn.addEventListener("click", function () {
+        // 點擊後延遲一下再填充，確保選單已展開
+        setTimeout(fillAccountEmail, 100);
       });
+    }
 
-      // 監聽 window 'storage' 事件（key='jwt_token'）時再次呼叫 fillAccountEmail()
-      window.addEventListener("storage", function (e) {
-        if (e.key === "jwt_token") {
-          fillAccountEmail();
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        // 檢查是否為登入按鈕
+        if (this.classList.contains("login-btn")) {
+          // 跳轉到登入頁面
+          window.location.href = "/index.html";
+          return;
         }
+
+        // 處理登出
+        handleLogout();
       });
-    </script>
+    }
 
-    <!-- 智能 Navbar 隱藏/顯示邏輯 -->
-    <script>
-      (function () {
-        const header = document.getElementById("header");
-        let isMouseNearTop = false;
-        let hideTimeout = null;
+    // 在 DOMContentLoaded 也先呼叫一次 fillAccountEmail() 以避免空白
+    fillAccountEmail();
+  });
 
-        // 初始化：顯示 navbar（因為在頂端）
-        header.style.transform = "translateY(0)";
-        header.style.transition = "transform 0.3s ease";
+  // 監聽 window 'storage' 事件（key='jwt_token'）時再次呼叫 fillAccountEmail()
+  window.addEventListener("storage", function (e) {
+    if (e.key === "jwt_token") {
+      fillAccountEmail();
+    }
+  });
+</script>
 
-        // 檢查滑鼠是否在視窗頂端附近（32px 內）
-        function checkMousePosition(e) {
-          isMouseNearTop = e.clientY <= 50;
+<!-- 智能 Navbar 隱藏/顯示邏輯 -->
+<script>
+  (function () {
+    const header = document.getElementById("header");
+    let isMouseNearTop = false;
+    let hideTimeout = null;
 
-          if (isMouseNearTop) {
-            showNavbar();
-            clearTimeout(hideTimeout);
-          } else if (window.scrollY > 0 && !isMouseNearTop) {
-            // 延遲隱藏，避免滑鼠移動時閃爍
-            hideTimeout = setTimeout(() => {
-              if (!isMouseNearTop && window.scrollY > 0) {
-                hideNavbar();
-              }
-            }, 300);
+    // 初始化：顯示 navbar（因為在頂端）
+    header.style.transform = "translateY(0)";
+    header.style.transition = "transform 0.3s ease";
+
+    // 檢查滑鼠是否在視窗頂端附近（32px 內）
+    function checkMousePosition(e) {
+      isMouseNearTop = e.clientY <= 50;
+
+      if (isMouseNearTop) {
+        showNavbar();
+        clearTimeout(hideTimeout);
+      } else if (window.scrollY > 0 && !isMouseNearTop) {
+        // 延遲隱藏，避免滑鼠移動時閃爍
+        hideTimeout = setTimeout(() => {
+          if (!isMouseNearTop && window.scrollY > 0) {
+            hideNavbar();
           }
-        }
+        }, 300);
+      }
+    }
 
-        // 顯示 navbar
-        function showNavbar() {
-          header.style.transform = "translateY(0)";
-        }
+    // 顯示 navbar
+    function showNavbar() {
+      header.style.transform = "translateY(0)";
+    }
 
-        // 隱藏 navbar
-        function hideNavbar() {
-          header.style.transform = "translateY(-100%)";
-        }
+    // 隱藏 navbar
+    function hideNavbar() {
+      header.style.transform = "translateY(-100%)";
+    }
 
-        // 處理滾動事件
-        function handleScroll() {
-          if (window.scrollY === 0) {
-            // 在頂端時顯示 navbar
-            showNavbar();
-          } else {
-            // 離開頂端時隱藏 navbar（除非滑鼠在上緣）
-            if (!isMouseNearTop) {
+    // 處理滾動事件
+    function handleScroll() {
+      if (window.scrollY === 0) {
+        // 在頂端時顯示 navbar
+        showNavbar();
+      } else {
+        // 離開頂端時隱藏 navbar（除非滑鼠在上緣）
+        if (!isMouseNearTop) {
+          hideNavbar();
+        }
+      }
+    }
+
+    // 檢查是否為觸控裝置
+    function isTouchDevice() {
+      return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    }
+
+    // 觸控裝置的簡化邏輯
+    function handleTouchDevice() {
+      window.addEventListener("scroll", handleScroll);
+    }
+
+    // 滑鼠裝置的完整邏輯
+    function handleMouseDevice() {
+      // 滑鼠移動事件
+      document.addEventListener("mousemove", checkMousePosition);
+
+      // 滑鼠進入 navbar 事件
+      header.addEventListener("mouseenter", () => {
+        clearTimeout(hideTimeout);
+      });
+
+      // 滑鼠離開 navbar 事件
+      header.addEventListener("mouseleave", () => {
+        if (window.scrollY > 0 && !isMouseNearTop) {
+          hideTimeout = setTimeout(() => {
+            if (!isMouseNearTop && window.scrollY > 0) {
               hideNavbar();
             }
-          }
+          }, 300);
         }
+      });
 
-        // 檢查是否為觸控裝置
-        function isTouchDevice() {
-          return "ontouchstart" in window || navigator.maxTouchPoints > 0;
-        }
+      // 滾動事件
+      window.addEventListener("scroll", handleScroll);
+    }
 
-        // 觸控裝置的簡化邏輯
-        function handleTouchDevice() {
-          window.addEventListener("scroll", handleScroll);
-        }
+    // 初始化
+    if (isTouchDevice()) {
+      handleTouchDevice();
+    } else {
+      handleMouseDevice();
+    }
 
-        // 滑鼠裝置的完整邏輯
-        function handleMouseDevice() {
-          // 滑鼠移動事件
-          document.addEventListener("mousemove", checkMousePosition);
+    // 視窗大小改變時重新檢查
+    window.addEventListener("resize", handleScroll);
+  })();
+</script>
 
-          // 滑鼠進入 navbar 事件
-          header.addEventListener("mouseenter", () => {
-            clearTimeout(hideTimeout);
-          });
+<!-- 結帳功能 -->
+<script>
+  async function handleCheckout() {
+    const userId = 65; // 假設登入後知道 userId
+    const token = Auth.getToken();
 
-          // 滑鼠離開 navbar 事件
-          header.addEventListener("mouseleave", () => {
-            if (window.scrollY > 0 && !isMouseNearTop) {
-              hideTimeout = setTimeout(() => {
-                if (!isMouseNearTop && window.scrollY > 0) {
-                  hideNavbar();
-                }
-              }, 300);
-            }
-          });
+    if (!token || Auth.isTokenExpired(token)) {
+      alert("請先登入");
+      return;
+    }
 
-          // 滾動事件
-          window.addEventListener("scroll", handleScroll);
-        }
+    // 檢查購物車是否有商品
+    const cartTbody = document.querySelector("#cart tbody, #cart-tbody");
+    if (!cartTbody) {
+      alert("找不到購物車，請重新整理頁面");
+      return;
+    }
 
-        // 初始化
-        if (isTouchDevice()) {
-          handleTouchDevice();
-        } else {
-          handleMouseDevice();
-        }
+    const cartItems = cartTbody.querySelectorAll("tr[data-cart-item-id]");
+    if (cartItems.length === 0) {
+      alert("購物車內沒有商品，無法結帳");
+      return;
+    }
 
-        // 視窗大小改變時重新檢查
-        window.addEventListener("resize", handleScroll);
-      })();
-    </script>
+    try {
+      const res = await Auth.authFetch(
+              `/api/cart/checkout?userId=${userId}`,
+              {
+                method: "GET",
+              }
+      );
 
-    <!-- 結帳功能 -->
-    <script>
-      async function handleCheckout() {
-        const userId = 57; // 假設登入後知道 userId
-        const token = Auth.getToken();
-
-        if (!token || Auth.isTokenExpired(token)) {
-          alert("請先登入");
-          return;
-        }
-
-        // 檢查購物車是否有商品
-        const cartTbody = document.querySelector("#cart tbody, #cart-tbody");
-        if (!cartTbody) {
-          alert("找不到購物車，請重新整理頁面");
-          return;
-        }
-
-        const cartItems = cartTbody.querySelectorAll("tr[data-cart-item-id]");
-        if (cartItems.length === 0) {
-          alert("購物車內沒有商品，無法結帳");
-          return;
-        }
-
-        try {
-          const res = await Auth.authFetch(
-            `/api/cart/checkout?userId=${userId}`,
-            {
-              method: "GET",
-            }
-          );
-
-          if (!res.ok) {
-            throw new Error(`後端錯誤: ${res.status}`);
-          }
-
-          const data = await res.json();
-
-          // 後端傳回 { itemName: "...", amount: 1234 }
-          document.getElementById("itemName").value = data.itemName;
-          document.getElementById("amount").value = data.amount;
-
-          // 提交表單到綠界
-          document.getElementById("ecpay-form").submit();
-        } catch (err) {
-          console.error("結帳失敗", err);
-          alert("結帳失敗，請稍後再試");
-        }
+      if (!res.ok) {
+        throw new Error(`後端錯誤: ${res.status}`);
       }
-    </script>
-  </body>
+
+      const data = await res.json();
+
+      // 後端傳回 { itemName: "...", amount: 1234 }
+      document.getElementById("itemName").value = data.itemName;
+      document.getElementById("amount").value = data.amount;
+
+      // 提交表單到綠界
+      document.getElementById("ecpay-form").submit();
+    } catch (err) {
+      console.error("結帳失敗", err);
+      alert("結帳失敗，請稍後再試");
+    }
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const modalEl = document.getElementById('addressModal');
+    const backdrop = document.getElementById('cartAddressBackdrop');
+    const openBtn  = document.getElementById('openAddressModal');
+    const citySel  = document.getElementById('city');
+    const distSel  = document.getElementById('district');
+    const submitBtn= document.getElementById('submitAddressBtn');
+
+    function showModal(){
+      if (!modalEl || !backdrop) return;
+      modalEl.style.display = 'block';
+      backdrop.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+    function hideModal(){
+      if (!modalEl || !backdrop) return;
+      modalEl.style.display = 'none';
+      backdrop.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    async function loadCities(){
+      const res = await fetch('Data/TwCities.json');
+      if (!res.ok) throw new Error('載入城市失敗: '+res.status);
+      const data = await res.json();
+      // 先清空並塞選項
+      citySel.innerHTML = '<option value="">請選擇縣市</option>';
+      for (const c of data){
+        const o = document.createElement('option');
+        o.value = c.name; o.textContent = c.name;
+        citySel.appendChild(o);
+      }
+      // 存到元素上，之後更新 district 會用到
+      citySel._twdata = data;
+    }
+
+    function updateDistricts(){
+      const data = citySel._twdata || [];
+      const c = data.find(x => x.name === citySel.value);
+      distSel.innerHTML = c ? c.districts.map(d=>`<option value="${d.name}">${d.name}</option>`).join('')
+              : '<option value="">請先選擇縣市</option>';
+      updateZip(); // 連帶更新郵遞區號
+    }
+
+    function updateZip(){
+      const data = citySel._twdata || [];
+      const c = data.find(x => x.name === citySel.value);
+      const d = c?.districts?.find(x => x.name === distSel.value);
+      document.getElementById('zip')?.setAttribute('value', d?.zip || '');
+      document.getElementById('zip').value = d?.zip || '';
+    }
+
+    async function submitAddress(){
+      const token = window.Auth?.getToken?.() || localStorage.getItem('jwt_token') || localStorage.getItem('token') || '';
+      if (!token){ alert('請先登入'); return; }
+      const body = {
+        recipientName : document.getElementById('name').value.trim(),
+        phone         : document.getElementById('phone').value.trim(),
+        city          : citySel.value,
+        district      : distSel.value,
+        postalCode    : document.getElementById('zip').value.trim(),
+        detailAddress : document.getElementById('address').value.trim(),
+        isDefault     : document.getElementById('default').checked,
+      };
+      if (!body.recipientName || !body.phone || !body.detailAddress){
+        alert('請填寫必填欄位：姓名、手機、地址'); return;
+      }
+      const res = await fetch(`${window.API_BASE || 'http://localhost:8080'}/api/addresses/add`, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', Authorization:`Bearer ${token}` },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok){ throw new Error(await res.text()); }
+      alert('地址新增成功'); hideModal();
+      await loadDefaultAddressToInput();
+    }
+
+    // 綁事件
+    openBtn?.addEventListener('click', e => { e.preventDefault(); loadCities().then(showModal).catch(console.error); });
+    citySel?.addEventListener('change', updateDistricts);
+    distSel?.addEventListener('change', updateZip);
+    submitBtn?.addEventListener('click', e => { e.preventDefault(); submitAddress().catch(err => alert('新增失敗')); });
+    backdrop?.addEventListener('click', hideModal);
+    // 頁面載入就把「預設地址」塞到收件地址框
+    loadDefaultAddressToInput();
+  });
+  // 這個是你的 JWT 取得邏輯（相容你專案的寫法）
+  const getJwt = () =>
+          window.Auth?.getToken?.() ||
+          localStorage.getItem('jwt_token') ||
+          localStorage.getItem('token') || '';
+
+  // 收件地址輸入框
+  const addrInput = document.getElementById('addressInput');
+
+  // 讀「預設地址」→ 塞進收件地址輸入框
+  async function loadDefaultAddressToInput() {
+    if (!addrInput) return;
+
+    // 先看你有沒有從別頁塞的快取（有就用，順手清掉）
+    const saved = localStorage.getItem('ship_to');
+    if (saved) {
+      try {
+        const a = JSON.parse(saved);
+        const txt = `${a.postalCode || ''} ${a.city || ''}${a.district || ''}${a.detailAddress || ''}`.trim();
+        addrInput.value = txt;
+        localStorage.removeItem('ship_to');
+        return;
+      } catch {}
+    }
+
+    // 沒快取 → 向後端拿我的地址清單，找 isDefault
+    const token = getJwt();
+    if (!token) return; // 沒登入就不理
+
+    try {
+      const res = await fetch(`${window.API_BASE || ''}/api/addresses/my`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) return;
+
+      const list = await res.json();
+      const def = Array.isArray(list) ? (list.find(a => a.isDefault) || list[0]) : null;
+      if (def) {
+        const txt = `${def.postalCode || ''} ${def.city || ''}${def.district || ''}${def.detailAddress || ''}`.trim();
+        addrInput.value = txt;
+      }
+    } catch (e) {
+      console.warn('loadDefaultAddressToInput failed', e);
+    }
+  }
+</script>
+
+<script>
+  // ─────────────────────────────────────────────────────────
+  //  顯示 / 隱藏下拉清單
+  // ─────────────────────────────────────────────────────────
+  function toggleAddressList(show){
+    const box = document.getElementById('addressList');
+    if (!box) return;
+    if (show === undefined) box.hidden = !box.hidden;
+    else box.hidden = !show;
+  }
+
+  // ─────────────────────────────────────────────────────────
+  //  重新渲染「我的地址清單」到下拉
+  //  傳入格式：[{ recipientName, phone, city, district, postalCode, detailAddress, isDefault }, ...]
+  // ─────────────────────────────────────────────────────────
+  function renderAddressList(list) {
+    const box = document.getElementById('addressList');
+    const input = document.getElementById('addressInput');
+    if (!box) return;
+
+    if (!Array.isArray(list) || list.length === 0) {
+      box.innerHTML = '<div class="addr-item" style="color:#888;cursor:default">目前沒有已儲存的地址</div>';
+      return;
+    }
+
+    box.innerHTML = list.map(a => {
+      const full = `${a.postalCode ?? ''} ${a.city ?? ''}${a.district ?? ''}${a.detailAddress ?? ''}`.trim();
+      return `
+        <div class="addr-item" data-value="${full.replace(/"/g,'&quot;')}">
+          <div><strong>${a.recipientName ?? ''}</strong>（${a.phone ?? ''}）${a.isDefault ? '<span class="tag">預設</span>' : ''}</div>
+          <div class="addr">${full}</div>
+        </div>
+      `;
+    }).join('');
+
+    // 預設地址自動帶入（若輸入框目前是空的）
+    const def = list.find(a => a.isDefault);
+    if (def && input && !input.value) {
+      const full = `${def.postalCode ?? ''} ${def.city ?? ''}${def.district ?? ''}${def.detailAddress ?? ''}`.trim();
+      input.value = full;
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────
+  //  文件層級事件：點清單項目回填，點外面關閉
+  // ─────────────────────────────────────────────────────────
+  document.addEventListener('click', (e) => {
+    const item = e.target.closest('#addressList .addr-item');
+    if (item) {
+      const val = item.getAttribute('data-value') || '';
+      const input = document.getElementById('addressInput');
+      if (input) input.value = val;
+      toggleAddressList(false);
+      return;
+    }
+    // 點擊在輸入列之外 → 關閉清單
+    if (!e.target.closest('.address-input-row')) {
+      toggleAddressList(false);
+    }
+  });
+
+  // ─────────────────────────────────────────────────────────
+  //  綁定按鈕與輸入框：打開/切換清單
+  // ─────────────────────────────────────────────────────────
+  document.getElementById('addressApplyBtn')?.addEventListener('click', (e)=>{
+    e.preventDefault();
+    toggleAddressList();   // 切換開/關
+  });
+  document.getElementById('addressInput')?.addEventListener('focus', ()=>{
+    toggleAddressList(true);
+  });
+
+  // ─────────────────────────────────────────────────────────
+  //  從後端載入我的地址清單 → 呼叫 renderAddressList(list)
+  //  需要已登入（Auth.getToken 存在且未過期）
+  // ─────────────────────────────────────────────────────────
+  async function loadAddresses(){
+    try {
+      const token = window.Auth?.getToken?.();
+      if (!token || window.Auth.isTokenExpired(token)) return;  // 未登入就不載
+
+      // 用同一套 auth.js 的 authFetch（你在 cart.html 已經引入了）
+      const res = await Auth.authFetch('/api/addresses/my', { method: 'GET' });
+      if (!res.ok) throw new Error(await res.text());
+      const list = await res.json();
+
+      // 丟給下拉清單渲染
+      renderAddressList(Array.isArray(list) ? list : (list.items ?? []));
+    } catch (err) {
+      console.warn('[address] 讀取地址列表失敗：', err);
+    }
+  }
+
+  // 首次載入就去拿清單（登入狀態下才會成功）
+  document.addEventListener('DOMContentLoaded', loadAddresses);
+</script>
+
+
+
+
+
+</script>
+</body>
 </html>

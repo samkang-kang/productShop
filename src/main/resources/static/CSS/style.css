@@ -199,29 +199,10 @@ body {
   color: #ffffff;
   font-size: 20px;
   transition: 0.3s ease;
-  position: relative; /* for badge positioning */
 }
 
 .nav-icon:hover {
   color: #243320;
-}
-
-/* cart badge */
-.cart-badge {
-  position: absolute;
-  top: -6px;
-  right: -10px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 4px;
-  border-radius: 999px;
-  background: #e53935;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 18px;
-  text-align: center;
-  display: none; /* hidden when zero */
 }
 
 #mobile {
@@ -1265,6 +1246,32 @@ footer a:hover {
   flex-wrap: wrap;
   justify-content: space-between;
 }
+/* 左欄容器，包「地址」+「優惠券」疊在一起 */
+.cart-left { width: 50%; }
+
+/* 在左欄裡，兩個區塊都吃滿寬 */
+.cart-left #address-block,
+.cart-left #cuopon { width: 100%; }
+
+/* 讓兩塊看起來一模一樣（直接共用選擇器） */
+#address-block, #cuopon { margin-bottom: 30px; }
+#address-block h3, #cuopon h3 { padding-bottom: 15px; }
+#address-block input, #cuopon input {
+  padding: 10px 20px;
+  outline: none;
+  width: 60%;
+  margin-right: 10px;
+  border: 1px solid #e2e9e1;
+}
+#address-block button, #cuopon button {
+  background: #088178;
+  color: #fff;
+  padding: 12px 20px;
+}
+
+/* 原本 #cuopon 設 width:50%；在左欄情境下覆蓋成 100% */
+.cart-left #cuopon { width: 100%; }
+
 
 #cuopon {
   width: 50%;
@@ -2069,10 +2076,10 @@ footer a:hover {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.45),
-    rgba(0, 0, 0, 0.1) 60%,
-    rgba(0, 0, 0, 0)
+          to top,
+          rgba(0, 0, 0, 0.45),
+          rgba(0, 0, 0, 0.1) 60%,
+          rgba(0, 0, 0, 0)
   );
   z-index: 1;
   pointer-events: none;
@@ -2111,10 +2118,10 @@ footer a:hover {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.35),
-    rgba(0, 0, 0, 0.1) 60%,
-    rgba(0, 0, 0, 0)
+          to top,
+          rgba(0, 0, 0, 0.35),
+          rgba(0, 0, 0, 0.1) 60%,
+          rgba(0, 0, 0, 0)
   );
   z-index: 1;
   pointer-events: none;
@@ -2202,10 +2209,10 @@ footer a:hover {
   position: absolute;
   inset: 0; /* 上右下左全覆蓋 */
   background: rgba(
-    255,
-    255,
-    255,
-    0.4
+          255,
+          255,
+          255,
+          0.4
   ); /* 白色半透明遮罩，可改成黑色 rgba(0,0,0,0.2) */
   z-index: -1;
   border-radius: inherit;
@@ -2513,7 +2520,7 @@ footer a:hover {
   padding: 0 20px;
   color: #222;
   font-family: system-ui, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei",
-    sans-serif;
+  sans-serif;
   line-height: 1.8;
 }
 .order-header {
@@ -2686,7 +2693,7 @@ footer a:hover {
   cursor: pointer;
 }
 .btn:hover {
-  background: #625c59;
+  background: #f7f7f7;
 }
 .btn-primary {
   background: #222;
