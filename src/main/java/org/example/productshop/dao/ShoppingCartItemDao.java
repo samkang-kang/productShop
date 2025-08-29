@@ -28,16 +28,28 @@ public class ShoppingCartItemDao {
                 .stream().findFirst().orElse(null);
     }
 
-    // 新增購物車（不用更改）
-    public void insertCartItem(Integer userId, Integer productId, Integer quantity) {
-        String sql = "INSERT INTO shopping_cart_items(user_id, product_id, quantity) " +
-                "VALUES(:userId, :productId, :quantity)";
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", userId);
-        params.addValue("productId", productId);
-        params.addValue("quantity", quantity);
-        jdbcTemplate.update(sql, params);
-    }
+//    // 新增購物車（不用更改）
+//    public void insertCartItem(Integer userId, Integer productId, Integer quantity) {
+//        String sql = "INSERT INTO shopping_cart_items(user_id, product_id, quantity) " +
+//                "VALUES(:userId, :productId, :quantity)";
+//        MapSqlParameterSource params = new MapSqlParameterSource();
+//        params.addValue("userId", userId);
+//        params.addValue("productId", productId);
+//        params.addValue("quantity", quantity);
+//        jdbcTemplate.update(sql, params);
+//    }
+
+    // ✨ 新增購物車（含 price）
+    public void insertCartItem(Integer userId, Integer productId, Integer quantity, java.math.BigDecimal price) {
+                String sql = "INSERT INTO shopping_cart_items(user_id, product_id, quantity, price) " +
+                                "VALUES(:userId, :productId, :quantity, :price)";
+                MapSqlParameterSource params = new MapSqlParameterSource();
+                params.addValue("userId", userId);
+                params.addValue("productId", productId);
+                params.addValue("quantity", quantity);
+                params.addValue("price", price);
+                jdbcTemplate.update(sql, params);
+            }
 
     // 更新購物車數量（以 userId + productId 定位）（不用更改）
     public void updateCartItem(Integer userId, Integer productId, Integer quantity) {
@@ -48,6 +60,16 @@ public class ShoppingCartItemDao {
         params.addValue("userId", userId);
         params.addValue("productId", productId);
         jdbcTemplate.update(sql, params);
+    }
+
+    // 放在 ShoppingCartItemDao 裡（和其他方法同一層）
+    public int updateCartItemQuantity(long userId, long cartItemId, int quantity) {
+        String sql = "UPDATE shopping_cart_items SET quantity = :quantity " +
+                "WHERE id = :id AND user_id = :userId";
+        return jdbcTemplate.update(sql, new MapSqlParameterSource()
+                .addValue("quantity", quantity)
+                .addValue("id", cartItemId)
+                .addValue("userId", userId));
     }
 
     // 刪除購物車商品（已有 userId 條件，不用更改）
@@ -62,13 +84,24 @@ public class ShoppingCartItemDao {
     }
 
     // ✅ 更新購物車商品數量：加入 userId 條件（避免誤改他人商品）
-    public int updateCartItemQuantity(long userId, long cartItemId, int quantity) {
-        String sql = "UPDATE shopping_cart_items SET quantity = :quantity WHERE id = :id AND user_id = :userId";
-        return jdbcTemplate.update(sql, new MapSqlParameterSource()
-                .addValue("quantity", quantity)
-                .addValue("id", cartItemId)
-                .addValue("userId", userId));
-    }
+//    public int updateCartItemQuantity(long userId, long cartItemId, int quantity) {
+//        String sql = "UPDATE shopping_cart_items SET quantity = :quantity WHERE id = :id AND user_id = :userId";
+//        return jdbcTemplate.update(sql, new MapSqlParameterSource()
+//                .addValue("quantity", quantity)
+//                .addValue("id", cartItemId)
+//                .addValue("userId", userId));
+//    }
+
+    public void updateCartItem(Integer userId, Integer productId, Integer quantity, java.math.BigDecimal price) {
+                String sql = "UPDATE shopping_cart_items SET quantity = :quantity, price = :price " +
+                                "WHERE user_id = :userId AND product_id = :productId";
+                MapSqlParameterSource params = new MapSqlParameterSource();
+                params.addValue("quantity", quantity);
+                params.addValue("price", price);
+                params.addValue("userId", userId);
+                params.addValue("productId", productId);
+                jdbcTemplate.update(sql, params);
+            }
 
     // ✅ 讀庫存：加入 userId 條件（更安全）
     public Integer getStockByCartItemId(long userId, long cartItemId) {

@@ -23,8 +23,10 @@ public class CartController {
 
     /** 取當前 userId：優先 token，其次 body/path/param，最後 email 轉 id（應對白名單） */
     private Long resolveUserId(HttpServletRequest req, Integer userIdInBodyOrPath) {
-        Object uidAttr = req.getAttribute("userId"); // 非白名單時 JwtFilter 會塞
-        if (uidAttr instanceof Long) return (Long) uidAttr;
+//        Object uidAttr = req.getAttribute("userId"); // 非白名單時 JwtFilter 會塞
+//        if (uidAttr instanceof Long) return (Long) uidAttr;
+        Object uidAttr = req.getAttribute("userId");
+        if (uidAttr instanceof Number n) return n.longValue();
         if (userIdInBodyOrPath != null) return userIdInBodyOrPath.longValue();
 
         // 白名單路由可能沒塞 userId；若仍帶了 Authorization（但白名單不解 token），就嘗試 userEmail
@@ -47,7 +49,20 @@ public class CartController {
             ));
         }
         try {
-            String msg = cartService.addToCart(uid.intValue(), request.getProductId(), request.getQuantity());
+//            String msg = cartService.addToCart(uid.intValue(), request.getProductId(), request.getQuantity());
+            var price = request.getPrice();
+                    if (price == null || price.signum() <= 0) {
+                            return ResponseEntity.badRequest().body(Map.of(
+                                       "error","PRICE_REQUIRED",
+                                       "message","加入購物車時請於 body 帶入有效的 price"
+                                            ));
+                        }
+                    String msg = cartService.addToCart(
+                                    uid.intValue(),
+                                    request.getProductId(),
+                                    request.getQuantity(),
+                                    price // ✨ 關鍵：把 price 往下傳
+                                    );
             return ResponseEntity.ok(Map.of("message", msg));
         } catch (Exception e) {
             e.printStackTrace();

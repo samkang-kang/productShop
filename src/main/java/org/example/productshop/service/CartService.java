@@ -17,18 +17,18 @@ public class CartService {
     @Autowired
     private ShoppingCartItemDao cartDao;
 
-    // 加入購物車（不用更改）
-    public String addToCart(Integer userId, Integer productId, Integer quantity) {
-        ShoppingCartItem item = cartDao.findByUserIdAndProductId(userId, productId);
-        if (item == null) {
-            cartDao.insertCartItem(userId, productId, quantity);
-            return "已加入購物車: 產品 " + productId + " x" + quantity;
-        } else {
-            int newQuantity = item.getQuantity() + quantity;
-            cartDao.updateCartItem(userId, productId, newQuantity);
-            return "購物車已更新數量: 產品 " + productId + " x" + newQuantity;
-        }
-    }
+    // ✨ 加入購物車（帶 price）：新單或合併都把 price 落庫
+    public String addToCart(Integer userId, Integer productId, Integer quantity, java.math.BigDecimal price) {
+                ShoppingCartItem item = cartDao.findByUserIdAndProductId(userId, productId);
+                if (item == null) {
+                        cartDao.insertCartItem(userId, productId, quantity, price);
+                        return "已加入購物車: 產品 " + productId + " x" + quantity;
+                   } else {
+                        int newQuantity = item.getQuantity() + quantity;
+                        cartDao.updateCartItem(userId, productId, newQuantity, price);
+                        return "購物車已更新數量: 產品 " + productId + " x" + newQuantity;
+                    }
+            }
 
     // 刪除（不用更改）
     public int removeCartItem(long userId, long cartItemId) {
