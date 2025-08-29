@@ -846,10 +846,19 @@
           newBtn.textContent = "加入中…";
 
           try {
+            const unitPrice = getDisplayedUnitPrice();
+            if (!Number.isFinite(unitPrice) || unitPrice <= 0) {
+              alert("價格讀取失敗，請稍後再試或刷新頁面");
+              throw new Error("INVALID_UNIT_PRICE");
+            }
             const res = await window.Auth.authFetch(endpoint, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ productId: pid, quantity: qty }),
+              body: JSON.stringify({
+                productId: pid,
+                quantity: qty,
+                price: unitPrice,
+              }),
             });
             const text = await res.text();
             let data = {};

@@ -234,9 +234,7 @@
     <!-- 右側：搜尋、購物車和人像圖標 -->
     <div class="right">
       <a href="#" class="nav-icon"><i class="fas fa-search"></i></a>
-      <a href="cart.html" class="nav-icon active"
-      ><i class="far fa-shopping-bag"></i
-      ></a>
+      <a href="cart.html" class="nav-icon active" id="nav-cart"><i class="far fa-shopping-bag"></i><span class="cart-badge" id="cart-badge">0</span></a>
       <button
               class="nav-icon account-btn"
               aria-haspopup="menu"
@@ -820,8 +818,23 @@
 
 <!-- 結帳功能 -->
 <script>
+  // 嘗試從受保護的 API 取得使用者編號：
+  // 目前後端 /api/cart/me 會回傳 items 陣列，若有商品，項目中包含 userId 欄位
+  async function getUserIdFromServer() {
+    try {
+      const resp = await Auth.authFetch('/api/cart/me', { method: 'GET' });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          const withUid = data.items.find(it => it && it.userId != null);
+          if (withUid) return Number(withUid.userId);
+        }
+      }
+    } catch {}
+    return NaN;
+  }
+
   async function handleCheckout() {
-    const userId = 65; // 假設登入後知道 userId
     const token = Auth.getToken();
 
     if (!token || Auth.isTokenExpired(token)) {
@@ -843,6 +856,12 @@
     }
 
     try {
+      // 不再寫死 userId，改由後端資料推得
+      let userId = await getUserIdFromServer();
+      if (!Number.isFinite(userId)) {
+        alert('暫時無法取得使用者資訊，請重新登入後再試');
+        return;
+      }
       const res = await Auth.authFetch(
               `/api/cart/checkout?userId=${userId}`,
               {
