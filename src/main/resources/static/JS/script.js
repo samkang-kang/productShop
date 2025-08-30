@@ -7,7 +7,17 @@ function getCartTbody() {
 
 // 商品 ID -> 單品頁檔名
 const DETAIL_PAGE_MAP = {
-  12: "mango_1.html",
+  1: "zbanana_1.html",
+  4: "zhamimelon_1.html",
+  5: "zpapaya_1.html",
+  6: "zpeach_1.html",
+  9: "zlongan_1.html",
+  10: "zwatermelon_1.html",
+  12: "zmango_1.html",
+  11: "zapple_1.html",
+  14: "zpassion_1.html",
+  15: "zgrape_1.html",
+  18: "zguava_1.html",
 };
 
 function buildDetailUrl(item) {

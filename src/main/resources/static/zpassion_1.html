@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      if (location.origin.startsWith("file://")) {
+        window.API_BASE = "http://localhost:8080";
+      }
+    </script>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tech2etc Ecommerce Tutorial</title>
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    />
+
+    <link rel="stylesheet" href="./CSS/style.css" />
+  </head>
+
+  <body data-product-id="14" data-tier1="10" data-tier2="21">
+    <section id="header">
+      <div class="header-container">
+        <!-- 左側：Logo + 導航連結 -->
+        <div class="left">
+          <a href="#" id="logo-link">
+            <img src="img/logo-1.png" alt="SwanGo Logo" id="fixed-logo" />
+          </a>
+          <nav class="nav-links">
+            <a href="landing.html">Home</a>
+            <a href="shop.html">Shop</a>
+            <a href="about.html">About</a>
+          </nav>
+        </div>
+
+        <!-- 右側：購物車和人像圖標 -->
+        <div class="right">
+          <a href="#" class="nav-icon"><i class="fas fa-search"></i></a>
+          <a href="cart.html" class="nav-icon" id="nav-cart">
+            <i class="far fa-shopping-bag"></i>
+            <span class="cart-badge" id="cart-badge">0</span>
+          </a>
+          <button
+            class="nav-icon account-btn"
+            aria-haspopup="menu"
+            aria-expanded="false"
+          >
+            <i class="fas fa-user"></i>
+          </button>
+        </div>
+
+        <!-- 帳戶選單 -->
+        <div class="account-dropdown" role="menu" hidden>
+          <div class="dropdown-header">
+            <div class="user-info">
+              <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
+              </div>
+              <div class="user-details">
+                <div class="user-name">使用者名稱</div>
+                <div class="user-email">user@example.com</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dropdown-menu">
+            <a href="#" class="menu-item" role="menuitem" tabindex="0">
+              <i class="fas fa-shopping-bag"></i>
+              <span>所有訂單</span>
+            </a>
+            <a href="#" class="menu-item" role="menuitem" tabindex="0">
+              <i class="fas fa-heart"></i>
+              <span>訂閱商品</span>
+            </a>
+            <a href="#" class="menu-item" role="menuitem" tabindex="0">
+              <i class="fas fa-cog"></i>
+              <span>帳戶設定</span>
+            </a>
+            <a href="#" class="menu-item" role="menuitem" tabindex="0">
+              <i class="fas fa-key"></i>
+              <span>修改密碼</span>
+            </a>
+            <div class="menu-divider"></div>
+            <a href="#" class="menu-item logout" role="menuitem" tabindex="0">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>登出</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 手機版 -->
+      <div id="mobile">
+        <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
+        <a href="login.html"><i class="fas fa-user"></i></a>
+        <i id="bar" class="fas fa-outdent"></i>
+      </div>
+    </section>
+
+    <section id="prodetails" class="section-p1">
+      <div class="single-pro-image">
+        <img src="./img/menu/zpassion/51_1.jpg" width="100%" id="MainImg" alt="" />
+
+        <div class="small-img-group">
+          <div class="small-img-col">
+            <img
+              src="./img/menu/zpassion/51_1.jpg"
+              width="100%"
+              class="small-img"
+              alt=""
+            />
+          </div>
+          <div class="small-img-col">
+            <img
+              src="./img/menu/zpassion/51_2.jpg"
+              width="100%"
+              class="small-img"
+              alt=""
+            />
+          </div>
+          <div class="small-img-col">
+            <img
+              src="./img/menu/zpassion/51_3.jpg"
+              width="100%"
+              class="small-img"
+              alt=""
+            />
+          </div>
+          <div class="small-img-col">
+            <img
+              src="./img/menu/zpassion/51_4.jpg"
+              width="100%"
+              class="small-img"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="single-pro-details">
+        <h6>
+          <button class="market-btn" data-market="taipei1">台北一</button> /
+          <button class="market-btn" data-market="taipei2">台北二</button>
+        </h6>
+        <h4>滿天星（蜜糖百香果）</h4>
+        <h2>
+          <span class="price" aria-live="polite">載入中…</span>
+          <small class="unit"
+            >元 / 盒 <span class="quantity"> (10顆)</span></small
+          >
+        </h2>
+        <p class="subtotal">小計：<span class="total-price">—</span></p>
+        <div class="qty" data-min="1" data-max="99">
+          <button class="qty-btn" data-action="dec" aria-label="減少一個">
+            −
+          </button>
+          <input
+            id="sp-qty"
+            class="qty-input"
+            type="text"
+            value="1"
+            inputmode="numeric"
+            aria-label="數量"
+            readonly
+          />
+          <button class="qty-btn" data-action="inc" aria-label="增加一個">
+            ＋
+          </button>
+        </div>
+        <button id="btnAddSingle" class="normal">加入購物車</button>
+        <h4>Product Details</h4>
+        <span
+          >在台灣盛夏果園裡，滿天星百香果閃耀登場。外皮紫紅並帶有明顯的白色斑點，宛如夜空繁星，因此得名。它最大的特色就是甜度高、酸度低，入口時濃郁果香四溢，酸味溫和不刺激，特別適合怕酸、喜歡清甜口感的消費者。
+
+滿天星百香果果肉金黃透亮，果籽晶瑩飽滿，咬下去層次豐富、香甜馥郁。除了直接鮮食，也能加入沙拉、甜點或料理中，讓酸甜果香為日常餐桌增添驚喜。</span
+        >
+      </div>
+    </section>
+
+    <!-- ===== 本週人氣果物推薦 ===== -->
+
+    <div id="test-products">
+      <section id="product1" class="section-p1 center-target">
+        <div class="section-title">
+          <h2>本週人氣果物推薦</h2>
+          <p>產地直送・新鮮夏季限定</p>
+        </div>
+
+        <div class="pro-container">
+          <!-- 卡片 1 -->
+          <div class="pro featured">
+            <img src="./img/fruit/top/J4.jpg" alt="" />
+            <div class="des">
+              <span class="product-tag lime">Q彈爽滑帶有蜜味</span>
+              <span class="product-tag teal">晶瑩剔透</span>
+              <span class="rating-tag">
+                <span class="rating-label">推薦指數：</span>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </span>
+              <div class="title-row">
+                <h5 class="product-name">荔枝</h5>
+                <h4 class="price">$78</h4>
+              </div>
+            </div>
+            <a href="litchi_1.html"
+              ><i class="fal fa-shopping-cart cart"></i
+            ></a>
+          </div>
+
+          <!-- 卡片 2 -->
+          <div class="pro featured">
+            <img src="./img/fruit/mid/P1.jpg" alt="" />
+            <div class="des">
+              <span class="product-tag green">微軟不過硬</span>
+              <span class="product-tag orange">淡淡甜味</span>
+              <span class="rating-tag">
+                <span class="rating-label">推薦指數：</span>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </span>
+              <div class="title-row">
+                <h5 class="product-name">芭樂</h5>
+                <h4 class="price">$78</h4>
+              </div>
+            </div>
+            <a href="#"><i class="fal fa-shopping-cart cart"></i></a>
+          </div>
+
+          <!-- 卡片 3 -->
+          <div class="pro featured">
+            <img src="./img/fruit/mid/31 (1).jpg" alt="" />
+            <div class="des">
+              <span class="product-tag pink">綿密柔軟</span>
+              <span class="product-tag teal">味道甜美</span>
+              <span class="rating-tag">
+                <span class="rating-label">推薦指數：</span>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+              </span>
+              <div class="title-row">
+                <h5 class="product-name">釋迦</h5>
+                <h4 class="price">$78</h4>
+              </div>
+            </div>
+            <a href="#"><i class="fal fa-shopping-cart cart"></i></a>
+          </div>
+
+          <!-- 卡片 4 -->
+          <div class="pro featured">
+            <img src="./img/fruit/mid/811_1 (1).jpg" alt="" />
+            <div class="des">
+              <span class="product-tag lime">飽滿碩大</span>
+              <span class="product-tag brown">軟糯濃郁風味</span>
+              <span class="rating-tag">
+                <span class="rating-label">推薦指數：</span>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+              </span>
+              <div class="title-row">
+                <h5 class="product-name">火龍果</h5>
+                <h4 class="price">$78</h4>
+              </div>
+            </div>
+            <a href="#"><i class="fal fa-shopping-cart cart"></i></a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== 頁面底部區塊 ===== -->
+    <section id="newsletter" class="section-p1 section-m1">
+      <div class="newstext">
+        <h4>Sign Up For Newsletters</h4>
+        <p>
+          Get E-mail updates about our latest shop and
+          <span>special offers.</span>
+        </p>
+      </div>
+      <div class="form">
+        <input type="text" placeholder="Your email address" />
+        <button class="normal">Sign Up</button>
+      </div>
+    </section>
+
+    <footer class="section-p1">
+      <div class="col">
+        <img class="logo" src="" alt="" />
+        <h4>Contact</h4>
+        <p><strong>Address: </strong> 408 台中市 南屯區 公益路二段 51號18樓</p>
+        <p><strong>Phone:</strong> +04 1234 5678 /(+886) 12 2345 6789</p>
+        <p><strong>Hours:</strong> 10:00 - 18:00, Mon - Sat</p>
+        <div class="follow">
+          <h4>Follow Us</h4>
+          <div class="icon">
+            <i class="fab fa-facebook-f"></i>
+            <i class="fab fa-twitter"></i>
+            <i class="fab fa-instagram"></i>
+            <i class="fab fa-pinterest-p"></i>
+            <i class="fab fa-youtube"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <h4>About</h4>
+        <a href="#">About Us</a>
+        <a href="#">Delivery Information</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Contact Us</a>
+      </div>
+
+      <div class="col">
+        <h4>My Account</h4>
+        <a href="#">Sign In</a>
+        <a href="#">View Cart</a>
+        <a href="#">My Wishlist</a>
+        <a href="#">Track My Order</a>
+        <a href="#">Help</a>
+      </div>
+
+      <div class="col install">
+        <h4>Install App</h4>
+        <p>From App Store or Google Play</p>
+        <div class="row">
+          <img src="img/pay/app.jpg" alt="" />
+          <img src="img/pay/play.jpg" alt="" />
+        </div>
+        <p>Secured Payment Gateways</p>
+        <img src="img/pay/pay.png" alt="" />
+      </div>
+
+      <div class="copyright">
+        <p>© 2025.Big company</p>
+      </div>
+    </footer>
+
+    <script>
+      var MainImg = document.getElementById("MainImg");
+      var smallimg = document.getElementsByClassName("small-img");
+
+      smallimg[0].onclick = function () {
+        MainImg.src = smallimg[0].src;
+      };
+      smallimg[1].onclick = function () {
+        MainImg.src = smallimg[1].src;
+      };
+      smallimg[2].onclick = function () {
+        MainImg.src = smallimg[2].src;
+      };
+      smallimg[3].onclick = function () {
+        MainImg.src = smallimg[3].src;
+      };
+    </script>
+
+    <script src="./JS/script.js"></script>
+    <script src="./JS/account-dropdown.js"></script>
+
+    <!-- 引入統一的 auth.js -->
+    <script src="./JS/auth.js"></script>
+
+    <!-- 購物車連結回跳邏輯 -->
+    <script>
+      (function () {
+        function needLogin() {
+          const t = window.Auth?.getToken?.();
+          return !t || window.Auth.isTokenExpired(t);
+        }
+        const cartLink = document.querySelector(
+          'a[href="/cart.html"], .to-cart, #go-cart'
+        );
+        if (cartLink) {
+          cartLink.addEventListener("click", function (e) {
+            if (needLogin()) {
+              e.preventDefault();
+              sessionStorage.setItem("return_to", "/cart.html");
+              location.href = "/index.html";
+            }
+          });
+        }
+      })();
+    </script>
+
+    <!-- 引入載入器樣式 -->
+    <style>
+      /* ===== 全頁載入器樣式 ===== */
+      .page-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      .page-loader.show {
+        display: flex;
+        opacity: 1;
+      }
+
+      .loader-content {
+        text-align: center;
+      }
+
+      .loading-animation {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .loading-bar {
+        width: 8px;
+        height: 40px;
+        background-color: #222;
+        border-radius: 4px;
+        animation: loading-bounce 1.4s ease-in-out infinite both;
+      }
+
+      .loading-bar.bar1 {
+        animation-delay: -0.32s;
+      }
+
+      .loading-bar.bar2 {
+        animation-delay: -0.16s;
+      }
+
+      @keyframes loading-bounce {
+        0%,
+        80%,
+        100% {
+          transform: scaleY(0.4);
+        }
+        40% {
+          transform: scaleY(1);
+        }
+      }
+
+      .loading-text {
+        font-size: 14px;
+        color: #222;
+        font-weight: 500;
+      }
+    </style>
+
+    <!-- JWT 用戶資訊顯示邏輯 -->
+    <script>
+      // 定義填充帳戶 email 的函式
+      function fillAccountEmail() {
+        const userEmailElement = document.querySelector(".user-email");
+        const userNameElement = document.querySelector(".user-name");
+        const logoutBtn = document.querySelector(".logout");
+        const accountBtn = document.querySelector(".account-btn");
+        const userInfoSection = document.querySelector(".user-info");
+
+        if (!userEmailElement) return;
+
+        const token = Auth.getToken();
+        if (!token || Auth.isTokenExpired(token)) {
+          // 未登入狀態 - 隱藏使用者資訊區塊
+          if (userInfoSection) {
+            userInfoSection.style.display = "none";
+          }
+
+          // 隱藏需要登入的功能選項
+          hideLoginRequiredItems();
+
+          // 取消 dropdown-header 的 padding
+          const dropdownHeader = document.querySelector(".dropdown-header");
+          if (dropdownHeader) {
+            dropdownHeader.classList.add("no-padding");
+          }
+
+          // 將登出按鈕改為登入按鈕
+          if (logoutBtn) {
+            logoutBtn.innerHTML =
+              '<i class="fas fa-sign-in-alt"></i><span>登入</span>';
+            logoutBtn.classList.add("login-btn");
+            logoutBtn.classList.remove("logout");
+            logoutBtn.href = "/index.html";
+            logoutBtn.style.display = "block";
+          }
+          return;
+        }
+
+        // 已登入狀態
+        try {
+          const claims = Auth.parseJwt(token);
+          const email = claims.email || claims.sub || "user@example.com";
+          const name = claims.name || claims.firstName || "使用者";
+
+          // 顯示使用者資訊區塊
+          if (userInfoSection) {
+            userInfoSection.style.display = "flex";
+          }
+
+          // 恢復 dropdown-header 的 padding
+          const dropdownHeader = document.querySelector(".dropdown-header");
+          if (dropdownHeader) {
+            dropdownHeader.classList.remove("no-padding");
+          }
+
+          userEmailElement.textContent = email;
+          if (userNameElement) userNameElement.textContent = name;
+
+          // 顯示所有功能選項
+          showAllItems();
+
+          // 恢復登出按鈕
+          if (logoutBtn) {
+            logoutBtn.innerHTML =
+              '<i class="fas fa-sign-out-alt"></i><span>登出</span>';
+            logoutBtn.classList.remove("login-btn");
+            logoutBtn.classList.add("logout");
+            logoutBtn.href = "#";
+            logoutBtn.style.display = "block";
+          }
+        } catch (error) {
+          // 隱藏使用者資訊區塊
+          if (userInfoSection) {
+            userInfoSection.style.display = "none";
+          }
+          hideLoginRequiredItems();
+        }
+
+        // 若 token 未過期，再以 Auth.authFetch 取得 { email } 成功後覆寫
+        if (!Auth.isTokenExpired(token)) {
+          Auth.authFetch("/api/me")
+            .then((response) => {
+              if (response.ok) {
+                return response.json();
+              }
+              throw new Error("API 請求失敗");
+            })
+            .then((data) => {
+              if (data.email) {
+                userEmailElement.textContent = data.email;
+              }
+              if (data.name && userNameElement) {
+                userNameElement.textContent = data.name;
+              }
+            })
+            .catch((error) => {
+              if (error.status === 401) {
+                // 401 時隱藏使用者資訊並隱藏登入功能選項
+                if (userInfoSection) {
+                  userInfoSection.style.display = "none";
+                }
+                hideLoginRequiredItems();
+                // 清除過期的 token
+                Auth.clearToken();
+              }
+            });
+        }
+      }
+
+      // 隱藏需要登入的功能選項
+      function hideLoginRequiredItems() {
+        // 隱藏除了登入/登出按鈕之外的所有選單項目
+        const loginRequiredItems = document.querySelectorAll(
+          ".menu-item:not(.logout):not(.login-btn)"
+        );
+        loginRequiredItems.forEach((item) => {
+          item.style.display = "none";
+        });
+
+        // 隱藏分隔線
+        const divider = document.querySelector(".menu-divider");
+        if (divider) {
+          divider.style.display = "none";
+        }
+      }
+
+      // 顯示所有功能選項
+      function showAllItems() {
+        const allItems = document.querySelectorAll(".menu-item");
+        allItems.forEach((item) => {
+          item.style.display = "block";
+        });
+
+        // 顯示分隔線
+        const divider = document.querySelector(".menu-divider");
+        if (divider) {
+          divider.style.display = "block";
+        }
+      }
+
+      // 處理登出功能
+      function handleLogout() {
+        if (confirm("確定要登出嗎？")) {
+          // 清除 JWT token
+          Auth.clearToken();
+
+          // 更新 UI 顯示
+          fillAccountEmail();
+        }
+      }
+
+      // 顯示頁面跳轉載入器
+      function showPageLoader() {
+        const loader = document.getElementById("page-loader");
+
+        // 顯示載入器
+        loader.classList.add("show");
+
+        // 鎖住背景捲動
+        document.body.style.overflow = "hidden";
+
+        // 0.5秒後跳轉到登入頁面
+        setTimeout(() => {
+          window.location.href = "/index.html";
+        }, 500);
+      }
+
+      // 綁定在選單展開時觸發 fillAccountEmail()
+      document.addEventListener("DOMContentLoaded", function () {
+        const accountBtn = document.querySelector(".account-btn");
+        const logoutBtn = document.querySelector(".logout");
+
+        if (accountBtn) {
+          accountBtn.addEventListener("click", function () {
+            // 點擊後延遲一下再填充，確保選單已展開
+            setTimeout(fillAccountEmail, 100);
+          });
+        }
+
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            // 檢查是否為登入按鈕
+            if (this.classList.contains("login-btn")) {
+              // 顯示載入動畫
+              showPageLoader();
+              return;
+            }
+
+            // 處理登出
+            handleLogout();
+          });
+        }
+
+        // 在 DOMContentLoaded 也先呼叫一次 fillAccountEmail() 以避免空白
+        fillAccountEmail();
+      });
+
+      // 監聽 window 'storage' 事件（key='jwt_token'）時再次呼叫 fillAccountEmail()
+      window.addEventListener("storage", function (e) {
+        if (e.key === "jwt_token") {
+          fillAccountEmail();
+        }
+      });
+    </script>
+
+    <!-- 智能 Navbar 隱藏/顯示邏輯 -->
+    <script>
+      (function () {
+        const header = document.getElementById("header");
+        let isMouseNearTop = false;
+        let hideTimeout = null;
+
+        // 初始化：顯示 navbar（因為在頂端）
+        header.style.transform = "translateY(0)";
+        header.style.transition = "transform 0.3s ease";
+
+        // 檢查滑鼠是否在視窗頂端附近（32px 內）
+        function checkMousePosition(e) {
+          isMouseNearTop = e.clientY <= 50;
+
+          if (isMouseNearTop) {
+            showNavbar();
+            clearTimeout(hideTimeout);
+          } else if (window.scrollY > 0 && !isMouseNearTop) {
+            // 延遲隱藏，避免滑鼠移動時閃爍
+            hideTimeout = setTimeout(() => {
+              if (!isMouseNearTop && window.scrollY > 0) {
+                hideNavbar();
+              }
+            }, 300);
+          }
+        }
+
+        // 顯示 navbar
+        function showNavbar() {
+          header.style.transform = "translateY(0)";
+        }
+
+        // 隱藏 navbar
+        function hideNavbar() {
+          header.style.transform = "translateY(-100%)";
+        }
+
+        // 處理滾動事件
+        function handleScroll() {
+          if (window.scrollY === 0) {
+            // 在頂端時顯示 navbar
+            showNavbar();
+          } else {
+            // 離開頂端時隱藏 navbar（除非滑鼠在上緣）
+            if (!isMouseNearTop) {
+              hideNavbar();
+            }
+          }
+        }
+
+        // 檢查是否為觸控裝置
+        function isTouchDevice() {
+          return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+        }
+
+        // 觸控裝置的簡化邏輯
+        function handleTouchDevice() {
+          window.addEventListener("scroll", handleScroll);
+        }
+
+        // 滑鼠裝置的完整邏輯
+        function handleMouseDevice() {
+          // 滑鼠移動事件
+          document.addEventListener("mousemove", checkMousePosition);
+
+          // 滑鼠進入 navbar 事件
+          header.addEventListener("mouseenter", () => {
+            clearTimeout(hideTimeout);
+          });
+
+          // 滑鼠離開 navbar 事件
+          header.addEventListener("mouseleave", () => {
+            if (window.scrollY > 0 && !isMouseNearTop) {
+              hideTimeout = setTimeout(() => {
+                if (!isMouseNearTop && window.scrollY > 0) {
+                  hideNavbar();
+                }
+              }, 300);
+            }
+          });
+
+          // 滾動事件
+          window.addEventListener("scroll", handleScroll);
+        }
+
+        // 初始化
+        if (isTouchDevice()) {
+          handleTouchDevice();
+        } else {
+          handleMouseDevice();
+        }
+
+        // 視窗大小改變時重新檢查
+        window.addEventListener("resize", handleScroll);
+      })();
+    </script>
+
+    <!-- 覆寫單品頁加入購物車：改用新版 /api/cart/add（需 JWT） -->
+    <script>
+      (function () {
+        const btn = document.getElementById("btnAddSingle");
+        const qtyInput = document.getElementById("sp-qty");
+        const bodyEl = document.querySelector("body[data-product-id]");
+        if (!btn || !qtyInput || !bodyEl) return;
+
+        // 以 clone 技巧移除舊有監聽器，避免重複送出
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+
+        function getProductId() {
+          return Number(bodyEl.dataset.productId);
+        }
+
+        function captureMainImage(pid) {
+          const mainImg =
+            document.getElementById("MainImg") ||
+            document.querySelector(
+              ".main-img,.product-main img,.pro img, .gallery img, img"
+            );
+          if (mainImg && mainImg.src) {
+            localStorage.setItem(`img:${pid}`, mainImg.src);
+          }
+        }
+
+        function getDisplayedUnitPrice() {
+          const txt = document.querySelector(".price")?.textContent || "";
+          const n = Number(txt.replace(/[^\d.]/g, ""));
+          return isFinite(n) ? n : 0;
+        }
+
+        function showPageLoader() {
+          const loader = document.getElementById("page-loader");
+          if (loader) {
+            loader.classList.add("show");
+            document.body.style.overflow = "hidden";
+            setTimeout(() => {
+              window.location.href = "/index.html";
+            }, 500);
+          } else {
+            window.location.href = "/index.html";
+          }
+        }
+
+        newBtn.addEventListener("click", async function () {
+          const pid = getProductId();
+          const qty = Math.max(1, Number(qtyInput.value || 1));
+          if (!pid || Number.isNaN(pid)) {
+            alert(
+              '找不到商品編號，請檢查 <body data-product-id="..."> 是否正確。'
+            );
+            return;
+          }
+
+          // 需 JWT；未登入則導向至登入頁
+          const token = window.Auth?.getToken?.();
+          if (!token || window.Auth?.isTokenExpired?.(token)) {
+            alert("請先登入後再加入購物車");
+            showPageLoader();
+            return;
+          }
+
+          const API_BASE =
+            window.API_BASE ||
+            (location.port === "8080" ? "" : "http://localhost:8080");
+          const endpoint = `${API_BASE}/api/cart/add`;
+
+          const prevText = newBtn.textContent;
+          newBtn.disabled = true;
+          newBtn.textContent = "加入中…";
+
+          try {
+            const unitPrice = getDisplayedUnitPrice();
+            if (!Number.isFinite(unitPrice) || unitPrice <= 0) {
+              alert("價格讀取失敗，請稍後再試或刷新頁面");
+              throw new Error("INVALID_UNIT_PRICE");
+            }
+            const res = await window.Auth.authFetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                productId: pid,
+                quantity: qty,
+                price: unitPrice,
+              }),
+            });
+            const text = await res.text();
+            let data = {};
+            try {
+              data = JSON.parse(text);
+            } catch {}
+
+            if (!res.ok) {
+              if (res.status === 401) {
+                showPageLoader();
+                return;
+              }
+              throw new Error(data.message || text || res.statusText);
+            }
+
+            // 成功：保存當時單價與主圖，供購物車顯示使用
+            const price = getDisplayedUnitPrice();
+            if (price) localStorage.setItem(`price:${pid}`, String(price));
+            captureMainImage(pid);
+
+            // 立刻重算並更新 Navbar 徽章數（呼叫 /api/cart/me）
+            try {
+              let count = NaN;
+              try {
+                const r = await window.Auth.authFetch(
+                  `${API_BASE}/api/cart/me`,
+                  { method: "GET" }
+                );
+                const t = await r.text();
+                let j = {};
+                try {
+                  j = JSON.parse(t);
+                } catch {}
+                if (Array.isArray(j.items)) count = j.items.length;
+                if (!Number.isFinite(count) && Number.isFinite(j.count))
+                  count = Number(j.count);
+              } catch {}
+              if (!Number.isFinite(count)) {
+                const set = new Set(
+                  JSON.parse(localStorage.getItem("cart_products") || "[]")
+                );
+                set.add(pid);
+                count = set.size;
+                localStorage.setItem("cart_products", JSON.stringify([...set]));
+              }
+              localStorage.setItem("cart_count", String(count));
+              window.updateCartBadge?.(count);
+            } catch {}
+
+            alert(data.message || "已加入購物車");
+          } catch (err) {
+            console.error("[add-to-cart] error:", err);
+            alert("加入失敗：" + (err?.message || "請稍後再試"));
+          } finally {
+            newBtn.disabled = false;
+            newBtn.textContent = prevText;
+          }
+        });
+      })();
+    </script>
+
+    <!-- 全頁載入器 -->
+    <div id="page-loader" class="page-loader">
+      <div class="loader-content">
+        <div class="loading-animation">
+          <div class="loading-bar bar1"></div>
+          <div class="loading-bar bar2"></div>
+        </div>
+        <div class="loading-text">頁面跳轉中…</div>
+      </div>
+    </div>
+  </body>
+</html>
