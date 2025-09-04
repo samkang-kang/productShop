@@ -95,7 +95,7 @@ button.market-btn {
   color: rgb(56, 52, 52);
   text-decoration: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 25px;
   padding: 0;
   margin: 0;
   outline: none;
@@ -878,6 +878,14 @@ footer a:hover {
   line-height: 25px;
 }
 
+.divider {
+  font-size: 25px;     /* 放大字體 */
+  margin: 0 8px;       /* 左右間距 */
+  color: black;         /* 顏色可調 */
+  font-weight: bold;   /* 想要更明顯就加粗 */
+  vertical-align: middle; /* 對齊按鈕文字 */
+}
+
 /* ===== 單一商品頁面推薦商品區域 - 4卡片一排 ===== */
 #prodetails + #product1 .pro-container {
   display: flex;
@@ -1651,7 +1659,7 @@ footer a:hover {
   left: 0;
   width: 100%;
   background-color: white;
-  padding: 25px 100px; /* 調整左右 padding 讓內容收進來 */
+  padding: 15px 100px; /* 調整左右 padding 讓內容收進來 */
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between; /* 左右分開 */
@@ -1681,8 +1689,9 @@ footer a:hover {
   margin: 0 5px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.3);
+  background: gray;
   box-shadow: 0px 0px 2px 2px rgba(255, 255, 255, 0.3);
+  display: none;
 }
 
 * {
