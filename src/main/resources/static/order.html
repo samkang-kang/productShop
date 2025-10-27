@@ -1,697 +1,697 @@
 <!DOCTYPE html>
 <html lang="en">
-  <!-- ===== HTML 文件結構 ===== -->
+<!-- ===== HTML 文件結構 ===== -->
 
-  <head>
-    <script>
-      if (location.origin.startsWith("file://")) {
-        window.API_BASE = "http://localhost:8080";
-      }
-    </script>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tech2etc Ecommerce Tutorial</title>
-    <link
-      rel="stylesheet"
-      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-    />
+<head>
+  <script>
+    if (location.origin.startsWith("file://")) {
+      window.API_BASE = "http://localhost:8080";
+    }
+  </script>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tech2etc Ecommerce Tutorial</title>
+  <link
+          rel="stylesheet"
+          href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+  />
 
-    <link rel="stylesheet" href="./CSS/style.css" />
-  </head>
+  <link rel="stylesheet" href="./CSS/style.css" />
+</head>
 
-  <!-- ===== 頁面導航區塊 ===== -->
+<!-- ===== 頁面導航區塊 ===== -->
 
-  <body>
-    <section id="header">
-      <div class="header-container">
-        <!-- 左側：Logo + 導航連結 -->
-        <div class="left">
-          <a href="#" id="logo-link">
-            <img src="img/logo-1.png" alt="SwanGo Logo" id="fixed-logo" />
-          </a>
-          <nav class="nav-links">
-            <a href="landing.html">Home</a>
-            <a href="shop.html" class="active">Shop</a>
-            <a href="about.html">About</a>
-          </nav>
-        </div>
+<body>
+<section id="header">
+  <div class="header-container">
+    <!-- 左側：Logo + 導航連結 -->
+    <div class="left">
+      <a href="#" id="logo-link">
+        <img src="img/logo-1.png" alt="SwanGo Logo" id="fixed-logo" />
+      </a>
+      <nav class="nav-links">
+        <a href="landing.html">Home</a>
+        <a href="shop.html" class="active">Shop</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
 
-        <!-- 右側：購物車和人像圖標 -->
-        <div class="right">
-          <a href="#" class="nav-icon"><i class="fas fa-search"></i></a>
-          <a href="cart.html" class="nav-icon"
-            ><i class="far fa-shopping-bag"></i
-          ></a>
-          <button
-            class="nav-icon account-btn"
-            aria-haspopup="menu"
-            aria-expanded="false"
-          >
-            <i class="fas fa-user"></i>
-          </button>
-        </div>
+    <!-- 右側：購物車和人像圖標 -->
+    <div class="right">
+      <a href="#" class="nav-icon"><i class="fas fa-search"></i></a>
+      <a href="cart.html" class="nav-icon"
+      ><i class="far fa-shopping-bag"></i
+      ></a>
+      <button
+              class="nav-icon account-btn"
+              aria-haspopup="menu"
+              aria-expanded="false"
+      >
+        <i class="fas fa-user"></i>
+      </button>
+    </div>
 
-        <!-- 帳戶選單 -->
-        <div class="account-dropdown" role="menu" hidden>
-          <div class="dropdown-header">
-            <div class="user-info">
-              <div class="user-avatar">
-                <i class="fas fa-user-circle"></i>
-              </div>
-              <div class="user-details">
-                <div class="user-name">使用者名稱</div>
-                <div class="user-email">user@example.com</div>
-              </div>
-            </div>
+    <!-- 帳戶選單 -->
+    <div class="account-dropdown" role="menu" hidden>
+      <div class="dropdown-header">
+        <div class="user-info">
+          <div class="user-avatar">
+            <i class="fas fa-user-circle"></i>
           </div>
-
-          <div class="dropdown-menu">
-            <a href="#" class="menu-item" role="menuitem" tabindex="0">
-              <i class="fas fa-shopping-bag"></i>
-              <span>所有訂單</span>
-            </a>
-            <a href="#" class="menu-item" role="menuitem" tabindex="0">
-              <i class="fas fa-heart"></i>
-              <span>訂閱商品</span>
-            </a>
-            <a href="#" class="menu-item" role="menuitem" tabindex="0">
-              <i class="fas fa-cog"></i>
-              <span>帳戶設定</span>
-            </a>
-            <a href="#" class="menu-item" role="menuitem" tabindex="0">
-              <i class="fas fa-key"></i>
-              <span>修改密碼</span>
-            </a>
-            <div class="menu-divider"></div>
-            <a href="#" class="menu-item logout" role="menuitem" tabindex="0">
-              <i class="fas fa-sign-out-alt"></i>
-              <span>登出</span>
-            </a>
+          <div class="user-details">
+            <div class="user-name">使用者名稱</div>
+            <div class="user-email">user@example.com</div>
           </div>
         </div>
       </div>
 
-      <!-- 手機版 -->
-      <div id="mobile">
-        <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
-        <a href="login.html"><i class="fas fa-user"></i></a>
-        <i id="bar" class="fas fa-outdent"></i>
+      <div class="dropdown-menu">
+        <a href="#" class="menu-item" role="menuitem" tabindex="0">
+          <i class="fas fa-shopping-bag"></i>
+          <span>所有訂單</span>
+        </a>
+        <a href="#" class="menu-item" role="menuitem" tabindex="0">
+          <i class="fas fa-heart"></i>
+          <span>訂閱商品</span>
+        </a>
+        <a href="#" class="menu-item" role="menuitem" tabindex="0">
+          <i class="fas fa-cog"></i>
+          <span>帳戶設定</span>
+        </a>
+        <a href="#" class="menu-item" role="menuitem" tabindex="0">
+          <i class="fas fa-key"></i>
+          <span>修改密碼</span>
+        </a>
+        <div class="menu-divider"></div>
+        <a href="#" class="menu-item logout" role="menuitem" tabindex="0">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>登出</span>
+        </a>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <main class="order-page">
-      <!-- 訂單抬頭 -->
-      <section class="order-header">
-        <a href="order.html" class="back-link">← 返回列表</a>
-        <!-- <h1 class="order-title">訂單明細</h1> -->
-        <ul class="order-ids">
-          <li>訂單編號：<strong>W0D33DSC0001634</strong></li>
-          <li>物流單號：<strong>8265638019</strong></li>
-          <li class="muted">更新時間：2025/07/27</li>
+  <!-- 手機版 -->
+  <div id="mobile">
+    <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
+    <a href="login.html"><i class="fas fa-user"></i></a>
+    <i id="bar" class="fas fa-outdent"></i>
+  </div>
+</section>
+
+<main class="order-page">
+  <!-- 訂單抬頭 -->
+  <section class="order-header">
+    <a href="order.html" class="back-link">← 返回列表</a>
+    <!-- <h1 class="order-title">訂單明細</h1> -->
+    <ul class="order-ids">
+      <li>訂單編號：<strong>W0D33DSC0001634</strong></li>
+      <li>物流單號：<strong>8265638019</strong></li>
+      <li class="muted">更新時間：2025/07/27</li>
+    </ul>
+    <div class="order-actions">
+      <!-- <button class="btn btn-outline">匯出明細</button>
+      <button class="btn btn-primary">再買一次</button> -->
+    </div>
+  </section>
+
+  <!-- 兩欄主體 -->
+  <section class="order-body">
+    <!-- 左側：流程 / 商品 -->
+    <div class="order-main">
+      <!-- 出貨 / 付款 / 狀態 -->
+      <div class="block">
+        <h2 class="block-title">出貨與付款</h2>
+        <div class="meta-table">
+          <div class="meta-row meta-head">
+            <div>日期</div>
+            <div>金額</div>
+            <div>付款方式</div>
+            <div>狀態</div>
+          </div>
+          <div class="meta-row">
+            <div>2025/07/16</div>
+            <div>NT$ 1,760</div>
+            <div>網路ATM</div>
+            <div>已付款</div>
+          </div>
+        </div>
+        <div class="meta-ops">
+          <button class="btn btn-sm btn-outline">查看發票</button>
+          <button class="btn btn-sm btn-outline">配送進度</button>
+        </div>
+      </div>
+
+      <!-- 商品清單 -->
+      <div class="block">
+        <h2 class="block-title">商品明細</h2>
+        <table class="items-table">
+          <thead>
+          <tr>
+            <th>商品</th>
+            <th>規格</th>
+            <th class="t-right">單價</th>
+            <th class="t-center">數量</th>
+            <th class="t-right">小計</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>台灣御選愛文芒果</td>
+            <td>L / 10顆</td>
+            <td class="t-right">NT$ 1,680</td>
+            <td class="t-center">1</td>
+            <td class="t-right">NT$ 1,680</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 收件資訊 -->
+      <div class="block">
+        <h2 class="block-title">收件與聯絡</h2>
+        <dl class="dl-grid">
+          <dt>收件人</dt>
+          <dd>林小姐 / 0985-235-556</dd>
+          <dt>配送地址</dt>
+          <dd>台中市南屯區公益路二段 182 號</dd>
+          <dt>Email</dt>
+          <dd>user@example.com</dd>
+          <dt>發票資訊</dt>
+          <dd>手機載具 / RE-9F214616 （捐贈碼：2233）</dd>
+          <dt>備註</dt>
+          <dd>門市到貨簡訊通知。</dd>
+        </dl>
+      </div>
+
+      <!-- 客服區塊 -->
+      <div class="block block-help">
+        <strong>對訂單有問題嗎？</strong>
+        <p>請聯繫客服，我們將在 24 小時內回覆。</p>
+        <a class="btn btn-outline" href="/support">聯絡客服</a>
+      </div>
+    </div>
+
+    <!-- 右側：金額摘要 -->
+    <aside class="order-aside">
+      <div class="summary-card">
+        <h3>金額摘要</h3>
+        <ul class="price-list">
+          <li><span>商品總計</span><span>NT$ 1,680</span></li>
+          <li><span>運費</span><span>NT$ 80</span></li>
+          <li class="muted"><span>折扣</span><span>- NT$ 0</span></li>
+          <li class="total"><span>應付金額</span><span>NT$ 1,760</span></li>
         </ul>
-        <div class="order-actions">
-          <!-- <button class="btn btn-outline">匯出明細</button>
-          <button class="btn btn-primary">再買一次</button> -->
-        </div>
-      </section>
-
-      <!-- 兩欄主體 -->
-      <section class="order-body">
-        <!-- 左側：流程 / 商品 -->
-        <div class="order-main">
-          <!-- 出貨 / 付款 / 狀態 -->
-          <div class="block">
-            <h2 class="block-title">出貨與付款</h2>
-            <div class="meta-table">
-              <div class="meta-row meta-head">
-                <div>日期</div>
-                <div>金額</div>
-                <div>付款方式</div>
-                <div>狀態</div>
-              </div>
-              <div class="meta-row">
-                <div>2025/07/16</div>
-                <div>NT$ 1,760</div>
-                <div>網路ATM</div>
-                <div>已付款</div>
-              </div>
-            </div>
-            <div class="meta-ops">
-              <button class="btn btn-sm btn-outline">查看發票</button>
-              <button class="btn btn-sm btn-outline">配送進度</button>
-            </div>
-          </div>
-
-          <!-- 商品清單 -->
-          <div class="block">
-            <h2 class="block-title">商品明細</h2>
-            <table class="items-table">
-              <thead>
-                <tr>
-                  <th>商品</th>
-                  <th>規格</th>
-                  <th class="t-right">單價</th>
-                  <th class="t-center">數量</th>
-                  <th class="t-right">小計</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>台灣御選愛文芒果</td>
-                  <td>L / 10顆</td>
-                  <td class="t-right">NT$ 1,680</td>
-                  <td class="t-center">1</td>
-                  <td class="t-right">NT$ 1,680</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- 收件資訊 -->
-          <div class="block">
-            <h2 class="block-title">收件與聯絡</h2>
-            <dl class="dl-grid">
-              <dt>收件人</dt>
-              <dd>林小姐 / 0985-235-556</dd>
-              <dt>配送地址</dt>
-              <dd>台中市南屯區公益路二段 182 號</dd>
-              <dt>Email</dt>
-              <dd>user@example.com</dd>
-              <dt>發票資訊</dt>
-              <dd>手機載具 / RE-9F214616 （捐贈碼：2233）</dd>
-              <dt>備註</dt>
-              <dd>門市到貨簡訊通知。</dd>
-            </dl>
-          </div>
-
-          <!-- 客服區塊 -->
-          <div class="block block-help">
-            <strong>對訂單有問題嗎？</strong>
-            <p>請聯繫客服，我們將在 24 小時內回覆。</p>
-            <a class="btn btn-outline" href="/support">聯絡客服</a>
-          </div>
-        </div>
-
-        <!-- 右側：金額摘要 -->
-        <aside class="order-aside">
-          <div class="summary-card">
-            <h3>金額摘要</h3>
-            <ul class="price-list">
-              <li><span>商品總計</span><span>NT$ 1,680</span></li>
-              <li><span>運費</span><span>NT$ 80</span></li>
-              <li class="muted"><span>折扣</span><span>- NT$ 0</span></li>
-              <li class="total"><span>應付金額</span><span>NT$ 1,760</span></li>
-            </ul>
-            <button class="btn btn-primary btn-full">再買一次</button>
-          </div>
-        </aside>
-      </section>
-    </main>
-
-    <!-- footer -->
-    <!-- ===== 電子報訂閱區塊 ===== -->
-    <section id="newsletter" class="section-p1 section-m1">
-      <div class="newstext">
-        <h4>Sign Up For Newsletters</h4>
-        <p>
-          Get E-mail updates about our latest shop and
-          <span>special offers.</span>
-        </p>
+        <button class="btn btn-primary btn-full">再買一次</button>
       </div>
-      <div class="form">
-        <input type="text" placeholder="Your email address" />
-        <button class="normal">Sign Up</button>
+    </aside>
+  </section>
+</main>
+
+<!-- footer -->
+<!-- ===== 電子報訂閱區塊 ===== -->
+<section id="newsletter" class="section-p1 section-m1">
+  <div class="newstext">
+    <h4>Sign Up For Newsletters</h4>
+    <p>
+      Get E-mail updates about our latest shop and
+      <span>special offers.</span>
+    </p>
+  </div>
+  <div class="form">
+    <input type="text" placeholder="Your email address" />
+    <button class="normal">Sign Up</button>
+  </div>
+</section>
+
+<!-- ===== 頁面底部區塊 ===== -->
+<footer class="section-p1">
+  <div class="col">
+    <img class="logo" src="img/logo.png" alt="" />
+    <h4>Contact</h4>
+    <p><strong>Address: </strong> 408 台中市 南屯區 公益路二段 51號18樓</p>
+    <p><strong>Phone:</strong> +04 1234 5678 /(+886) 12 2345 6789</p>
+    <p><strong>Hours:</strong> 10:00 - 18:00, Mon - Sat</p>
+    <div class="follow">
+      <h4>Follow Us</h4>
+      <div class="icon">
+        <i class="fab fa-facebook-f"></i>
+        <i class="fab fa-twitter"></i>
+        <i class="fab fa-instagram"></i>
+        <!-- <i class="fab fa-pinterest-p"></i> -->
+        <!-- <i class="fab fa-youtube"></i> -->
       </div>
-    </section>
+    </div>
+  </div>
 
-    <!-- ===== 頁面底部區塊 ===== -->
-    <footer class="section-p1">
-      <div class="col">
-        <img class="logo" src="img/logo.png" alt="" />
-        <h4>Contact</h4>
-        <p><strong>Address: </strong> 408 台中市 南屯區 公益路二段 51號18樓</p>
-        <p><strong>Phone:</strong> +04 1234 5678 /(+886) 12 2345 6789</p>
-        <p><strong>Hours:</strong> 10:00 - 18:00, Mon - Sat</p>
-        <div class="follow">
-          <h4>Follow Us</h4>
-          <div class="icon">
-            <i class="fab fa-facebook-f"></i>
-            <i class="fab fa-twitter"></i>
-            <i class="fab fa-instagram"></i>
-            <!-- <i class="fab fa-pinterest-p"></i> -->
-            <!-- <i class="fab fa-youtube"></i> -->
-          </div>
-        </div>
-      </div>
+  <div class="col">
+    <h4>About</h4>
+    <a href="#">About Us</a>
+    <a href="#">Delivery Information</a>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms & Conditions</a>
+    <a href="#">Contact Us</a>
+  </div>
 
-      <div class="col">
-        <h4>About</h4>
-        <a href="#">About Us</a>
-        <a href="#">Delivery Information</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms & Conditions</a>
-        <a href="#">Contact Us</a>
-      </div>
+  <div class="col">
+    <h4>My Account</h4>
+    <a href="#">Sign In</a>
+    <a href="#">View Cart</a>
+    <a href="#">My Wishlist</a>
+    <a href="#">Track My Order</a>
+    <a href="#">Help</a>
+  </div>
 
-      <div class="col">
-        <h4>My Account</h4>
-        <a href="#">Sign In</a>
-        <a href="#">View Cart</a>
-        <a href="#">My Wishlist</a>
-        <a href="#">Track My Order</a>
-        <a href="#">Help</a>
-      </div>
+  <div class="col install">
+    <h4>Install App</h4>
+    <p>From App Store or Google Play</p>
+    <div class="row">
+      <img src="img/pay/app.jpg" alt="" />
+      <img src="img/pay/play.jpg" alt="" />
+    </div>
+    <p>Secured Payment Gateways</p>
+    <img src="img/pay/pay.png" alt="" />
+  </div>
 
-      <div class="col install">
-        <h4>Install App</h4>
-        <p>From App Store or Google Play</p>
-        <div class="row">
-          <img src="img/pay/app.jpg" alt="" />
-          <img src="img/pay/play.jpg" alt="" />
-        </div>
-        <p>Secured Payment Gateways</p>
-        <img src="img/pay/pay.png" alt="" />
-      </div>
+  <div class="copyright">
+    <p>© 2025.Big company</p>
+  </div>
+</footer>
 
-      <div class="copyright">
-        <p>© 2025.Big company</p>
-      </div>
-    </footer>
+<script src="./JS/script.js"></script>
+<script src="./JS/account-dropdown.js"></script>
 
-    <script src="./JS/script.js"></script>
-    <script src="./JS/account-dropdown.js"></script>
+<!-- 引入統一的 auth.js -->
+<script src="./JS/auth.js"></script>
 
-    <!-- 引入統一的 auth.js -->
-    <script src="./JS/auth.js"></script>
-
-    <!-- 購物車連結回跳邏輯 -->
-    <script>
-      (function () {
-        function needLogin() {
-          const t = window.Auth?.getToken?.();
-          return !t || window.Auth.isTokenExpired(t);
+<!-- 購物車連結回跳邏輯 -->
+<script>
+  (function () {
+    function needLogin() {
+      const t = window.Auth?.getToken?.();
+      return !t || window.Auth.isTokenExpired(t);
+    }
+    const cartLink = document.querySelector(
+            'a[href="/cart.html"], .to-cart, #go-cart'
+    );
+    if (cartLink) {
+      cartLink.addEventListener("click", function (e) {
+        if (needLogin()) {
+          e.preventDefault();
+          sessionStorage.setItem("return_to", "/cart.html");
+          location.href = "/index.html";
         }
-        const cartLink = document.querySelector(
-          'a[href="/cart.html"], .to-cart, #go-cart'
-        );
-        if (cartLink) {
-          cartLink.addEventListener("click", function (e) {
-            if (needLogin()) {
-              e.preventDefault();
-              sessionStorage.setItem("return_to", "/cart.html");
-              location.href = "/index.html";
-            }
-          });
-        }
-      })();
-    </script>
+      });
+    }
+  })();
+</script>
 
-    <!-- 引入載入器樣式 -->
-    <style>
-      /* ===== 全頁載入器樣式 ===== */
-      .page-loader {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.9);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-      }
+<!-- 引入載入器樣式 -->
+<style>
+  /* ===== 全頁載入器樣式 ===== */
+  .page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
 
-      .page-loader.show {
-        display: flex;
-        opacity: 1;
-      }
+  .page-loader.show {
+    display: flex;
+    opacity: 1;
+  }
 
-      .loader-content {
-        text-align: center;
-      }
+  .loader-content {
+    text-align: center;
+  }
 
-      .loading-animation {
-        display: flex;
-        justify-content: center;
-        align-items: flex-end;
-        gap: 8px;
-        margin-bottom: 20px;
-      }
+  .loading-animation {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
 
-      .loading-bar {
-        width: 8px;
-        height: 40px;
-        background-color: #222;
-        border-radius: 4px;
-        animation: loading-bounce 1.4s ease-in-out infinite both;
-      }
+  .loading-bar {
+    width: 8px;
+    height: 40px;
+    background-color: #222;
+    border-radius: 4px;
+    animation: loading-bounce 1.4s ease-in-out infinite both;
+  }
 
-      .loading-bar.bar1 {
-        animation-delay: -0.32s;
-      }
+  .loading-bar.bar1 {
+    animation-delay: -0.32s;
+  }
 
-      .loading-bar.bar2 {
-        animation-delay: -0.16s;
-      }
+  .loading-bar.bar2 {
+    animation-delay: -0.16s;
+  }
 
-      @keyframes loading-bounce {
-        0%,
-        80%,
-        100% {
-          transform: scaleY(0.4);
-        }
-        40% {
-          transform: scaleY(1);
-        }
-      }
+  @keyframes loading-bounce {
+    0%,
+    80%,
+    100% {
+      transform: scaleY(0.4);
+    }
+    40% {
+      transform: scaleY(1);
+    }
+  }
 
-      .loading-text {
-        font-size: 14px;
-        color: #222;
-        font-weight: 500;
-      }
-    </style>
+  .loading-text {
+    font-size: 14px;
+    color: #222;
+    font-weight: 500;
+  }
+</style>
 
-    <!-- JWT 用戶資訊顯示邏輯 -->
-    <script>
-      // 定義填充帳戶 email 的函式
-      function fillAccountEmail() {
-        const userEmailElement = document.querySelector(".user-email");
-        const userNameElement = document.querySelector(".user-name");
-        const logoutBtn = document.querySelector(".logout");
-        const accountBtn = document.querySelector(".account-btn");
-        const userInfoSection = document.querySelector(".user-info");
+<!-- JWT 用戶資訊顯示邏輯 -->
+<script>
+  // 定義填充帳戶 email 的函式
+  function fillAccountEmail() {
+    const userEmailElement = document.querySelector(".user-email");
+    const userNameElement = document.querySelector(".user-name");
+    const logoutBtn = document.querySelector(".logout");
+    const accountBtn = document.querySelector(".account-btn");
+    const userInfoSection = document.querySelector(".user-info");
 
-        if (!userEmailElement) return;
+    if (!userEmailElement) return;
 
-        const token = Auth.getToken();
-        if (!token || Auth.isTokenExpired(token)) {
-          // 未登入狀態 - 隱藏使用者資訊區塊
-          if (userInfoSection) {
-            userInfoSection.style.display = "none";
-          }
-
-          // 隱藏需要登入的功能選項
-          hideLoginRequiredItems();
-
-          // 取消 dropdown-header 的 padding
-          const dropdownHeader = document.querySelector(".dropdown-header");
-          if (dropdownHeader) {
-            dropdownHeader.classList.add("no-padding");
-          }
-
-          // 將登出按鈕改為登入按鈕
-          if (logoutBtn) {
-            logoutBtn.innerHTML =
-              '<i class="fas fa-sign-in-alt"></i><span>登入</span>';
-            logoutBtn.classList.add("login-btn");
-            logoutBtn.classList.remove("logout");
-            logoutBtn.href = "/index.html";
-            logoutBtn.style.display = "block";
-          }
-          return;
-        }
-
-        // 已登入狀態
-        try {
-          const claims = Auth.parseJwt(token);
-          const email = claims.email || claims.sub || "user@example.com";
-          const name = claims.name || claims.firstName || "使用者";
-
-          // 顯示使用者資訊區塊
-          if (userInfoSection) {
-            userInfoSection.style.display = "flex";
-          }
-
-          // 恢復 dropdown-header 的 padding
-          const dropdownHeader = document.querySelector(".dropdown-header");
-          if (dropdownHeader) {
-            dropdownHeader.classList.remove("no-padding");
-          }
-
-          userEmailElement.textContent = email;
-          if (userNameElement) userNameElement.textContent = name;
-
-          // 顯示所有功能選項
-          showAllItems();
-
-          // 恢復登出按鈕
-          if (logoutBtn) {
-            logoutBtn.innerHTML =
-              '<i class="fas fa-sign-out-alt"></i><span>登出</span>';
-            logoutBtn.classList.remove("login-btn");
-            logoutBtn.classList.add("logout");
-            logoutBtn.href = "#";
-            logoutBtn.style.display = "block";
-          }
-        } catch (error) {
-          // 隱藏使用者資訊區塊
-          if (userInfoSection) {
-            userInfoSection.style.display = "none";
-          }
-          hideLoginRequiredItems();
-        }
-
-        // 若 token 未過期，再以 Auth.authFetch 取得 { email } 成功後覆寫
-        if (!Auth.isTokenExpired(token)) {
-          Auth.authFetch("/api/me")
-            .then((response) => {
-              if (response.ok) {
-                return response.json();
-              }
-              throw new Error("API 請求失敗");
-            })
-            .then((data) => {
-              if (data.email) {
-                userEmailElement.textContent = data.email;
-              }
-              if (data.name && userNameElement) {
-                userNameElement.textContent = data.name;
-              }
-            })
-            .catch((error) => {
-              if (error.status === 401) {
-                // 401 時隱藏使用者資訊並隱藏登入功能選項
-                if (userInfoSection) {
-                  userInfoSection.style.display = "none";
-                }
-                hideLoginRequiredItems();
-                // 清除過期的 token
-                Auth.clearToken();
-              }
-            });
-        }
+    const token = Auth.getToken();
+    if (!token || Auth.isTokenExpired(token)) {
+      // 未登入狀態 - 隱藏使用者資訊區塊
+      if (userInfoSection) {
+        userInfoSection.style.display = "none";
       }
 
       // 隱藏需要登入的功能選項
-      function hideLoginRequiredItems() {
-        // 隱藏除了登入/登出按鈕之外的所有選單項目
-        const loginRequiredItems = document.querySelectorAll(
-          ".menu-item:not(.logout):not(.login-btn)"
-        );
-        loginRequiredItems.forEach((item) => {
-          item.style.display = "none";
-        });
+      hideLoginRequiredItems();
 
-        // 隱藏分隔線
-        const divider = document.querySelector(".menu-divider");
-        if (divider) {
-          divider.style.display = "none";
-        }
+      // 取消 dropdown-header 的 padding
+      const dropdownHeader = document.querySelector(".dropdown-header");
+      if (dropdownHeader) {
+        dropdownHeader.classList.add("no-padding");
       }
+
+      // 將登出按鈕改為登入按鈕
+      if (logoutBtn) {
+        logoutBtn.innerHTML =
+                '<i class="fas fa-sign-in-alt"></i><span>登入</span>';
+        logoutBtn.classList.add("login-btn");
+        logoutBtn.classList.remove("logout");
+        logoutBtn.href = "/index.html";
+        logoutBtn.style.display = "block";
+      }
+      return;
+    }
+
+    // 已登入狀態
+    try {
+      const claims = Auth.parseJwt(token);
+      const email = claims.email || claims.sub || "user@example.com";
+      const name = claims.name || claims.firstName || "使用者";
+
+      // 顯示使用者資訊區塊
+      if (userInfoSection) {
+        userInfoSection.style.display = "flex";
+      }
+
+      // 恢復 dropdown-header 的 padding
+      const dropdownHeader = document.querySelector(".dropdown-header");
+      if (dropdownHeader) {
+        dropdownHeader.classList.remove("no-padding");
+      }
+
+      userEmailElement.textContent = email;
+      if (userNameElement) userNameElement.textContent = name;
 
       // 顯示所有功能選項
-      function showAllItems() {
-        const allItems = document.querySelectorAll(".menu-item");
-        allItems.forEach((item) => {
-          item.style.display = "block";
-        });
+      showAllItems();
 
-        // 顯示分隔線
-        const divider = document.querySelector(".menu-divider");
-        if (divider) {
-          divider.style.display = "block";
-        }
+      // 恢復登出按鈕
+      if (logoutBtn) {
+        logoutBtn.innerHTML =
+                '<i class="fas fa-sign-out-alt"></i><span>登出</span>';
+        logoutBtn.classList.remove("login-btn");
+        logoutBtn.classList.add("logout");
+        logoutBtn.href = "#";
+        logoutBtn.style.display = "block";
       }
-
-      // 處理登出功能
-      function handleLogout() {
-        if (confirm("確定要登出嗎？")) {
-          // 清除 JWT token
-          Auth.clearToken();
-
-          // 更新 UI 顯示
-          fillAccountEmail();
-        }
+    } catch (error) {
+      // 隱藏使用者資訊區塊
+      if (userInfoSection) {
+        userInfoSection.style.display = "none";
       }
+      hideLoginRequiredItems();
+    }
 
-      // 顯示頁面跳轉載入器
-      function showPageLoader() {
-        const loader = document.getElementById("page-loader");
+    // 若 token 未過期，再以 Auth.authFetch 取得 { email } 成功後覆寫
+    if (!Auth.isTokenExpired(token)) {
+      Auth.authFetch("/api/me")
+              .then((response) => {
+                if (response.ok) {
+                  return response.json();
+                }
+                throw new Error("API 請求失敗");
+              })
+              .then((data) => {
+                if (data.email) {
+                  userEmailElement.textContent = data.email;
+                }
+                if (data.name && userNameElement) {
+                  userNameElement.textContent = data.name;
+                }
+              })
+              .catch((error) => {
+                if (error.status === 401) {
+                  // 401 時隱藏使用者資訊並隱藏登入功能選項
+                  if (userInfoSection) {
+                    userInfoSection.style.display = "none";
+                  }
+                  hideLoginRequiredItems();
+                  // 清除過期的 token
+                  Auth.clearToken();
+                }
+              });
+    }
+  }
 
-        // 顯示載入器
-        loader.classList.add("show");
+  // 隱藏需要登入的功能選項
+  function hideLoginRequiredItems() {
+    // 隱藏除了登入/登出按鈕之外的所有選單項目
+    const loginRequiredItems = document.querySelectorAll(
+            ".menu-item:not(.logout):not(.login-btn)"
+    );
+    loginRequiredItems.forEach((item) => {
+      item.style.display = "none";
+    });
 
-        // 鎖住背景捲動
-        document.body.style.overflow = "hidden";
+    // 隱藏分隔線
+    const divider = document.querySelector(".menu-divider");
+    if (divider) {
+      divider.style.display = "none";
+    }
+  }
 
-        // 0.5秒後跳轉到登入頁面
-        setTimeout(() => {
-          window.location.href = "/index.html";
-        }, 500);
-      }
+  // 顯示所有功能選項
+  function showAllItems() {
+    const allItems = document.querySelectorAll(".menu-item");
+    allItems.forEach((item) => {
+      item.style.display = "block";
+    });
 
-      // 綁定在選單展開時觸發 fillAccountEmail()
-      document.addEventListener("DOMContentLoaded", function () {
-        const accountBtn = document.querySelector(".account-btn");
-        const logoutBtn = document.querySelector(".logout");
+    // 顯示分隔線
+    const divider = document.querySelector(".menu-divider");
+    if (divider) {
+      divider.style.display = "block";
+    }
+  }
 
-        if (accountBtn) {
-          accountBtn.addEventListener("click", function () {
-            // 點擊後延遲一下再填充，確保選單已展開
-            setTimeout(fillAccountEmail, 100);
-          });
-        }
+  // 處理登出功能
+  function handleLogout() {
+    if (confirm("確定要登出嗎？")) {
+      // 清除 JWT token
+      Auth.clearToken();
 
-        if (logoutBtn) {
-          logoutBtn.addEventListener("click", function (e) {
-            e.preventDefault();
+      // 更新 UI 顯示
+      fillAccountEmail();
+    }
+  }
 
-            // 檢查是否為登入按鈕
-            if (this.classList.contains("login-btn")) {
-              // 顯示載入動畫
-              showPageLoader();
-              return;
-            }
+  // 顯示頁面跳轉載入器
+  function showPageLoader() {
+    const loader = document.getElementById("page-loader");
 
-            // 處理登出
-            handleLogout();
-          });
-        }
+    // 顯示載入器
+    loader.classList.add("show");
 
-        // 在 DOMContentLoaded 也先呼叫一次 fillAccountEmail() 以避免空白
-        fillAccountEmail();
+    // 鎖住背景捲動
+    document.body.style.overflow = "hidden";
+
+    // 0.5秒後跳轉到登入頁面
+    setTimeout(() => {
+      window.location.href = "/index.html";
+    }, 500);
+  }
+
+  // 綁定在選單展開時觸發 fillAccountEmail()
+  document.addEventListener("DOMContentLoaded", function () {
+    const accountBtn = document.querySelector(".account-btn");
+    const logoutBtn = document.querySelector(".logout");
+
+    if (accountBtn) {
+      accountBtn.addEventListener("click", function () {
+        // 點擊後延遲一下再填充，確保選單已展開
+        setTimeout(fillAccountEmail, 100);
       });
+    }
 
-      // 監聽 window 'storage' 事件（key='jwt_token'）時再次呼叫 fillAccountEmail()
-      window.addEventListener("storage", function (e) {
-        if (e.key === "jwt_token") {
-          fillAccountEmail();
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        // 檢查是否為登入按鈕
+        if (this.classList.contains("login-btn")) {
+          // 顯示載入動畫
+          showPageLoader();
+          return;
         }
+
+        // 處理登出
+        handleLogout();
       });
-    </script>
+    }
 
-    <!-- 智能 Navbar 隱藏/顯示邏輯 -->
-    <script>
-      (function () {
-        const header = document.getElementById("header");
-        let isMouseNearTop = false;
-        let hideTimeout = null;
+    // 在 DOMContentLoaded 也先呼叫一次 fillAccountEmail() 以避免空白
+    fillAccountEmail();
+  });
 
-        // 初始化：顯示 navbar（因為在頂端）
-        header.style.transform = "translateY(0)";
-        header.style.transition = "transform 0.3s ease";
+  // 監聽 window 'storage' 事件（key='jwt_token'）時再次呼叫 fillAccountEmail()
+  window.addEventListener("storage", function (e) {
+    if (e.key === "jwt_token") {
+      fillAccountEmail();
+    }
+  });
+</script>
 
-        // 檢查滑鼠是否在視窗頂端附近（32px 內）
-        function checkMousePosition(e) {
-          isMouseNearTop = e.clientY <= 50;
+<!-- 智能 Navbar 隱藏/顯示邏輯 -->
+<script>
+  (function () {
+    const header = document.getElementById("header");
+    let isMouseNearTop = false;
+    let hideTimeout = null;
 
-          if (isMouseNearTop) {
-            showNavbar();
-            clearTimeout(hideTimeout);
-          } else if (window.scrollY > 0 && !isMouseNearTop) {
-            // 延遲隱藏，避免滑鼠移動時閃爍
-            hideTimeout = setTimeout(() => {
-              if (!isMouseNearTop && window.scrollY > 0) {
-                hideNavbar();
-              }
-            }, 300);
+    // 初始化：顯示 navbar（因為在頂端）
+    header.style.transform = "translateY(0)";
+    header.style.transition = "transform 0.3s ease";
+
+    // 檢查滑鼠是否在視窗頂端附近（32px 內）
+    function checkMousePosition(e) {
+      isMouseNearTop = e.clientY <= 50;
+
+      if (isMouseNearTop) {
+        showNavbar();
+        clearTimeout(hideTimeout);
+      } else if (window.scrollY > 0 && !isMouseNearTop) {
+        // 延遲隱藏，避免滑鼠移動時閃爍
+        hideTimeout = setTimeout(() => {
+          if (!isMouseNearTop && window.scrollY > 0) {
+            hideNavbar();
           }
-        }
+        }, 300);
+      }
+    }
 
-        // 顯示 navbar
-        function showNavbar() {
-          header.style.transform = "translateY(0)";
-        }
+    // 顯示 navbar
+    function showNavbar() {
+      header.style.transform = "translateY(0)";
+    }
 
-        // 隱藏 navbar
-        function hideNavbar() {
-          header.style.transform = "translateY(-100%)";
-        }
+    // 隱藏 navbar
+    function hideNavbar() {
+      header.style.transform = "translateY(-100%)";
+    }
 
-        // 處理滾動事件
-        function handleScroll() {
-          if (window.scrollY === 0) {
-            // 在頂端時顯示 navbar
-            showNavbar();
-          } else {
-            // 離開頂端時隱藏 navbar（除非滑鼠在上緣）
-            if (!isMouseNearTop) {
+    // 處理滾動事件
+    function handleScroll() {
+      if (window.scrollY === 0) {
+        // 在頂端時顯示 navbar
+        showNavbar();
+      } else {
+        // 離開頂端時隱藏 navbar（除非滑鼠在上緣）
+        if (!isMouseNearTop) {
+          hideNavbar();
+        }
+      }
+    }
+
+    // 檢查是否為觸控裝置
+    function isTouchDevice() {
+      return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    }
+
+    // 觸控裝置的簡化邏輯
+    function handleTouchDevice() {
+      window.addEventListener("scroll", handleScroll);
+    }
+
+    // 滑鼠裝置的完整邏輯
+    function handleMouseDevice() {
+      // 滑鼠移動事件
+      document.addEventListener("mousemove", checkMousePosition);
+
+      // 滑鼠進入 navbar 事件
+      header.addEventListener("mouseenter", () => {
+        clearTimeout(hideTimeout);
+      });
+
+      // 滑鼠離開 navbar 事件
+      header.addEventListener("mouseleave", () => {
+        if (window.scrollY > 0 && !isMouseNearTop) {
+          hideTimeout = setTimeout(() => {
+            if (!isMouseNearTop && window.scrollY > 0) {
               hideNavbar();
             }
-          }
+          }, 300);
         }
+      });
 
-        // 檢查是否為觸控裝置
-        function isTouchDevice() {
-          return "ontouchstart" in window || navigator.maxTouchPoints > 0;
-        }
+      // 滾動事件
+      window.addEventListener("scroll", handleScroll);
+    }
 
-        // 觸控裝置的簡化邏輯
-        function handleTouchDevice() {
-          window.addEventListener("scroll", handleScroll);
-        }
+    // 初始化
+    if (isTouchDevice()) {
+      handleTouchDevice();
+    } else {
+      handleMouseDevice();
+    }
 
-        // 滑鼠裝置的完整邏輯
-        function handleMouseDevice() {
-          // 滑鼠移動事件
-          document.addEventListener("mousemove", checkMousePosition);
+    // 視窗大小改變時重新檢查
+    window.addEventListener("resize", handleScroll);
+  })();
+</script>
 
-          // 滑鼠進入 navbar 事件
-          header.addEventListener("mouseenter", () => {
-            clearTimeout(hideTimeout);
-          });
-
-          // 滑鼠離開 navbar 事件
-          header.addEventListener("mouseleave", () => {
-            if (window.scrollY > 0 && !isMouseNearTop) {
-              hideTimeout = setTimeout(() => {
-                if (!isMouseNearTop && window.scrollY > 0) {
-                  hideNavbar();
-                }
-              }, 300);
-            }
-          });
-
-          // 滾動事件
-          window.addEventListener("scroll", handleScroll);
-        }
-
-        // 初始化
-        if (isTouchDevice()) {
-          handleTouchDevice();
-        } else {
-          handleMouseDevice();
-        }
-
-        // 視窗大小改變時重新檢查
-        window.addEventListener("resize", handleScroll);
-      })();
-    </script>
-
-    <!-- 全頁載入器 -->
-    <div id="page-loader" class="page-loader">
-      <div class="loader-content">
-        <div class="loading-animation">
-          <div class="loading-bar bar1"></div>
-          <div class="loading-bar bar2"></div>
-        </div>
-        <div class="loading-text">頁面跳轉中…</div>
-      </div>
+<!-- 全頁載入器 -->
+<div id="page-loader" class="page-loader">
+  <div class="loader-content">
+    <div class="loading-animation">
+      <div class="loading-bar bar1"></div>
+      <div class="loading-bar bar2"></div>
     </div>
-  </body>
+    <div class="loading-text">頁面跳轉中…</div>
+  </div>
+</div>
+</body>
 </html>

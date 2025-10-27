@@ -42,6 +42,9 @@ public class JwtFilter implements Filter {
             "/api/addresses",
             "/api/addresses/**",
             "/api/orders/**",
+            "/api/orders/",        // ← 用前綴（結尾是 /）
+            "/api/orders/by-mtn",  // ← 再明確列一次更保險
+            "/api/ecpay/notify",
 
             // 其他
             "/error"
